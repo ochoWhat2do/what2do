@@ -5,6 +5,7 @@ import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 
+// 사용자 서비스
 public interface UserService {
     /*
      * 회원 가입
