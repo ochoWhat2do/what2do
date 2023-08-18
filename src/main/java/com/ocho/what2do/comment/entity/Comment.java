@@ -46,7 +46,7 @@ public class Comment extends Timestamped {
   @JoinColumn(name = "user_id", updatable = false)
   private User user; // 작성자
 
-  @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "comment", orphanRemoval = true)
   private List<CommentLike> commentLikes = new ArrayList<>();
 
   // 부모

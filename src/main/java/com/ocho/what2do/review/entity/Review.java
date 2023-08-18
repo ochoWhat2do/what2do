@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -36,6 +37,9 @@ public class Review extends Timestamped {
 
   @Column
   private Long order;
+
+  @OneToMany(mappedBy = "review", orphanRemoval = true)
+  private List<ReviewLike> reviewLikeList = new ArrayList<>();
 
   @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
   @OrderBy("id asc") // 댓글 정렬
