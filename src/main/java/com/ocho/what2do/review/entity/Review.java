@@ -34,6 +34,9 @@ public class Review extends Timestamped {
   @Column(columnDefinition = "TEXT", nullable = false)
   private String content;
 
+  @Column
+  private Long order;
+
   @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
   @OrderBy("id asc") // 댓글 정렬
   private List<Comment> comments;
