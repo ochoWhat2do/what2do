@@ -48,6 +48,7 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     // CSRF 설정
     http.csrf(AbstractHttpConfigurer::disable);
+    http.cors();
 
     // Session 방식 -> JWT 방식 설정 변경
     http.sessionManagement(sessionManagement ->
