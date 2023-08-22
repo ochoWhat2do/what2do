@@ -40,6 +40,7 @@ out/
 application-ds.properties
 application-key.properties
 application-s3.properties
+application-oauth.properties
 
 ## generated Files
 **/src/main/generated/**
