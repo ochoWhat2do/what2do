@@ -2,6 +2,7 @@ package com.ocho.what2do.store.entity;
 
 import com.ocho.what2do.comment.entity.CommentLike;
 import com.ocho.what2do.common.entity.Timestamped;
+import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.storecategory.entity.StoreCategory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,4 +46,25 @@ public class Store extends Timestamped {
 
   @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StoreCategory> storeCategoryList = new ArrayList<>();
+
+  @Builder
+  public Store(String title, String address, String readAddress, String homePageLink, String imageLink, boolean isVisit, int visitCount){
+    this.title = title;
+    this.address = address;
+    this.readAddress = readAddress;
+    this.homePageLink = homePageLink;
+    this.imageLink = imageLink;
+    this.isVisit = isVisit;
+    this.visitCount = visitCount;
+  }
+
+  public void update(StoreRequestDto requestDto){
+    this.title = requestDto.getTitle();
+    this.address = requestDto.getAddress();
+    this.readAddress = requestDto.getReadAddress();
+    this.homePageLink = requestDto.getHomePageLink();
+    this.imageLink = requestDto.getImageLink();
+    this.isVisit = requestDto.isVisit();
+    this.visitCount = requestDto.getVisitCount();
+  }
 }
