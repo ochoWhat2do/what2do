@@ -1,5 +1,7 @@
 package com.ocho.what2do.store.service;
 
+import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
@@ -7,7 +9,6 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,6 +58,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Store findStore(Long storeId) {
-        return storeRepository.findById(storeId).orElseThrow(()->new IllegalArgumentException("선택한 가게는 존재하지 않습니다."));
+        return storeRepository.findById(storeId).orElseThrow(()->new CustomException(CustomErrorCode.STORE_NOT_FOUND,null));
     }
 }

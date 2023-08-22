@@ -14,6 +14,7 @@ public enum CustomErrorCode {
   NEW_PASSWORD_MISMATCHED(HttpStatus.BAD_REQUEST.value(), "새 비밀번호가 일치하지 않습니다."),
   USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 사용자입니다."),
   UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED.value(), "승인되지 않은 요청입니다."),
+  STORE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(),"존재하지 않은 가게입니다."),
   ;
 
   private final int errorCode;

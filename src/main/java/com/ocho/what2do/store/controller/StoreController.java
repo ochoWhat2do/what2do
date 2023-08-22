@@ -44,26 +44,15 @@ public class StoreController {
     @PutMapping("/stores/{storeId}") //가게 수정
     public ResponseEntity<ApiResponseDto> updateStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId, @RequestBody StoreRequestDto requestDto) {
         StoreResponseDto result;
-
-        try {
             Store store = storeService.findStore(storeId);
             result = storeService.updateStore(store, requestDto, userDetails.getUser());
-        } catch (RejectedExecutionException e) {
-            return ResponseEntity.badRequest().body(new ApiResponseDto(HttpStatus.BAD_REQUEST.value(),"작성자만 수정 할 수 있습니다."));
-        }
-
         return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/stores/{storeId}") //가게 삭제
     public ResponseEntity<ApiResponseDto> deleteStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId) {
-        try {
             Store store = storeService.findStore(storeId);
             storeService.deleteStore(store, userDetails.getUser());
-        } catch (RejectedExecutionException e) {
-            return ResponseEntity.badRequest().body(new ApiResponseDto(HttpStatus.BAD_REQUEST.value(),"작성자만 삭제 할 수 있습니다."));
-        }
-
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 삭제 성공"));
     }
 
