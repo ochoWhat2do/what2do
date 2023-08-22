@@ -37,4 +37,5 @@ public class ReviewLike {
     this.user = user;
     this.review = review;
   }
+
 }
