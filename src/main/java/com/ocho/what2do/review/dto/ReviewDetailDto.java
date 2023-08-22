@@ -14,13 +14,13 @@ public class ReviewDetailDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private List<CommentResponseDto> comments; // 댓글 목록 등
+
 
     public ReviewDetailDto(Long id, String content, LocalDateTime createdAt, LocalDateTime modifiedAt, List<CommentResponseDto> comments) {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.comments = comments;
+
     }
 }

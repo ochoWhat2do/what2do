@@ -11,6 +11,8 @@ import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +39,13 @@ public class ReviewServiceImpl implements ReviewService {
         return reviews.stream()
                 .map(ReviewResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<ReviewResponseDto> getAllReviewsPaged(Pageable pageable) {
+        Page<Review> reviewPage = reviewRepository.findAll(pageable);
+        return reviewPage.map(ReviewResponseDto::new);
     }
 
     @Override

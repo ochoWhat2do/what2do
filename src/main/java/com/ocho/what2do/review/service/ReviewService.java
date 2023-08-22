@@ -3,11 +3,12 @@ package com.ocho.what2do.review.service;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface ReviewService {
     /*
      * 리뷰 단일 조회
@@ -21,6 +22,13 @@ public interface ReviewService {
      * @return 전체 리뷰 목록
      */
     List<ReviewResponseDto> getAllReviews();
+
+    /*
+     * 전체 리뷰 페이징 조회
+     * @param pageable 페이징 정보
+     * @return 전체 리뷰 페이지
+     */
+    Page<ReviewResponseDto> getAllReviewsPaged(Pageable pageable);
 
     /*
      * 리뷰 등록
@@ -69,4 +77,6 @@ public interface ReviewService {
      * @return 업데이트된 리뷰 정보
      */
     ReviewResponseDto unlikeReview(Long reviewId, User user);
+
+
 }

@@ -9,6 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,6 +40,16 @@ public class ReviewController {
         List<ReviewResponseDto> responseDtoList = reviewService.getAllReviews();
         return ResponseEntity.ok(responseDtoList);
     }
+    @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
+    @GetMapping("/reviews")
+    public ResponseEntity<Page<ReviewResponseDto>> getAllReviewsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReviewResponseDto> reviewPage = reviewService.getAllReviewsPaged(pageable);
+        return ResponseEntity.ok(reviewPage);
+    }
 
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
     @PostMapping("/reviews")
@@ -50,15 +63,12 @@ public class ReviewController {
     @Operation(summary = "리뷰 수정", description = "선택한 리뷰의 내용을 수정합니다.")
     @PutMapping("/reviews/{review_Id}")
     public ResponseEntity<ReviewResponseDto> updateReview(
-            @PathVariable("review_Id") Long reviewId,
+            @PathVariable("review_Id") Long review_Id,
             @Valid @RequestBody ReviewRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, userDetails.getUser());
-        if (responseDto != null) {
-            return ResponseEntity.ok(responseDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        ReviewResponseDto responseDto = reviewService.updateReview(review_Id, requestDto, userDetails.getUser());
+        return ResponseEntity.ok().body(responseDto);
+
     }
 
     @Operation(summary = "리뷰 삭제", description = "선택한 리뷰를 삭제합니다.")
@@ -77,11 +87,7 @@ public class ReviewController {
             @PathVariable("review_Id") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.getReviewDetail(reviewId, userDetails.getUser());
-        if (responseDto != null) {
-            return ResponseEntity.ok(responseDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(responseDto);
     }
     @Operation(summary = "리뷰 좋아요", description = "리뷰에 좋아요를 표시합니다.")
     @PostMapping("/reviews/{review_Id}/likes")
@@ -89,11 +95,7 @@ public class ReviewController {
             @PathVariable("review_Id") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.likeReview(reviewId, userDetails.getUser());
-        if (responseDto != null) {
-            return ResponseEntity.ok(responseDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @Operation(summary = "리뷰 좋아요 취소", description = "리뷰의 좋아요를 취소합니다.")
@@ -102,11 +104,7 @@ public class ReviewController {
             @PathVariable("review_Id") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.unlikeReview(reviewId, userDetails.getUser());
-        if (responseDto != null) {
-            return ResponseEntity.ok(responseDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok().body(responseDto);
     }
 
 }
