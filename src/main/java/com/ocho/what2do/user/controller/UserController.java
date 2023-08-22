@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -70,5 +72,14 @@ public class UserController {
     public ResponseEntity<ApiResponseDto> editUserPassword(@Valid @RequestBody EditPasswordRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.editUserPassword(requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "회원 비밀번호 수정 성공"));
+    }
+
+    /*
+     * 로그아웃
+     * */
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseEntity<ApiResponseDto> logout(@RequestHeader("Authorization") String requestAccessToken) {
+        return ResponseEntity.ok().body(userService.logout(requestAccessToken));
     }
 }

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,8 +22,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
   private final JwtUtil jwtUtil;
 
-  public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+  private final RedisTemplate redisTemplate;
+
+  public JwtAuthenticationFilter(JwtUtil jwtUtil, RedisTemplate redisTemplate) {
     this.jwtUtil = jwtUtil;
+    this.redisTemplate = redisTemplate;
     setFilterProcessesUrl("/api/users/login");
   }
 
@@ -52,8 +56,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     String email = ((UserDetailsImpl) authResult.getPrincipal()).getEmail();
     UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
-    String token = jwtUtil.createToken(email, role);
+    String token = jwtUtil.createAccessToken(email, role);
+    String refreshToken = jwtUtil.createRefreshToken(authResult);
     response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+    response.addHeader(JwtUtil.AUTHORIZATION_REFRESH_HEADER, refreshToken);
 
     response.setStatus(200);
     response.setContentType("application/json");

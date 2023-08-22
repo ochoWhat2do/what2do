@@ -24,4 +24,8 @@ public class SignupRequestDto {
 
     private boolean admin;
     private String adminToken;
+
+    // 추가정보
+    private String city;
+    private String gender;
 }

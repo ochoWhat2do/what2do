@@ -7,6 +7,7 @@ import com.ocho.what2do.common.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -26,6 +27,7 @@ public class WebSecurityConfig {
   private final JwtUtil jwtUtil;
   private final UserDetailsServiceImpl userDetailsService;
   private final AuthenticationConfiguration authenticationConfiguration;
+  private final RedisTemplate redisTemplate;
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -34,7 +36,7 @@ public class WebSecurityConfig {
 
   @Bean
   public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-    JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+    JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisTemplate);
     filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
     return filter;
   }

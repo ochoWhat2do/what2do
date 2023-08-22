@@ -1,7 +1,11 @@
 package com.ocho.what2do.user.service;
 
+import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.jwt.JwtUtil;
 import com.ocho.what2do.common.message.CustomErrorCode;
+import com.ocho.what2do.common.redis.RedisUtil;
+import com.ocho.what2do.common.security.UserDetailsImpl;
 import com.ocho.what2do.user.dto.EditUserRequestDto;
 import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.entity.User;
@@ -11,11 +15,16 @@ import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import com.ocho.what2do.userpassword.entity.UserPassword;
 import com.ocho.what2do.userpassword.repository.UserPasswordRepository;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +32,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserPasswordRepository userPasswordRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisUtil redisUtil;
 
     @Value("${admin.token}")
     private String adminToken;
+
+    public static final String BEARER_PREFIX = "Bearer ";
 
     @Transactional
     @Override
@@ -43,7 +57,8 @@ public class UserServiceImpl implements UserService {
             role = UserRoleEnum.ADMIN;
         }
 
-        User user = userRepository.save(new User(email, password, role));
+        User user = userRepository.save(new User(email, password, role, requestDto.getCity(),
+            requestDto.getGender()));
         userPasswordRepository.save(new UserPassword(password, user));
     }
 
@@ -81,6 +96,37 @@ public class UserServiceImpl implements UserService {
         String newPassword = passwordEncoder.encode(requestDto.getPassword());
         userPasswordRepository.save(new UserPassword(newPassword, found));
         found.editPassword(newPassword);
+    }
+
+    @Override
+    @Transactional
+    public ApiResponseDto logout(String requestAccessToken) {
+        if (StringUtils.hasText(requestAccessToken) && requestAccessToken.startsWith(BEARER_PREFIX)) {
+            requestAccessToken =  requestAccessToken.substring(7);
+        }
+
+        //엑세스 토큰 남은 유효시간
+        Long expiration = jwtUtil.getExpiration(requestAccessToken);
+
+        // 1. Access Token 검증
+        if (!jwtUtil.validateToken(requestAccessToken)) {
+            return new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), "잘못된 요청입니다.");
+        }
+        // 2. Access Token 에서 User 정보를 가져옵니다.
+        Authentication authentication = jwtUtil.getAuthentication(requestAccessToken);
+        String email = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getEmail();
+        
+        // 3. Redis 에서 해당 User email 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        if (redisTemplate.opsForValue().get("RT:" + email) != null) {
+            // Refresh Token 삭제
+            redisTemplate.delete("RT:" + email);
+        }
+
+        // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
+        redisUtil.setBlackList(requestAccessToken, "logout", expiration);
+
+
+        return new ApiResponseDto(HttpStatus.OK.value(), "로그아웃 성공");
     }
 
     private User findUserByEmail(String email) {
