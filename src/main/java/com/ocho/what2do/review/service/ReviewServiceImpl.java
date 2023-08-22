@@ -5,14 +5,15 @@ import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.review.entity.Review;
+import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,9 +44,11 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<ReviewResponseDto> getAllReviewsPaged(Pageable pageable) {
-        Page<Review> reviewPage = reviewRepository.findAll(pageable);
-        return reviewPage.map(ReviewResponseDto::new);
+    public List<ReviewResponseDto> getAllReviewsPaged(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return reviewRepository.findAll(pageable).stream().map(ReviewResponseDto::new).toList();
     }
 
     @Override
@@ -100,6 +103,14 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = findReview(reviewId);
 
         // 좋아요 처리 로직 추가
+        if (review.getLikes().stream().anyMatch(like -> like.getUser().equals(user))) {
+            throw new CustomException(CustomErrorCode.REVIEW_ALREADY_LIKED, null);
+        }
+
+        // 새로운 좋아요 엔티티 생성 및 추가
+        ReviewLike newLike = new ReviewLike(user, review);
+        review.addLike(newLike);
+        reviewRepository.save(review);
 
         return new ReviewResponseDto(review);
     }
@@ -110,6 +121,14 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = findReview(reviewId);
 
         // 좋아요 취소 처리 로직 추가
+        ReviewLike likeToRemove = review.getLikes().stream()
+                .filter(like -> like.getUse().equals(user))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(CustomErrorCode.REVIEW_NOT_LIKED, null));
+
+        // 해당 좋아요 엔티티 제거
+        review.removeLike(likeToRemove);
+        reviewRepository.save(review);
 
         return new ReviewResponseDto(review);
     }

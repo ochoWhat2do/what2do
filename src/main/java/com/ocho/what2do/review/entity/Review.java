@@ -6,6 +6,7 @@ import com.ocho.what2do.user.entity.User;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import lombok.AccessLevel;
@@ -59,5 +60,16 @@ public class Review extends Timestamped {
         this.content = content;
     }
 
+    public Collection<ReviewLike> getLikes() {
+        return reviewLikeList;
+    }
+
+    public void removeLike(ReviewLike likeToRemove) {
+        reviewLikeList.remove(likeToRemove);
+    }
+
+    public void addLike(ReviewLike newLike) {
+        reviewLikeList.add(newLike);
+    }
 }
 

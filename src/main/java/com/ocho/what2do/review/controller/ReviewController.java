@@ -42,13 +42,15 @@ public class ReviewController {
     }
     @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
     @GetMapping("/reviews")
-    public ResponseEntity<Page<ReviewResponseDto>> getAllReviewsPaged(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ReviewResponseDto> reviewPage = reviewService.getAllReviewsPaged(pageable);
-        return ResponseEntity.ok(reviewPage);
+    public ResponseEntity<List<ReviewResponseDto>> getAllReviewsPaged(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc)
+    {
+        List<ReviewResponseDto> responseDto = reviewService.getAllReviewsPaged(page -1, size, sortBy, isAsc);
+        return ResponseEntity.ok().body(responseDto);
+
     }
 
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
@@ -63,10 +65,10 @@ public class ReviewController {
     @Operation(summary = "리뷰 수정", description = "선택한 리뷰의 내용을 수정합니다.")
     @PutMapping("/reviews/{review_Id}")
     public ResponseEntity<ReviewResponseDto> updateReview(
-            @PathVariable("review_Id") Long review_Id,
+            @PathVariable("review_Id") Long reviewId,
             @Valid @RequestBody ReviewRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ReviewResponseDto responseDto = reviewService.updateReview(review_Id, requestDto, userDetails.getUser());
+        ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
 
     }

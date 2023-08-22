@@ -28,7 +28,7 @@ public interface ReviewService {
      * @param pageable 페이징 정보
      * @return 전체 리뷰 페이지
      */
-    Page<ReviewResponseDto> getAllReviewsPaged(Pageable pageable);
+    List<ReviewResponseDto> getAllReviewsPaged(int page, int size, String sorBy, boolean isAsc);
 
     /*
      * 리뷰 등록
