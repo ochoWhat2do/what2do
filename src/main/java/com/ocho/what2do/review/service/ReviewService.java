@@ -3,9 +3,6 @@ package com.ocho.what2do.review.service;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

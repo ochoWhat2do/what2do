@@ -16,7 +16,11 @@ public enum CustomErrorCode {
     UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED.value(), "승인되지 않은 요청입니다."),
     REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 리뷰입니다."),
     REVIEW_ALREADY_EXIST(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 리뷰입니다." ),
-    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 댓글입니다.");
+    COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 댓글입니다."),
+    REVIEW_ALREADY_LIKED(HttpStatus.BAD_REQUEST.value(), "이미 좋아요한 리뷰입니다."),
+    REVIEW_NOT_LIKED(HttpStatus.BAD_REQUEST.value(), "아직 좋아요하지 않은 리뷰입니다."),
+    COMMENT_ALREADY_LIKED(HttpStatus.BAD_REQUEST.value(), "이미 좋아요한 댓글입니다."),
+    COMMENT_NOT_LIKED(HttpStatus.BAD_REQUEST.value(), "아직 좋아요하지 않는 댓글입니다.");
 
     private final int errorCode;
     private final String errorMessage;

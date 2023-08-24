@@ -1,0 +1,97 @@
+package com.ocho.what2do.comment.controller;
+
+import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
+import com.ocho.what2do.comment.dto.CommentEditRequestDto;
+import com.ocho.what2do.comment.dto.CommentResponseDto;
+import com.ocho.what2do.comment.service.CommentService;
+import com.ocho.what2do.common.dto.ApiResponseDto;
+import com.ocho.what2do.common.security.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api")
+@Tag(name = "Comment API", description = "댓글 기능과 관련된 API 정보를 담고 있습니다.")
+public class CommentController {
+
+    private final CommentService commentService;
+
+    @Operation(summary = "댓글 목록 조회", description = "댓글 목록을 조회합니다.")
+    @GetMapping("/comments/{review_Id}")
+    @ResponseBody
+    public ResponseEntity commentList(
+            @PathVariable Long review_Id,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc
+    ) {
+        List<CommentResponseDto> commentList = commentService.getCommentList(review_Id, page - 1, size, sortBy, isAsc);
+
+        return new ResponseEntity<>(commentList, HttpStatus.OK);
+    }
+
+    @Operation(summary = "댓글 생성", description = "댓글을 생성합니다.")
+    @PostMapping("/comments")
+    public ResponseEntity<ApiResponseDto> createComment(
+            @RequestBody CommentCreateRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        String result = commentService.createComment(requestDto, userDetails.getUser());
+        return ResponseEntity.ok(new ApiResponseDto(HttpStatus.OK.value(), result));
+    }
+
+    @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
+    @PutMapping("/comments/{comment_Id}")
+    public ResponseEntity<ApiResponseDto> editComment(
+            @PathVariable Long comment_Id,
+            @RequestBody CommentEditRequestDto requestDto,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        String result = commentService.editComment(comment_Id, requestDto, userDetails.getUser());
+
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), result));
+    }
+
+    @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
+    @DeleteMapping("/comments/{comment_Id}")
+    public ResponseEntity<ApiResponseDto> deleteComment(
+            @PathVariable Long comment_Id,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        String result = commentService.deleteComment(comment_Id, userDetails.getUser());
+        return ResponseEntity.ok(new ApiResponseDto(HttpStatus.OK.value(), result));
+    }
+
+    @Operation(summary = "댓글 좋아요", description = "댓글에 좋아요를 표시합니다.")
+    @PostMapping("/comments/{comment_Id}/likes")
+    public ResponseEntity<CommentResponseDto> likeComment(
+            @PathVariable Long comment_Id,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        CommentResponseDto likedComment = commentService.likeComment(comment_Id, userDetails.getUser());
+        if (likedComment != null) {
+            return ResponseEntity.ok(likedComment);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "댓글 좋아요 취소", description = "댓글의 좋아요를 취소합니다.")
+    @DeleteMapping("/comments/{comment_Id}/likes")
+    public ResponseEntity<CommentResponseDto> unlikeComment(
+            @PathVariable("comment_Id") Long commentId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        CommentResponseDto responseDto = commentService.unlikeComment(commentId, userDetails.getUser());
+        return ResponseEntity.ok().body(responseDto);
+    }
+}

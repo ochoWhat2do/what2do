@@ -33,8 +33,8 @@ public class Review extends Timestamped {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column
-    private Long order;
+    @Column(name = "order_no")
+    private Long orderNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -49,10 +49,10 @@ public class Review extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Review(String title, String content, Long order, User user) {
+    public Review(String title, String content, Long orderNo, User user) {
         this.title = title;
         this.content = content;
-        this.order = order;
+        this.orderNo = orderNo;
         this.user = user;
     }
 

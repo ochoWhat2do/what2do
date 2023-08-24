@@ -9,9 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +25,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @Operation(summary = "리뷰 조회", description = "현재 선택한 리뷰의 내부를 조회합니다.")
-    @GetMapping("/reviews/{review_Id}")
+    @GetMapping("/reviews/{review_Id}") // /api/stores/{store_id}/reviews
     public ResponseEntity<ReviewResponseDto> showReview(@PathVariable("review_Id") Long review_Id) {
         ReviewResponseDto responseDto = reviewService.showReview(review_Id);
         return ResponseEntity.ok().body(responseDto);
@@ -41,7 +38,7 @@ public class ReviewController {
         return ResponseEntity.ok(responseDtoList);
     }
     @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
-    @GetMapping("/reviews")
+    @GetMapping("/reviews/paged")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviewsPaged(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
@@ -54,7 +51,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
-    @PostMapping("/reviews")
+    @PostMapping("/reviews") //  /api/stores/{store_id}/reviews
     public ResponseEntity<ReviewResponseDto> createReview(
             @Valid @RequestBody ReviewRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -84,7 +81,7 @@ public class ReviewController {
 
 
     @Operation(summary = "리뷰 상세 조회", description = "선택한 리뷰의 상세 정보를 조회합니다.")
-    @GetMapping("/reviews/{review_Id}")
+    @GetMapping("/reviews/{review_Id}/detail")
     public ResponseEntity<ReviewResponseDto> getReviewDetail(
             @PathVariable("review_Id") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
