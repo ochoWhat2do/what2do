@@ -1,6 +1,5 @@
 package com.ocho.what2do.store.dto;
 
-import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storecategory.entity.StoreCategory;
 import com.ocho.what2do.user.entity.User;
@@ -8,7 +7,8 @@ import com.ocho.what2do.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class StoreResponseDto extends ApiResponseDto {
+public class StoreViewResponseDto {
+
     private Long id;
     private String title;
     private String address;
@@ -22,7 +22,7 @@ public class StoreResponseDto extends ApiResponseDto {
 
     private boolean isStoreFavorite = false;
 
-    public StoreResponseDto(Store store) {
+    public StoreViewResponseDto(Store store, User user) {
         this.id = store.getId();
         this.title = store.getTitle();
         this.address = store.getAddress();
@@ -33,8 +33,6 @@ public class StoreResponseDto extends ApiResponseDto {
         this.visitCount = store.getVisitCount();
         this.lastVisitDate = store.getLastVisitDate();
         this.storeCategoryList = store.getStoreCategoryList().stream().toList();
-        this.isStoreFavorite = false;
+        this.isStoreFavorite = (user == null ? false : store.getStoreFavoriteList().stream().filter(m -> m.getUser().getId() == user.getId()).toList().size() > 0 ? true : false);
     }
-
-
 }

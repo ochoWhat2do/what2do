@@ -3,6 +3,7 @@ package com.ocho.what2do.store.service;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
+import com.ocho.what2do.store.dto.StoreViewResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
@@ -29,7 +30,7 @@ public interface StoreService{
          * @param storeId 조회할 가게 ID
          * @return 조회된 가게 정보
          */
-        StoreResponseDto getStoreById(Long storeId);
+        StoreViewResponseDto getStoreById(Long storeId, User user);
 
         /**
          * 가게 업데이트
