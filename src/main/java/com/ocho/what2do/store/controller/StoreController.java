@@ -7,13 +7,13 @@ import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.service.StoreService;
+import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
+import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.concurrent.RejectedExecutionException;
 
 @RestController
 @RequestMapping("/api")
@@ -49,11 +49,30 @@ public class StoreController {
         return ResponseEntity.ok().body(result);
     }
 
-    @DeleteMapping("/stores/{storeId}") //가게 삭제
+    @DeleteMapping("/stores/{store_id}") //가게 삭제
     public ResponseEntity<ApiResponseDto> deleteStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId) {
             Store store = storeService.findStore(storeId);
             storeService.deleteStore(store, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 삭제 성공"));
+    }
+
+    @PostMapping("/stores/{store_id}/storefavorites") // 가게 찜하기
+    public ResponseEntity<StoreFavoriteResponseDto> addStoreFavorite(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId){
+        StoreFavoriteResponseDto result = storeService.addStoreFavorite(storeId,userDetails.getUser());
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("stores/{store_id}/storefavorites") // 가게 찜 목록 조회
+    public ResponseEntity<StoreFavoriteListResponseDto> getStoreFavorite(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        StoreFavoriteListResponseDto result = storeService.getStoreFavorite(userDetails.getUser());
+
+        return ResponseEntity.ok().body(result);
+    }
+
+    @DeleteMapping("stores/{store_id}/storefavorites") //가게 찜 취소
+    public ResponseEntity<ApiResponseDto> deleteStoreFavorite(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId){
+        storeService.deleteStoreFavorite(storeId, userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 찜하기 취소 성공"));
     }
 
 }

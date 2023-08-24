@@ -1,6 +1,5 @@
 package com.ocho.what2do.store.entity;
 
-import com.ocho.what2do.comment.entity.CommentLike;
 import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.storecategory.entity.StoreCategory;
