@@ -25,16 +25,16 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록을 조회합니다.")
-    @GetMapping("/comments/{review_Id}")
+    @GetMapping("/comments/{reviewId}")
     @ResponseBody
     public ResponseEntity commentList(
-            @PathVariable Long review_Id,
+            @PathVariable Long reviewId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("isAsc") boolean isAsc
     ) {
-        List<CommentResponseDto> commentList = commentService.getCommentList(review_Id, page - 1, size, sortBy, isAsc);
+        List<CommentResponseDto> commentList = commentService.getCommentList(reviewId, page - 1, size, sortBy, isAsc);
 
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
@@ -50,34 +50,34 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
-    @PutMapping("/comments/{comment_Id}")
+    @PutMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponseDto> editComment(
-            @PathVariable Long comment_Id,
+            @PathVariable Long commentId,
             @RequestBody CommentEditRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        String result = commentService.editComment(comment_Id, requestDto, userDetails.getUser());
+        String result = commentService.editComment(commentId, requestDto, userDetails.getUser());
 
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), result));
     }
 
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
-    @DeleteMapping("/comments/{comment_Id}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponseDto> deleteComment(
-            @PathVariable Long comment_Id,
+            @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        String result = commentService.deleteComment(comment_Id, userDetails.getUser());
+        String result = commentService.deleteComment(commentId, userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto(HttpStatus.OK.value(), result));
     }
 
     @Operation(summary = "댓글 좋아요", description = "댓글에 좋아요를 표시합니다.")
-    @PostMapping("/comments/{comment_Id}/likes")
+    @PostMapping("/comments/{commentId}/likes")
     public ResponseEntity<CommentResponseDto> likeComment(
-            @PathVariable Long comment_Id,
+            @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        CommentResponseDto likedComment = commentService.likeComment(comment_Id, userDetails.getUser());
+        CommentResponseDto likedComment = commentService.likeComment(commentId, userDetails.getUser());
         if (likedComment != null) {
             return ResponseEntity.ok(likedComment);
         } else {
@@ -86,9 +86,9 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 좋아요 취소", description = "댓글의 좋아요를 취소합니다.")
-    @DeleteMapping("/comments/{comment_Id}/likes")
+    @DeleteMapping("/comments/{commentId}/likes")
     public ResponseEntity<CommentResponseDto> unlikeComment(
-            @PathVariable("comment_Id") Long commentId,
+            @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         CommentResponseDto responseDto = commentService.unlikeComment(commentId, userDetails.getUser());
