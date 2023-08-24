@@ -5,6 +5,7 @@ import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
+import com.ocho.what2do.store.dto.StoreViewResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
@@ -48,9 +49,9 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResponseDto getStoreById(Long storeId) {
+    public StoreViewResponseDto getStoreById(Long storeId, User user) {
         Store store = findStore(storeId);
-        return new StoreResponseDto(store);
+        return new StoreViewResponseDto(store, user);
     }
 
     @Override
@@ -71,7 +72,7 @@ public class StoreServiceImpl implements StoreService {
     public StoreFavoriteResponseDto addStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
         if(storeUserRepository.existsByUserAndStore(user,store)){
-            throw new DuplicateRequestException("이미 찜한 가게입니다.");
+            throw new CustomException(CustomErrorCode.STORE_FAVORITE_ALREADY_EXISIT);
         }else {
             StoreFavorite storeUser = new StoreFavorite(store, user);
             storeUserRepository.save(storeUser);
@@ -93,7 +94,7 @@ public class StoreServiceImpl implements StoreService {
         if(storeUserOptional.isPresent()){
             storeUserRepository.delete(storeUserOptional.get());
         }else {
-            throw new IllegalArgumentException("해당 가게에 취소할 찜이 없습니다.");
+            throw new CustomException(CustomErrorCode.STORE_FAVORITE_NOT_FOUND,null);
         }
     }
     @Override

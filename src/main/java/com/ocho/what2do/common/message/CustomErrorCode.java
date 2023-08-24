@@ -15,6 +15,8 @@ public enum CustomErrorCode {
   USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 사용자입니다."),
   UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED.value(), "승인되지 않은 요청입니다."),
   STORE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(),"존재하지 않은 가게입니다."),
+  STORE_FAVORITE_ALREADY_EXISIT(HttpStatus.BAD_REQUEST.value(),"이미 찜한 가게입니다."),
+  STORE_FAVORITE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "해당 가게에 취소할 찜이 없습니다."),
   ;
 
   private final int errorCode;
