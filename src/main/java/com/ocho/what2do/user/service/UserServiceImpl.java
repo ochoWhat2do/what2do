@@ -15,6 +15,7 @@ import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import com.ocho.what2do.userpassword.entity.UserPassword;
 import com.ocho.what2do.userpassword.repository.UserPasswordRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,15 +117,15 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = jwtUtil.getAuthentication(requestAccessToken);
         String email = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getEmail();
         
-        // 3. Redis 에서 해당 User email 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
-        if (redisTemplate.opsForValue().get("RT:" + email) != null) {
-            // Refresh Token 삭제
-            redisTemplate.delete("RT:" + email);
+        // 3. Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.updateRefreshToken(null);
+            userRepository.saveAndFlush(user);
         }
-
         // 4. 해당 Access Token 유효시간 가지고 와서 BlackList 로 저장하기
         redisUtil.setBlackList(requestAccessToken, "logout", expiration);
-
 
         return new ApiResponseDto(HttpStatus.OK.value(), "로그아웃 성공");
     }

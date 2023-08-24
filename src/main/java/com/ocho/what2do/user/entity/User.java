@@ -52,9 +52,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private SocialType socialType; // KAKAO, NAVER, GOOGLE
 
-    private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
-
+    @Column(name="refresh_token")
     private String refreshToken; // 리프레시 토큰
+
+    private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     public User(String email, String password, UserRoleEnum role) {
         this.email = email;
@@ -101,5 +102,9 @@ public class User {
 
     public void editPassword(String newPassword) {
         this.password = newPassword;
+    }
+
+    public void updateRefreshToken(String updateRefreshToken) {
+        this.refreshToken = updateRefreshToken;
     }
 }

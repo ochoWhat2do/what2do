@@ -24,9 +24,9 @@ public class UserAuthServiceImpl implements UserAuthService{
   @Override
   public TokenDto reissueToken(String refreshToken) {
     // Refresh Token 검증
-    jwtUtil.validateToken(refreshToken);
+/*    jwtUtil.validateToken(refreshToken);
 
-    // Access Token 에서 User num을 가져옴
+    // Access Token 에서 User 정보를 가져옴
     Authentication authentication = jwtUtil.getAuthentication(refreshToken);
     UserRoleEnum role = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getRole();
 
@@ -34,11 +34,11 @@ public class UserAuthServiceImpl implements UserAuthService{
     String redisRefreshToken = redisTemplate.opsForValue().get("RT:"+((UserDetailsImpl) authentication.getPrincipal()).getUser().getEmail());
     if(!redisRefreshToken.equals(refreshToken)) {
       throw new CustomException(CustomErrorCode.NOT_EXIST_REFRESH_JWT, null);
-    }
+    }*/
     // 토큰 재발행
     TokenDto tokenDto = new TokenDto(
-        jwtUtil.createAccessToken(authentication.getName(), role),
-        jwtUtil.createRefreshToken(authentication)
+        "",
+        ""
     );
 
     return tokenDto;

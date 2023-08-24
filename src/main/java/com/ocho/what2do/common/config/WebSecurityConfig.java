@@ -4,6 +4,7 @@ import com.ocho.what2do.common.jwt.JwtAuthenticationFilter;
 import com.ocho.what2do.common.jwt.JwtAuthorizationFilter;
 import com.ocho.what2do.common.jwt.JwtUtil;
 import com.ocho.what2do.common.security.UserDetailsServiceImpl;
+import com.ocho.what2do.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,9 +26,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
   private final JwtUtil jwtUtil;
-  private final UserDetailsServiceImpl userDetailsService;
   private final AuthenticationConfiguration authenticationConfiguration;
   private final RedisTemplate redisTemplate;
+  private final UserRepository userRepository;
 
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -43,7 +44,7 @@ public class WebSecurityConfig {
 
   @Bean
   public JwtAuthorizationFilter jwtAuthorizationFilter() {
-    return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+    return new JwtAuthorizationFilter(jwtUtil, userRepository);
   }
 
   @Bean

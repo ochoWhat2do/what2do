@@ -24,6 +24,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   private final RedisTemplate redisTemplate;
 
+  public static final String BEARER_PREFIX = "Bearer ";
+
   public JwtAuthenticationFilter(JwtUtil jwtUtil, RedisTemplate redisTemplate) {
     this.jwtUtil = jwtUtil;
     this.redisTemplate = redisTemplate;
@@ -57,9 +59,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
     String token = jwtUtil.createAccessToken(email, role);
-    String refreshToken = jwtUtil.createRefreshToken(authResult);
-    response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
-    response.addHeader(JwtUtil.AUTHORIZATION_REFRESH_HEADER, refreshToken);
+    String refreshToken = jwtUtil.createRefreshToken();
+    response.addHeader(JwtUtil.AUTHORIZATION_ACCESS_HEADER, BEARER_PREFIX + token);
+    response.addHeader(JwtUtil.AUTHORIZATION_REFRESH_HEADER, BEARER_PREFIX + refreshToken);
 
     response.setStatus(200);
     response.setContentType("application/json");
