@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 @Getter
 @NoArgsConstructor
-public class ItemDto {
+public class NaverDto {
     private String title;
     private String link;
     private String category;
@@ -15,7 +15,7 @@ public class ItemDto {
     private int mapx;
     private int mapy;
 
-    public ItemDto(JSONObject itemJson) {
+    public NaverDto(JSONObject itemJson) {
         this.title = itemJson.getString("title");
         this.link = itemJson.getString("link");
         this.category = itemJson.getString("category");
