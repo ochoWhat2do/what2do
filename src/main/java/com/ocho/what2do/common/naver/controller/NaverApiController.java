@@ -1,7 +1,7 @@
 package com.ocho.what2do.common.naver.controller;
 
-import com.ocho.what2do.common.naver.dto.ItemDto;
-import com.ocho.what2do.common.naver.service.NaverApiService;
+import com.ocho.what2do.common.naver.dto.NaverDto;
+import com.ocho.what2do.common.naver.service.NaverApiServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,13 +12,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/naver")
 public class NaverApiController {
 
-    private final NaverApiService naverApiService;
+    private final NaverApiServiceImpl naverApiServiceImpl;
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam String query) {
-        return naverApiService.searchItems(query);
+    public List<NaverDto> searchItems(@RequestParam String query) {
+        return naverApiServiceImpl.searchItems(query);
     }
 }
