@@ -33,6 +33,9 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+	// JSON
+	implementation "org.json:json:20230227"
+
 	// === QueryDsl 시작 ===
 	// == 스프링 부트 3.0 이상 ==
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
