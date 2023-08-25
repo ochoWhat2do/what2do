@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Sort.Direction;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -88,14 +89,14 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findComment(commentId);
 
         // 좋아요 처리 로직 추가
-        if (comment.getCommentLikes().stream().anyMatch(like -> like.getUser().equals(user))) {
+        Optional<CommentLike> existingLike = commentLikeRepository.findByUserAndComment(user, comment);
+        if (existingLike.isPresent()) {
             throw new CustomException(CustomErrorCode.COMMENT_ALREADY_LIKED, null);
         }
 
         // 새로운 좋아요 엔티티 생성 및 추가
-        CommentLike newLike = new CommentLike(user, comment);
+        CommentLike newLike = CommentLike.builder().user(user).comment(comment).build();
         comment.addCommentLike(newLike);
-        commentRepository.save(comment);
 
         return new CommentResponseDto(comment);
     }
@@ -106,14 +107,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findComment(commentId);
 
         // 좋아요 취소 처리 로직 추가
-        CommentLike likeToRemove = comment.getCommentLikes().stream()
-                .filter(like -> like.getUser().equals(user))
-                .findFirst()
+        CommentLike likeToRemove = commentLikeRepository.findByUserAndComment(user, comment)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_LIKED, null));
 
         // 해당 좋아요 엔티티 제거
         comment.removeCommentLike(likeToRemove);
-        commentRepository.save(comment);
 
         return new CommentResponseDto(comment);
     }

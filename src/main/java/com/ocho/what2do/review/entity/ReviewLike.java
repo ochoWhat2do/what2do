@@ -38,7 +38,5 @@ public class ReviewLike {
     this.review = review;
   }
 
-  public User getUsr() {
-    return user;
-  }
+  public User getUsr() { return user; }
 }
