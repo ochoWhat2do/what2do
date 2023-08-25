@@ -44,8 +44,8 @@ public class Store extends Timestamped {
   @Column(name = "last_visit_date")
   private LocalDateTime lastVisitDate;    // 마지막 방문 일자
 
-  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<StoreCategory> storeCategoryList = new ArrayList<>();
+//  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<StoreCategory> storeCategoryList = new ArrayList<>();
 
   @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StoreFavorite> storeFavoriteList = new ArrayList<>();

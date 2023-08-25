@@ -24,10 +24,8 @@ public class StoreController {
     private final StoreService storeService;
 
     @PostMapping("/stores") //가게 등록
-    public ResponseEntity<StoreResponseDto> createPost(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody StoreRequestDto requestDto) {
-        StoreResponseDto result = storeService.createStore(requestDto, userDetails.getUser());
-
-        return ResponseEntity.status(201).body(result);
+    public ResponseEntity<StoreResponseDto> createStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody StoreRequestDto requestDto) {
+        return new ResponseEntity<>(storeService.createStore(requestDto, userDetails.getUser()), HttpStatus.OK);
     }
 
     @GetMapping("/stores") //가게 전체 조회
@@ -39,8 +37,7 @@ public class StoreController {
 
     @GetMapping("/stores/{storeId}") //가게 단건 조회
     public ResponseEntity<StoreViewResponseDto> getStoreById(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        StoreViewResponseDto result = storeService.getStoreById(storeId, userDetails.getUser());
-        return ResponseEntity.ok().body(result);
+        return new ResponseEntity<>(storeService.getStoreById(storeId, userDetails.getUser()), HttpStatus.OK);
     }
 
     @PutMapping("/stores/{storeId}") //가게 수정
@@ -66,11 +63,10 @@ public class StoreController {
     }
 
     @Operation(summary = "가게 찜 목록 조회", description = "가게를 찜한 목록을 조회합니다.")
-    @GetMapping("stores/{storeId}/storefavorites") // 가게 찜 목록 조회
+    @GetMapping("stores/storefavorites") // 가게 찜 목록 조회
     public ResponseEntity<StoreFavoriteListResponseDto> getStoreFavorite(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        StoreFavoriteListResponseDto result = storeService.getStoreFavorite(userDetails.getUser());
+        return new ResponseEntity<>(storeService.getStoreFavorite(userDetails.getUser()),HttpStatus.OK);
 
-        return ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "가게 찜하기 취소", description = "가게를 찜하기를 취소합니다.")

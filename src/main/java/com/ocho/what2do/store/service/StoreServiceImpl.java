@@ -13,7 +13,6 @@ import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,12 +42,14 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    @Transactional
     public StoreListResponseDto getStores() {
         List<StoreResponseDto> storeList = storeRepository.findAll().stream().map(StoreResponseDto::new).collect(Collectors.toList());
         return new StoreListResponseDto(storeList);
     }
 
     @Override
+    @Transactional
     public StoreViewResponseDto getStoreById(Long storeId, User user) {
         Store store = findStore(storeId);
         return new StoreViewResponseDto(store, user);
@@ -69,18 +70,20 @@ public class StoreServiceImpl implements StoreService {
 
 
     @Override
+    @Transactional
     public StoreFavoriteResponseDto addStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
         if(storeFavoriteRepository.existsByUserAndStore(user,store)){
             throw new CustomException(CustomErrorCode.STORE_FAVORITE_ALREADY_EXIST);
-        }else {
+        }
             StoreFavorite storeUser = new StoreFavorite(store, user);
             storeFavoriteRepository.save(storeUser);
-        }
-        return new StoreFavoriteResponseDto(new StoreFavorite(store,user));
+
+        return new StoreFavoriteResponseDto(storeUser);
     }
 
     @Override
+    @Transactional
     public StoreFavoriteListResponseDto getStoreFavorite(User user) {
         List<StoreFavoriteResponseDto> storeUserList = storeFavoriteRepository.findAll().stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
         return new StoreFavoriteListResponseDto(storeUserList);
