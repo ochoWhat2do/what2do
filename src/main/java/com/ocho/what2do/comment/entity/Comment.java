@@ -1,26 +1,19 @@
 package com.ocho.what2do.comment.entity;
 
+import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
+import com.ocho.what2do.comment.dto.CommentEditRequestDto;
 import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.user.entity.User;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -59,6 +52,7 @@ public class Comment extends Timestamped {
   @OneToMany(mappedBy = "parent", orphanRemoval = true)
   private List<Comment> children = new ArrayList<>();
 
+
   // 부모 댓글 수정
   public void updateParent(Comment parent) {
     this.parent = parent;
@@ -85,6 +79,27 @@ public class Comment extends Timestamped {
 
   public void setUser(User user) {
     this.user = user;
+  }
+
+  public Comment(CommentCreateRequestDto requestDto) {
+    this.content = requestDto.getContent();
+  }
+
+  public void editComment(CommentEditRequestDto requestDto) {
+    this.content = requestDto.getContent();
+  }
+
+
+  // 추가: 댓글 좋아요 추가
+  public void addCommentLike(CommentLike commentLike) {
+    this.commentLikes.add(commentLike);
+    commentLike.setComment(this);
+  }
+
+  // 추가: 댓글 좋아요 제거
+  public void removeCommentLike(CommentLike commentLike) {
+    this.commentLikes.remove(commentLike);
+    commentLike.setComment(null);
   }
 
 }
