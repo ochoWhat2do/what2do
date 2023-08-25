@@ -72,7 +72,7 @@ public class StoreServiceImpl implements StoreService {
     public StoreFavoriteResponseDto addStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
         if(storeFavoriteRepository.existsByUserAndStore(user,store)){
-            throw new CustomException(CustomErrorCode.STORE_FAVORITE_ALREADY_EXISIT);
+            throw new CustomException(CustomErrorCode.STORE_FAVORITE_ALREADY_EXIST);
         }else {
             StoreFavorite storeUser = new StoreFavorite(store, user);
             storeFavoriteRepository.save(storeUser);
