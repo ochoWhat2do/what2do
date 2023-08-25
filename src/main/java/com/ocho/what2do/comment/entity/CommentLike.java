@@ -38,5 +38,10 @@ public class CommentLike {
         this.user = user;
         this.comment = comment;
     }
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+
 }
 
