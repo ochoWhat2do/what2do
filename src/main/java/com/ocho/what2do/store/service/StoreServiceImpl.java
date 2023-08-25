@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
-    private final StoreFavoriteRepository storeUserRepository;
+    private final StoreFavoriteRepository storeFavoriteRepository;
 
     @Override
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
@@ -71,18 +71,18 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreFavoriteResponseDto addStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
-        if(storeUserRepository.existsByUserAndStore(user,store)){
+        if(storeFavoriteRepository.existsByUserAndStore(user,store)){
             throw new CustomException(CustomErrorCode.STORE_FAVORITE_ALREADY_EXISIT);
         }else {
             StoreFavorite storeUser = new StoreFavorite(store, user);
-            storeUserRepository.save(storeUser);
+            storeFavoriteRepository.save(storeUser);
         }
         return new StoreFavoriteResponseDto(new StoreFavorite(store,user));
     }
 
     @Override
     public StoreFavoriteListResponseDto getStoreFavorite(User user) {
-        List<StoreFavoriteResponseDto> storeUserList = storeUserRepository.findAll().stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
+        List<StoreFavoriteResponseDto> storeUserList = storeFavoriteRepository.findAll().stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
         return new StoreFavoriteListResponseDto(storeUserList);
     }
 
@@ -90,9 +90,9 @@ public class StoreServiceImpl implements StoreService {
     @Transactional
     public void deleteStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
-        Optional<StoreFavorite> storeUserOptional = storeUserRepository.findByUserAndStore(user, store);
+        Optional<StoreFavorite> storeUserOptional = storeFavoriteRepository.findByUserAndStore(user, store);
         if(storeUserOptional.isPresent()){
-            storeUserRepository.delete(storeUserOptional.get());
+            storeFavoriteRepository.delete(storeUserOptional.get());
         }else {
             throw new CustomException(CustomErrorCode.STORE_FAVORITE_NOT_FOUND,null);
         }
