@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final ReviewRepository reviewRepository;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc
     ) {
         Review review = findReview(reviewId);
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
     public String createComment(CommentCreateRequestDto requestDto, User user) {
 
         Comment comment = new Comment(requestDto);
-        Review review = findReview(requestDto.getReview_Id());
+        Review review = findReview(requestDto.getReviewId());
         comment.setReview(review);
         comment.setUser(user);
         commentRepository.save(comment);

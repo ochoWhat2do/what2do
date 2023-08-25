@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CommentCreateRequestDto {
     private String content;
-    private Long review_Id;
+    private Long reviewId;
 }

@@ -122,13 +122,13 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 좋아요 취소 처리 로직 추가
         ReviewLike likeToRemove = review.getLikes().stream()
-                .filter(like -> like.getUse().equals(user))
+                .filter(like -> like.getUser().equals(user))
                 .findFirst()
                 .orElseThrow(() -> new CustomException(CustomErrorCode.REVIEW_NOT_LIKED, null));
 
-        // 해당 좋아요 엔티티 제거
-        review.removeLike(likeToRemove);
-        reviewRepository.save(review);
+//        // 해당 좋아요 엔티티 제거
+//        review.removeLike(likeToRemove);
+//        reviewRepository.save(review);
 
         return new ReviewResponseDto(review);
     }

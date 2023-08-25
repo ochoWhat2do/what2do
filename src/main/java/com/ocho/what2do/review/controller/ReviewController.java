@@ -25,9 +25,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @Operation(summary = "리뷰 조회", description = "현재 선택한 리뷰의 내부를 조회합니다.")
-    @GetMapping("/reviews/{review_Id}") // /api/stores/{store_id}/reviews
-    public ResponseEntity<ReviewResponseDto> showReview(@PathVariable("review_Id") Long review_Id) {
-        ReviewResponseDto responseDto = reviewService.showReview(review_Id);
+    @GetMapping("/reviews/{reviewId}") // /api/stores/{store_id}/reviews
+    public ResponseEntity<ReviewResponseDto> showReview(@PathVariable("reviewId") Long reviewId) {
+        ReviewResponseDto responseDto = reviewService.showReview(reviewId);
         return ResponseEntity.ok().body(responseDto);
     }
 
@@ -51,7 +51,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
-    @PostMapping("/reviews") //  /api/stores/{store_id}/reviews
+    @PostMapping("/reviews") //  /api/stores/{storeId}/reviews
     public ResponseEntity<ReviewResponseDto> createReview(
             @Valid @RequestBody ReviewRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -60,9 +60,9 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 수정", description = "선택한 리뷰의 내용을 수정합니다.")
-    @PutMapping("/reviews/{review_Id}")
+    @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<ReviewResponseDto> updateReview(
-            @PathVariable("review_Id") Long reviewId,
+            @PathVariable("reviewId") Long reviewId,
             @Valid @RequestBody ReviewRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, userDetails.getUser());
@@ -71,9 +71,9 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 삭제", description = "선택한 리뷰를 삭제합니다.")
-    @DeleteMapping("/reviews/{review_Id}")
+    @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<ApiResponseDto> deleteReview(
-            @PathVariable("review_Id") Long reviewId,
+            @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "리뷰 삭제 성공"));
@@ -81,26 +81,26 @@ public class ReviewController {
 
 
     @Operation(summary = "리뷰 상세 조회", description = "선택한 리뷰의 상세 정보를 조회합니다.")
-    @GetMapping("/reviews/{review_Id}/detail")
+    @GetMapping("/reviews/{reviewId}/detail")
     public ResponseEntity<ReviewResponseDto> getReviewDetail(
-            @PathVariable("review_Id") Long reviewId,
+            @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.getReviewDetail(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
     }
     @Operation(summary = "리뷰 좋아요", description = "리뷰에 좋아요를 표시합니다.")
-    @PostMapping("/reviews/{review_Id}/likes")
+    @PostMapping("/reviews/{reviewId}/likes")
     public ResponseEntity<ReviewResponseDto> likeReview(
-            @PathVariable("review_Id") Long reviewId,
+            @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.likeReview(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
     }
 
     @Operation(summary = "리뷰 좋아요 취소", description = "리뷰의 좋아요를 취소합니다.")
-    @DeleteMapping("/reviews/{review_Id}/likes")
+    @DeleteMapping("/reviews/{reviewId}/likes")
     public ResponseEntity<ReviewResponseDto> unlikeReview(
-            @PathVariable("review_Id") Long reviewId,
+            @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         ReviewResponseDto responseDto = reviewService.unlikeReview(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
