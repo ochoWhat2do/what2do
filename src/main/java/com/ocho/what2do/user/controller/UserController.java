@@ -61,7 +61,7 @@ public class UserController {
     }
 
     @Operation(summary = "사용자 정보 삭제", description = "전달된 Bearer 토큰을 통해 본인 혹은 관리자 여부 확인 후 userId를 통해 찾은 사용자의 정보를 삭제합니다.")
-    @DeleteMapping("/signout")
+    @DeleteMapping("/info")
     public ResponseEntity<ApiResponseDto> deleteUserInfo(@RequestParam("userId") Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.deleteUserInfo(userId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "회원 정보 삭제 성공"));

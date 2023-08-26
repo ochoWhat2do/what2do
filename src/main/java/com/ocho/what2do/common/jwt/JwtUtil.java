@@ -48,6 +48,10 @@ public class JwtUtil {
   // JWT 데이터
   // Header KEY 값
   public static final String AUTHORIZATION_ACCESS_HEADER = "Authorization";
+
+  // refresh 토큰 헤더 값
+  public static final String AUTHORIZATION_REFRESH_HEADER = "Authorization_refresh";
+
   // 사용자 권한 값의 KEY
   public static final String AUTHORIZATION_KEY = "auth";
 
@@ -60,18 +64,11 @@ public class JwtUtil {
   private static final String EMAIL_CLAIM = "email";
   private static final String BEARER_PREFIX = "Bearer ";
 
-
-  // refresh 토큰 헤더 값
-  public static final String AUTHORIZATION_REFRESH_HEADER = "Authorization_Refresh";
-
   // access 토큰 만료시간
-  // private static final long TOKEN_TIME = 60 * 60 * 1000L; // 60 분
-
-  private static final long TOKEN_TIME = 1 * 60 * 1000L; // 1 분
+  private static final long ACCESS_TOKEN_TIME = 10 * 60 * 1000L; // 10 분
 
   // refresh 토큰 만료시간
-  // private static final long REFRESH_TOKEN_TIME = (60 * 1000) * 60 * 24 * 7; // 7일
-  private static final long REFRESH_TOKEN_TIME = 1 * 60 * 1000L;
+  private static final long REFRESH_TOKEN_TIME = 20 * 60 * 1000L; // 20 분
 
   private final RedisTemplate<String, String> redisTemplate;
 
@@ -103,13 +100,16 @@ public class JwtUtil {
   // 토큰 생성
   public String createAccessToken(String email, UserRoleEnum role) {
     Date date = new Date();
+    Claims claims = Jwts.claims();
+    claims.put(EMAIL_CLAIM, email);
+    claims.put(AUTHORIZATION_KEY, role);
+
 
     return
         Jwts.builder()
             .setSubject(ACCESS_TOKEN_SUBJECT)
-            .claim(EMAIL_CLAIM, email) // 사용자 식별자값(ID) -- email 사용
-            .claim(AUTHORIZATION_KEY, role) // 사용자 권한
-            .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+            .setClaims(claims)
+            .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME)) // 만료 시간
             .setIssuedAt(date) // 발급일
             .signWith(key, signatureAlgorithm) // 암호화 알고리즘
             .compact();
@@ -165,7 +165,9 @@ public class JwtUtil {
   public boolean validateToken(String token) {
     try {
       if (redisUtil.hasKeyBlackList(token)) {
-        return false;
+        // return false;
+        logger.error(String.valueOf(CustomErrorCode.EXPIRED_BLACK_ACCESS_TOKEN_EXCEPTION));
+        throw new CustomException(CustomErrorCode.EXPIRED_BLACK_ACCESS_TOKEN_EXCEPTION, null);
       }
       Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
       return true;
@@ -216,7 +218,11 @@ public class JwtUtil {
     response.setStatus(HttpServletResponse.SC_OK);
 
     setAccessTokenHeader(response, tokenDto.getAccessToken());
-    setRefreshTokenHeader(response, tokenDto.getRefreshToken());
+    if (tokenDto.getRefreshToken() != null) {
+      setRefreshTokenHeader(response, tokenDto.getRefreshToken());
+    } else {
+      setRefreshTokenHeader(response, "");
+    }
     log.info("Access Token, Refresh Token 헤더 설정 완료");
   }
 
@@ -234,6 +240,17 @@ public class JwtUtil {
     response.setHeader(AUTHORIZATION_REFRESH_HEADER, refreshToken);
   }
 
+  /**
+   * RefreshToken DB 저장(업데이트)
+   */
+  public void updateRefreshToken(String email, String refreshToken) {
+    userRepository.findByEmail(email)
+        .ifPresentOrElse(
+            user -> user.updateRefreshToken(refreshToken),
+            () -> new Exception("일치하는 회원이 없습니다.")
+        );
+  }
+
   // 토큰에서 email 가져오는 기능
   public Optional<String> getEmailFromToken(String token) {
     return
@@ -242,7 +259,7 @@ public class JwtUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject());
+                .get(EMAIL_CLAIM).toString());
   }
 
 

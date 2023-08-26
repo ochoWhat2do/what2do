@@ -41,6 +41,7 @@ application-ds.properties
 application-key.properties
 application-s3.properties
 application-oauth.properties
+application-template.properties
 
 ## generated Files
 **/src/main/generated/**

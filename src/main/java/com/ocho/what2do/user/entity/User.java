@@ -55,6 +55,7 @@ public class User {
     @Column(name="refresh_token")
     private String refreshToken; // 리프레시 토큰
 
+    @Column
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
     public User(String email, String password, UserRoleEnum role) {
@@ -76,11 +77,13 @@ public class User {
     }
 
     @Builder
-    public User(String email, UserRoleEnum role, String nickname, String picture) {
+    public User(String email, UserRoleEnum role, String nickname, String picture, String socialId, SocialType socialType) {
         this.email = email;
         this.role = role;
         this.nickname = nickname;
         this.picture = picture;
+        this.socialId = socialId;
+        this.socialType = socialType;
     }
 
     public void editUserInfo(String nickname, String introduction) {
