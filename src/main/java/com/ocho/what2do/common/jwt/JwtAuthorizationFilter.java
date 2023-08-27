@@ -38,6 +38,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
   private static final String NO_CHECK_URL = "/api/users/login"; // "login"으로 들어오는 요청은 Filter 작동 X
   private static final String NO_CHECK_URL_SIGNUP = "/api/users/signup";
 
+  private static final String START_CHECK_URL_USER = "/api/users";
+
   public static final String AUTHORIZATION_ACCESS_HEADER = "Authorization";
   private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
 

@@ -90,6 +90,8 @@ public class WebSecurityConfig {
             .requestMatchers("/swagger-ui/**", "/v3/**").permitAll() // swagger-ui 와 관련된 모든 요청 접근 허가
             .requestMatchers("/oauth2/kakao").permitAll()
             .requestMatchers("/").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/users/info")
+            .permitAll()
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리
     );
 

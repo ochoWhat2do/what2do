@@ -65,10 +65,10 @@ public class JwtUtil {
   private static final String BEARER_PREFIX = "Bearer ";
 
   // access 토큰 만료시간
-  private static final long ACCESS_TOKEN_TIME = 10 * 60 * 1000L; // 10 분
+  private static final long ACCESS_TOKEN_TIME = 30 * 60 * 1000L; // 30 분
 
   // refresh 토큰 만료시간
-  private static final long REFRESH_TOKEN_TIME = 20 * 60 * 1000L; // 20 분
+  private static final long REFRESH_TOKEN_TIME = 60 * 60 * 1000L; // 20 분
 
   private final RedisTemplate<String, String> redisTemplate;
 
