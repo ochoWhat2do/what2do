@@ -1,4 +1,4 @@
-package com.ocho.what2do.storeuser.entity;
+package com.ocho.what2do.storefavorite.entity;
 
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.user.entity.User;
@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name="store_user")
-public class StoreUser {
+@Table(name="store_favorite")
+public class StoreFavorite {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,10 @@ public class StoreUser {
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "card_id")
+  @JoinColumn(name = "store_id")
   private Store store;
 
-  public StoreUser(Store store, User user) {
+  public StoreFavorite(Store store, User user) {
     this.store = store;
     this.user = user;
   }
