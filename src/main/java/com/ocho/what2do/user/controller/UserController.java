@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,7 +61,7 @@ public class UserController {
     }
 
     @Operation(summary = "사용자 정보 삭제", description = "전달된 Bearer 토큰을 통해 본인 혹은 관리자 여부 확인 후 userId를 통해 찾은 사용자의 정보를 삭제합니다.")
-    @DeleteMapping("/signout")
+    @DeleteMapping("/info")
     public ResponseEntity<ApiResponseDto> deleteUserInfo(@RequestParam("userId") Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.deleteUserInfo(userId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "회원 정보 삭제 성공"));
@@ -70,5 +72,14 @@ public class UserController {
     public ResponseEntity<ApiResponseDto> editUserPassword(@Valid @RequestBody EditPasswordRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.editUserPassword(requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "회원 비밀번호 수정 성공"));
+    }
+
+    /*
+     * 로그아웃
+     * */
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseEntity<ApiResponseDto> logout(@RequestHeader("Authorization") String requestAccessToken) {
+        return ResponseEntity.ok().body(userService.logout(requestAccessToken));
     }
 }

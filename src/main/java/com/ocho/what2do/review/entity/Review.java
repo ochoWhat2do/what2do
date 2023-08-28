@@ -40,7 +40,6 @@ public class Review extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     @OneToMany(mappedBy = "review", orphanRemoval = true)
     private List<ReviewLike> reviewLikeList = new ArrayList<>();
 
