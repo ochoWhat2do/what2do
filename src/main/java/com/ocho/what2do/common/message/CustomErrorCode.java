@@ -17,9 +17,15 @@ public enum CustomErrorCode {
   STORE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(),"존재하지 않은 가게입니다."),
   NOT_EXIST_REFRESH_JWT(HttpStatus.BAD_REQUEST.value(), "존재하지 않거나 만료된 Refresh 토큰입니다. 다시 로그인해주세요."),
   ILLEGAL_JSON_STRING_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "존재하지 않거나 만료된 Refresh 토큰입니다. 다시 로그인해주세요."),
-  EXPIRED_BLACK_ACCESS_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "만료되어 접속할 수 없는 토큰입니다. 다시 로그인해주세요.")
-  ;
+  EXPIRED_BLACK_ACCESS_TOKEN_EXCEPTION(HttpStatus.BAD_REQUEST.value(), "만료되어 접속할 수 없는 토큰입니다. 다시 로그인해주세요."),
+  COMMENT_ALREADY_LIKED(HttpStatus.BAD_REQUEST.value(),"이미 존재하는 좋아요 입니다."),
+  COMMENT_NOT_LIKED(HttpStatus.BAD_REQUEST.value(),"존재하지 않는 좋아요 입니다." ),
+  REVIEW_ALREADY_EXIST(HttpStatus.BAD_REQUEST.value(),"이미 존재하는 리뷰 입니다." ),
+  REVIEW_NOT_FOUND(HttpStatus.BAD_REQUEST.value(),"리뷰가 존재하지 않습니다."),
+  COMMENT_NOT_FOUND(HttpStatus.BAD_REQUEST.value(),"댓글이 존재하지 않습니다."),
+  REVIEW_ALREADY_LIKED(HttpStatus.BAD_REQUEST.value(),"이미 존재하는 좋아요 입니다."),
+  REVIEW_NOT_LIKED(HttpStatus.BAD_REQUEST.value()," 이미 좋아요를 누른 리뷰입니다." );
 
   private final int errorCode;
-  private final String errorMessage;
+    private final String errorMessage;
 }
