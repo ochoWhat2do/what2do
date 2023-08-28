@@ -2,6 +2,7 @@ package com.ocho.what2do.comment.service;
 
 import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
 import com.ocho.what2do.comment.dto.CommentEditRequestDto;
+import com.ocho.what2do.comment.dto.CommentLikeResponseDto;
 import com.ocho.what2do.comment.dto.CommentResponseDto;
 import com.ocho.what2do.comment.entity.Comment;
 import com.ocho.what2do.comment.entity.CommentLike;
@@ -9,7 +10,9 @@ import com.ocho.what2do.comment.repository.CommentLikeRepository;
 import com.ocho.what2do.comment.repository.CommentRepository;
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
+import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.entity.Review;
+import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
@@ -85,35 +88,34 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponseDto likeComment(Long commentId, User user) {
+    public CommentLikeResponseDto likeComment(Long commentId, User user) {
         Comment comment = findComment(commentId);
 
         // 좋아요 처리 로직 추가
-        Optional<CommentLike> existingLike = commentLikeRepository.findByUserAndComment(user, comment);
-        if (existingLike.isPresent()) {
+        Optional<CommentLike> commentLike = commentLikeRepository.findByUserAndComment(user, comment);
+        if (commentLike.isPresent()) {
             throw new CustomException(CustomErrorCode.COMMENT_ALREADY_LIKED, null);
         }
 
         // 새로운 좋아요 엔티티 생성 및 추가
-        CommentLike newLike = CommentLike.builder().user(user).comment(comment).build();
-        comment.addCommentLike(newLike);
+        CommentLike newLike = new CommentLike(user, comment);
+        comment.addLike(newLike);
+        CommentLike savedLike = commentLikeRepository.save(newLike);
 
-        return new CommentResponseDto(comment);
+        return new CommentLikeResponseDto(savedLike);
     }
 
     @Override
     @Transactional
-    public CommentResponseDto unlikeComment(Long commentId, User user) {
+    public void unlikeComment(Long commentId, User user) {
         Comment comment = findComment(commentId);
 
         // 좋아요 취소 처리 로직 추가
-        CommentLike likeToRemove = commentLikeRepository.findByUserAndComment(user, comment)
+        CommentLike commentLike  = commentLikeRepository.findByUserAndComment(user, comment)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.COMMENT_NOT_LIKED, null));
 
         // 해당 좋아요 엔티티 제거
-        comment.removeCommentLike(likeToRemove);
-
-        return new CommentResponseDto(comment);
+        commentLikeRepository.delete(commentLike);
     }
 
 

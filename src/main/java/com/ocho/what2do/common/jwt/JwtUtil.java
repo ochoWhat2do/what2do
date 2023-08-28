@@ -29,7 +29,7 @@ public class JwtUtil {
   // Token 식별자
   public static final String BEARER_PREFIX = "Bearer ";
   // 토큰 만료시간
-  private static final long TOKEN_TIME = 30 * 60 * 1000L; // 30 분
+  private static final long TOKEN_TIME = 120 * 60 * 1000L; // 30 분
 
   @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
   private String secretKey;

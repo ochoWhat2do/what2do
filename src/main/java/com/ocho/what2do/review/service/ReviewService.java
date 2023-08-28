@@ -1,5 +1,6 @@
 package com.ocho.what2do.review.service;
 
+import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
@@ -65,7 +66,7 @@ public interface ReviewService {
      * @param user 사용자 정보
      * @return 업데이트된 리뷰 정보
      */
-    ReviewResponseDto likeReview(Long reviewId, User user);
+    ReviewLikeResponseDto likeReview(Long reviewId, User user);
 
     /*
      * 리뷰 좋아요 취소
@@ -73,7 +74,7 @@ public interface ReviewService {
      * @param user 사용자 정보
      * @return 업데이트된 리뷰 정보
      */
-    ReviewResponseDto unlikeReview(Long reviewId, User user);
+    void unlikeReview(Long reviewId, User user);
 
 
 }

@@ -2,6 +2,7 @@ package com.ocho.what2do.review.service;
 
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
+import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.review.entity.Review;
@@ -65,6 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         Review review = Review.builder()
+                .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .user(user)
                 .build();
@@ -102,35 +104,35 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDto likeReview(Long reviewId, User user) {
+    public ReviewLikeResponseDto likeReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
 
         // 좋아요 처리 로직 추가
-        Optional<ReviewLike> existingLike = reviewLikeRepository.findByUserAndReview(user, review);
-        if (existingLike.isPresent()) {
+        Optional<ReviewLike> reviewLike = reviewLikeRepository.findByUserAndReview(user, review);
+        if (reviewLike.isPresent()) {
             throw new CustomException(CustomErrorCode.REVIEW_ALREADY_LIKED, null);
         }
 
         // 새로운 좋아요 엔티티 생성 및 추가
         ReviewLike newLike = new ReviewLike(user, review);
         review.addLike(newLike);
+        ReviewLike savedLike = reviewLikeRepository.save(newLike);
 
-        return new ReviewResponseDto(reviewRepository.save(review));
+        return new ReviewLikeResponseDto(savedLike);
     }
 
     @Override
     @Transactional
-    public ReviewResponseDto unlikeReview(Long reviewId, User user) {
+    public void unlikeReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
 
         // 좋아요 취소 처리 로직 추가
-        ReviewLike likeToRemove = reviewLikeRepository.findByUserAndReview(user, review)
+        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.REVIEW_NOT_LIKED, null));
 
         // 해당 좋아요 엔티티 제거
-        review.removeLike(likeToRemove);
+        reviewLikeRepository.delete(reviewLike);
 
-        return new ReviewResponseDto(reviewRepository.save(review));
     }
 
     private User findUser(Long userId) {
