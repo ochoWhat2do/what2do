@@ -1,9 +1,11 @@
 package com.ocho.what2do.user.service;
 
+import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.user.dto.EditUserRequestDto;
 import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
+import org.springframework.http.ResponseEntity;
 
 // 사용자 서비스
 public interface UserService {
@@ -34,4 +36,6 @@ public interface UserService {
      * @param user 수정할 정보를 소유하고 있는 사용자 본인에 대한 정보
      */
     void editUserPassword(EditPasswordRequestDto requestDto, User user);
+
+    ApiResponseDto logout(String requestAccessToken);
 }
