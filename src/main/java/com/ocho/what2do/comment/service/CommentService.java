@@ -2,6 +2,7 @@ package com.ocho.what2do.comment.service;
 
 import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
 import com.ocho.what2do.comment.dto.CommentEditRequestDto;
+import com.ocho.what2do.comment.dto.CommentLikeResponseDto;
 import com.ocho.what2do.comment.dto.CommentResponseDto;
 import com.ocho.what2do.user.entity.User;
 
@@ -47,7 +48,7 @@ public interface CommentService {
      * @param user 사용자 정보
      * @return 업데이트된 댓글 정보
      */
-    CommentResponseDto likeComment(Long commentId, User user);
+    CommentLikeResponseDto likeComment(Long commentId, User user);
 
     /*
      * 댓글 좋아요 취소
@@ -55,5 +56,5 @@ public interface CommentService {
      * @param user 사용자 정보
      * @return 업데이트된 댓글 정보
      */
-    CommentResponseDto unlikeComment(Long commentId, User user);
+    void unlikeComment(Long commentId, User user);
 }

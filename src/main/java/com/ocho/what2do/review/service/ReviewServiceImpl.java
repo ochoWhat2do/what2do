@@ -2,10 +2,12 @@ package com.ocho.what2do.review.service;
 
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
+import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.entity.ReviewLike;
+import com.ocho.what2do.review.repository.ReviewLikeRepository;
 import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -62,6 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         Review review = Review.builder()
+                .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .user(user)
                 .build();
@@ -99,38 +104,35 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDto likeReview(Long reviewId, User user) {
+    public ReviewLikeResponseDto likeReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
 
         // 좋아요 처리 로직 추가
-        if (review.getLikes().stream().anyMatch(like -> like.getUser().equals(user))) {
+        Optional<ReviewLike> reviewLike = reviewLikeRepository.findByUserAndReview(user, review);
+        if (reviewLike.isPresent()) {
             throw new CustomException(CustomErrorCode.REVIEW_ALREADY_LIKED, null);
         }
 
         // 새로운 좋아요 엔티티 생성 및 추가
         ReviewLike newLike = new ReviewLike(user, review);
         review.addLike(newLike);
-        reviewRepository.save(review);
+        ReviewLike savedLike = reviewLikeRepository.save(newLike);
 
-        return new ReviewResponseDto(review);
+        return new ReviewLikeResponseDto(savedLike);
     }
 
     @Override
     @Transactional
-    public ReviewResponseDto unlikeReview(Long reviewId, User user) {
+    public void unlikeReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
 
         // 좋아요 취소 처리 로직 추가
-        ReviewLike likeToRemove = review.getLikes().stream()
-                .filter(like -> like.getUser().equals(user))
-                .findFirst()
+        ReviewLike reviewLike = reviewLikeRepository.findByUserAndReview(user, review)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.REVIEW_NOT_LIKED, null));
 
-//        // 해당 좋아요 엔티티 제거
-//        review.removeLike(likeToRemove);
-//        reviewRepository.save(review);
+        // 해당 좋아요 엔티티 제거
+        reviewLikeRepository.delete(reviewLike);
 
-        return new ReviewResponseDto(review);
     }
 
     private User findUser(Long userId) {

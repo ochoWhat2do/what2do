@@ -2,6 +2,7 @@ package com.ocho.what2do.comment.controller;
 
 import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
 import com.ocho.what2do.comment.dto.CommentEditRequestDto;
+import com.ocho.what2do.comment.dto.CommentLikeResponseDto;
 import com.ocho.what2do.comment.dto.CommentResponseDto;
 import com.ocho.what2do.comment.service.CommentService;
 import com.ocho.what2do.common.dto.ApiResponseDto;
@@ -73,25 +74,20 @@ public class CommentController {
 
     @Operation(summary = "댓글 좋아요", description = "댓글에 좋아요를 표시합니다.")
     @PostMapping("/comments/{commentId}/likes")
-    public ResponseEntity<CommentResponseDto> likeComment(
+    public ResponseEntity<CommentLikeResponseDto> likeComment(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        CommentResponseDto likedComment = commentService.likeComment(commentId, userDetails.getUser());
-        if (likedComment != null) {
-            return ResponseEntity.ok(likedComment);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CommentLikeResponseDto responseDto = commentService.likeComment(commentId, userDetails.getUser());
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @Operation(summary = "댓글 좋아요 취소", description = "댓글의 좋아요를 취소합니다.")
     @DeleteMapping("/comments/{commentId}/likes")
-    public ResponseEntity<CommentResponseDto> unlikeComment(
+    public ResponseEntity<ApiResponseDto> unlikeComment(
             @PathVariable("commentId") Long commentId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        CommentResponseDto responseDto = commentService.unlikeComment(commentId, userDetails.getUser());
-        return ResponseEntity.ok().body(responseDto);
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+         commentService.unlikeComment(commentId, userDetails.getUser());
+        return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "좋아요가 취소되었습니다."));
+
     }
 }

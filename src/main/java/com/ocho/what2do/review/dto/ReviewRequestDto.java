@@ -9,8 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReviewRequestDto {
-    @NotBlank(message = "리뷰 내용은 필수입니다.")
+//    @NotBlank(message = "리뷰 제목은 필수입니다.")
+    private String title;
+
+//    @NotBlank(message = "리뷰 내용은 필수입니다.")
     private String content;
+
 
     public Review toEntity(String title, Long orderNo, User user) {
         return Review.builder()
