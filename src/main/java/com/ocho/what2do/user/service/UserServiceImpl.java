@@ -132,6 +132,12 @@ public class UserServiceImpl implements UserService {
     return new ApiResponseDto(HttpStatus.OK.value(), "로그아웃 성공");
   }
 
+  @Override
+  @Transactional(readOnly = true)
+  public boolean checkDuplicateEmail(String email) {
+    return userRepository.findByEmail(email).isPresent();
+  }
+
   private User findUserByEmail(String email) {
     return userRepository.findByEmail(email).orElse(null);
   }

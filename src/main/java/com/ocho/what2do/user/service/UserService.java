@@ -36,6 +36,19 @@ public interface UserService {
      * @param user 수정할 정보를 소유하고 있는 사용자 본인에 대한 정보
      */
     void editUserPassword(EditPasswordRequestDto requestDto, User user);
-
+    
+    /*
+     * 로그아웃
+     * @param requestAccessToken 엑세스토큰
+     * @return ApiResponseDto api 실행결과 리턴
+     */
     ApiResponseDto logout(String requestAccessToken);
+
+
+    /*
+     * 이메일 중복체크
+     * @param email 이메일
+     * @return boolean 이메일이 중복되었는지 확인 후 리턴
+     */
+    public boolean checkDuplicateEmail(String email);
 }

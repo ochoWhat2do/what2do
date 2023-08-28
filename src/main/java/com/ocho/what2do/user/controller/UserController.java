@@ -82,4 +82,11 @@ public class UserController {
     public ResponseEntity<ApiResponseDto> logout(@RequestHeader("Authorization") String requestAccessToken) {
         return ResponseEntity.ok().body(userService.logout(requestAccessToken));
     }
+
+    @Operation(summary = "이메일 중복 체크", description = "입력한 이메일이 이미 등록되었는지 확인합니다.")
+    @GetMapping("/checkEmail")
+    public ResponseEntity<Boolean> checkDuplicate(@RequestParam String email) {
+        boolean isDuplicate = userService.checkDuplicateEmail(email);
+        return ResponseEntity.ok().body(isDuplicate);
+    }
 }
