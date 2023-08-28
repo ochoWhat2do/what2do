@@ -1,9 +1,9 @@
 package com.ocho.what2do.store.entity;
 
-import com.ocho.what2do.comment.entity.CommentLike;
 import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.storecategory.entity.StoreCategory;
+import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,8 +44,11 @@ public class Store extends Timestamped {
   @Column(name = "last_visit_date")
   private LocalDateTime lastVisitDate;    // 마지막 방문 일자
 
+//  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+//  private List<StoreCategory> storeCategoryList = new ArrayList<>();
+
   @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<StoreCategory> storeCategoryList = new ArrayList<>();
+  private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 
   @Builder
   public Store(String title, String address, String readAddress, String homePageLink, String imageLink, boolean isVisit, int visitCount){
