@@ -2,30 +2,37 @@ package com.ocho.what2do.user.service;
 
 import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.file.FileUploader;
 import com.ocho.what2do.common.jwt.JwtUtil;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.common.redis.RedisUtil;
 import com.ocho.what2do.common.security.UserDetailsImpl;
 import com.ocho.what2do.user.dto.EditUserRequestDto;
 import com.ocho.what2do.user.dto.SignupRequestDto;
+import com.ocho.what2do.user.dto.UserProfileDto;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
 import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import com.ocho.what2do.userpassword.entity.UserPassword;
 import com.ocho.what2do.userpassword.repository.UserPasswordRepository;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +44,8 @@ public class UserServiceImpl implements UserService {
   private final JwtUtil jwtUtil;
   private final RedisTemplate<String, String> redisTemplate;
   private final RedisUtil redisUtil;
+
+  private final FileUploader fileUploader;
 
   @Value("${admin.token}")
   private String adminToken;
@@ -62,18 +71,6 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.save(new User(email, password, role, requestDto.getCity(),
         requestDto.getGender()));
     userPasswordRepository.save(new UserPassword(password, user));
-  }
-
-  @Transactional
-  @Override
-  public User editUserInfo(EditUserRequestDto requestDto, User user) {
-    User found = findUser(user.getId());
-    if (found == null) {
-      throw new CustomException(CustomErrorCode.USER_NOT_FOUND, null);
-    }
-
-    found.editUserInfo(requestDto.getNickname(), requestDto.getIntroduction());
-    return found;
   }
 
   @Transactional
@@ -136,6 +133,29 @@ public class UserServiceImpl implements UserService {
   @Transactional(readOnly = true)
   public boolean checkDuplicateEmail(String email) {
     return userRepository.findByEmail(email).isPresent();
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public UserProfileDto getUserProfile(User user) {
+    User foundUser = findUser(user.getId());
+    return new UserProfileDto(foundUser);
+  }
+
+  @Override
+  @Transactional
+  public UserProfileDto editUserInfo(MultipartFile profilePic, EditUserRequestDto requestDto, User user) {
+    User foundUser = findUser(user.getId());
+    String imageUrl = null;
+    if (profilePic != null) {
+      try {
+        imageUrl = fileUploader.uploadFile(profilePic, "image");
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+    foundUser.editUserInfo(requestDto.getNickname(), requestDto.getIntroduction(), imageUrl);
+    return new UserProfileDto(foundUser);
   }
 
   private User findUserByEmail(String email) {
