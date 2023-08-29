@@ -51,7 +51,6 @@ public class Comment extends Timestamped {
   private List<CommentLike> commentLikeList = new ArrayList<>();
 
   // 자식
-  @Builder.Default
   @OneToMany(mappedBy = "parent", orphanRemoval = true)
   private List<Comment> children = new ArrayList<>();
 
