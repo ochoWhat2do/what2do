@@ -86,9 +86,10 @@ public class User {
         this.socialType = socialType;
     }
 
-    public void editUserInfo(String nickname, String introduction) {
+    public void editUserInfo(String nickname, String introduction, String picture) {
         this.nickname = nickname;
         this.introduction = introduction;
+        this.picture = picture;
     }
 
     // 소셜로그인 시 활용

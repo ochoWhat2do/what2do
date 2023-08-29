@@ -2,7 +2,9 @@ package com.ocho.what2do.review.entity;
 
 import com.ocho.what2do.comment.entity.Comment;
 import com.ocho.what2do.common.entity.Timestamped;
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.user.entity.User;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.Id;
 
 @Getter
@@ -39,6 +42,12 @@ public class Review extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    // 파일 첨부 컬럼(여러건 첨부 가능)
+    @Convert(converter = S3FileDto.S3FileDtoConverter.class)
+    @Type(JsonType.class)
+    @Column(name="attachment",columnDefinition = "json")
+    private List<S3FileDto> attachment;
 
     @OneToMany(mappedBy = "review", orphanRemoval = true)
     private List<ReviewLike> reviewLikeList = new ArrayList<>();
