@@ -1,6 +1,8 @@
 package com.ocho.what2do.common.daum.service;
 
-import com.ocho.what2do.common.daum.dto.DaumDto;
+import com.ocho.what2do.store.dto.StoreApiDto;
+import com.ocho.what2do.store.entity.Store;
+import com.ocho.what2do.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -22,12 +24,13 @@ import java.util.List;
 public class DaumApiServiceImpl implements DaumApiService {
 
     private final RestTemplate restTemplate;
+    private final StoreRepository storeRepository;
 
     @Value("${kakao.Authorization}")
     private String Authorization;
 
     @Override
-    public List<DaumDto> searchItems(String query, String page, String size) {
+    public List<StoreApiDto> searchItems(String query, String page, String size) {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://dapi.kakao.com")
@@ -53,16 +56,27 @@ public class DaumApiServiceImpl implements DaumApiService {
     }
 
     @Override
-    public List<DaumDto> fromJSONtoItems(String responseEntity) {
+    public List<StoreApiDto> fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
         JSONArray documents = jsonObject.getJSONArray("documents");
-        List<DaumDto> daumDtoList = new ArrayList<>();
+        List<StoreApiDto> storeApiDtoList = new ArrayList<>();
 
         for (Object item : documents) {
-            DaumDto daumDto = new DaumDto((JSONObject) item);
-            daumDtoList.add(daumDto);
+            StoreApiDto storeApiDto = new StoreApiDto((JSONObject) item);
+            Store store = Store.builder().title(storeApiDto.getTitle())
+                    .homePageLink(storeApiDto.getHomePageLink())
+                    .category(storeApiDto.getCategory())
+                    .address(storeApiDto.getAddress())
+                    .roadAddress(storeApiDto.getRoadAddress())
+                    .latitude(storeApiDto.getLatitude())
+                    .longitude(storeApiDto.getLongitude())
+                    .build();
+            if (!storeRepository.existsStoreByAddress(store.getAddress())) {
+                storeRepository.save(store);
+            }
+            storeApiDtoList.add(storeApiDto);
         }
 
-        return daumDtoList;
+        return storeApiDtoList;
     }
 }

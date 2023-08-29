@@ -2,25 +2,27 @@ package com.ocho.what2do.store.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class StoreRequestDto {
     private String title;
-    private String address;
-    private String readAddress;
     private String homePageLink;
-    private String imageLink;
-    private boolean isVisit;
-    private int visitCount;
+    private String category;
+    private String address;
+    private String roadAddress;
+    private String latitude;
+    private String longitude;
 
     @Builder
-    public StoreRequestDto(String title, String address, String readAddress, String homePageLink, String imageLink, boolean isVisit, int visitCount){
+    public StoreRequestDto(String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
         this.title = title;
-        this.address = address;
-        this.readAddress = readAddress;
         this.homePageLink = homePageLink;
-        this.imageLink = imageLink;
-        this.isVisit = isVisit;
-        this.visitCount = visitCount;
+        this.category = category;
+        this.address = address;
+        this.roadAddress = roadAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

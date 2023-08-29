@@ -30,12 +30,12 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
         Store store = Store.builder().title(requestDto.getTitle())
-                .address(requestDto.getAddress())
-                .readAddress(requestDto.getReadAddress())
                 .homePageLink(requestDto.getHomePageLink())
-                .imageLink(requestDto.getImageLink())
-                .isVisit(requestDto.isVisit())
-                .visitCount(requestDto.getVisitCount())
+                .category(requestDto.getCategory())
+                .address(requestDto.getAddress())
+                .roadAddress(requestDto.getRoadAddress())
+                .latitude(requestDto.getLatitude())
+                .longitude(requestDto.getLongitude())
                 .build();
         return new StoreResponseDto(storeRepository.save(store));
 
@@ -73,11 +73,11 @@ public class StoreServiceImpl implements StoreService {
     @Transactional
     public StoreFavoriteResponseDto addStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
-        if(storeFavoriteRepository.existsByUserAndStore(user,store)){
+        if (storeFavoriteRepository.existsByUserAndStore(user, store)) {
             throw new CustomException(CustomErrorCode.STORE_FAVORITE_ALREADY_EXIST);
         }
-            StoreFavorite storeUser = new StoreFavorite(store, user);
-            storeFavoriteRepository.save(storeUser);
+        StoreFavorite storeUser = new StoreFavorite(store, user);
+        storeFavoriteRepository.save(storeUser);
 
         return new StoreFavoriteResponseDto(storeUser);
     }
@@ -94,14 +94,15 @@ public class StoreServiceImpl implements StoreService {
     public void deleteStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
         Optional<StoreFavorite> storeUserOptional = storeFavoriteRepository.findByUserAndStore(user, store);
-        if(storeUserOptional.isPresent()){
+        if (storeUserOptional.isPresent()) {
             storeFavoriteRepository.delete(storeUserOptional.get());
-        }else {
-            throw new CustomException(CustomErrorCode.STORE_FAVORITE_NOT_FOUND,null);
+        } else {
+            throw new CustomException(CustomErrorCode.STORE_FAVORITE_NOT_FOUND, null);
         }
     }
+
     @Override
     public Store findStore(Long storeId) {
-        return storeRepository.findById(storeId).orElseThrow(()->new CustomException(CustomErrorCode.STORE_NOT_FOUND,null));
+        return storeRepository.findById(storeId).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND, null));
     }
 }
