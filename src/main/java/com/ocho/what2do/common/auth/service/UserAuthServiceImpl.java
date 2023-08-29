@@ -16,25 +16,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserAuthServiceImpl implements UserAuthService{
 
-  private final AuthenticationManager authenticationManager;
-  private final JwtUtil jwtUtil;
-
-  private final RedisTemplate<String, String> redisTemplate;
-
   @Override
   public TokenDto reissueToken(String refreshToken) {
-    // Refresh Token 검증
-/*    jwtUtil.validateToken(refreshToken);
 
-    // Access Token 에서 User 정보를 가져옴
-    Authentication authentication = jwtUtil.getAuthentication(refreshToken);
-    UserRoleEnum role = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getRole();
-
-    // Redis에서 저장된 Refresh Token 값을 가져옴
-    String redisRefreshToken = redisTemplate.opsForValue().get("RT:"+((UserDetailsImpl) authentication.getPrincipal()).getUser().getEmail());
-    if(!redisRefreshToken.equals(refreshToken)) {
-      throw new CustomException(CustomErrorCode.NOT_EXIST_REFRESH_JWT, null);
-    }*/
     // 토큰 재발행
     TokenDto tokenDto = new TokenDto(
         "",
