@@ -10,7 +10,6 @@ public class UserProfileDto {
   private String email;
   private String introduction;
   private int favoriteNum;
-  private int reviewNum;
 
   public UserProfileDto(User user) {
     this.picture = user.getPicture();

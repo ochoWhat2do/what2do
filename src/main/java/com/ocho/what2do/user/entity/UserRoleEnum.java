@@ -1,8 +1,11 @@
 package com.ocho.what2do.user.entity;
 
 public enum UserRoleEnum {
+    // 일반 사용자
     USER(Authority.USER),
+    // 관리자
     ADMIN(Authority.ADMIN),
+    // 최초 소셜로그인 시 부여
     GUEST(Authority.GUEST);
 
     private final String authority;
