@@ -80,9 +80,7 @@ public class UserController {
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "회원 비밀번호 수정 성공"));
     }
 
-    /*
-     * 로그아웃
-     * */
+    @Operation(summary = "로그아웃", description = "전달받은 access 토큰을 가지고 로그아웃 처리")
     @PostMapping("/logout")
     @ResponseBody
     public ResponseEntity<ApiResponseDto> logout(@RequestHeader("Authorization") String requestAccessToken) {
