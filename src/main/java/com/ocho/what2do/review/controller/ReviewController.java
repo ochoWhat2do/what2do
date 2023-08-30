@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -54,9 +56,10 @@ public class ReviewController {
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
     @PostMapping("/reviews") //  /api/stores/{storeId}/reviews
     public ResponseEntity<ReviewResponseDto> createReview(
-            @RequestBody ReviewRequestDto requestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ReviewResponseDto responseDto = reviewService.createReview(requestDto, userDetails.getUser());
+            @RequestPart @Valid ReviewRequestDto requestDto,
+            @RequestPart(required = false) List<MultipartFile> files,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        ReviewResponseDto responseDto = reviewService.createReview(requestDto, userDetails.getUser(), files);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -64,9 +67,10 @@ public class ReviewController {
     @PutMapping("/reviews/{reviewId}")
     public ResponseEntity<ReviewResponseDto> updateReview(
             @PathVariable("reviewId") Long reviewId,
-            @Valid @RequestBody ReviewRequestDto requestDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, userDetails.getUser());
+            @Valid @RequestPart ReviewRequestDto requestDto,
+            @RequestPart(required = false) List<MultipartFile> files,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, userDetails.getUser(), files);
         return ResponseEntity.ok().body(responseDto);
 
     }

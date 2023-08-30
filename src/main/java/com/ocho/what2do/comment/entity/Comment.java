@@ -47,8 +47,6 @@ public class Comment extends Timestamped {
   @JoinColumn(name = "parent_id")
   private Comment parent;
 
-  @OneToMany(mappedBy = "comment", orphanRemoval = true)
-  private List<CommentLike> commentLikeList = new ArrayList<>();
 
   // 자식
   @Builder.Default
@@ -92,21 +90,8 @@ public class Comment extends Timestamped {
     this.content = requestDto.getContent();
   }
 
-
-  // 추가: 댓글 좋아요 추가
-  public void addCommentLike(CommentLike commentLike) {
-    this.commentLikes.add(commentLike);
-    commentLike.setComment(this);
-  }
-
-  // 추가: 댓글 좋아요 제거
-  public void removeCommentLike(CommentLike commentLike) {
-    this.commentLikes.remove(commentLike);
-    commentLike.setComment(null);
-  }
-
   public void addLike(CommentLike newLike) {
-    commentLikeList.add(newLike);
+    commentLikes.add(newLike);
   }
 
 }

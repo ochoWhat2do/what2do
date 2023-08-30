@@ -4,6 +4,8 @@ import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
+import java.io.IOException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -33,8 +35,9 @@ public interface ReviewService {
      * @param requestDto 리뷰 등록 정보
      * @param user 작성자 정보
      * @return 생성된 리뷰 정보
+     * @param files 첨부파일 정보
      */
-    ReviewResponseDto createReview(ReviewRequestDto requestDto, User user);
+    ReviewResponseDto createReview(ReviewRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
 
     /*
      * 리뷰 수정
@@ -42,8 +45,9 @@ public interface ReviewService {
      * @param requestDto 리뷰 수정 정보
      * @param user 작성자 정보
      * @return 수정된 리뷰 정보
+     * @param files 첨부파일 정보
      */
-    ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto, User user);
+    ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto, User user,  List<MultipartFile> files) throws IOException;
 
     /*
      * 리뷰 삭제

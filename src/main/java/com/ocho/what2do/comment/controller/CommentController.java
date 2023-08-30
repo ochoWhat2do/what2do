@@ -86,7 +86,7 @@ public class CommentController {
     public ResponseEntity<ApiResponseDto> unlikeComment(
             @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-         commentService.unlikeComment(commentId, userDetails.getUser());
+        commentService.unlikeComment(commentId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "좋아요가 취소되었습니다."));
 
     }

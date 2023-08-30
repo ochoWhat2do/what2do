@@ -3,6 +3,7 @@ package com.ocho.what2do.review.entity;
 import com.ocho.what2do.comment.entity.Comment;
 import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.common.file.S3FileDto;
+import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.user.entity.User;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -57,15 +58,20 @@ public class Review extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Review(String title, String content, Long orderNo, User user) {
+    public Review(String title, String content, Long orderNo, User user, List<S3FileDto> attachment) {
         this.title = title;
         this.content = content;
         this.orderNo = orderNo;
         this.user = user;
+        this.attachment = attachment;
+
     }
 
-    public void updateReview(String content) {
-        this.content = content;
+    public void updateReview(ReviewRequestDto reviewRequestDto) {
+        this.content = reviewRequestDto.getContent();
+        this.title = reviewRequestDto.getTitle();
+        this.attachment = reviewRequestDto.getAttachment();
+        this.orderNo = reviewRequestDto.getOrderNo();
     }
 
     public Collection<ReviewLike> getLikes() {
