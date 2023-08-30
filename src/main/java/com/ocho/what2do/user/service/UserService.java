@@ -4,6 +4,8 @@ import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.user.dto.EditUserRequestDto;
 import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.dto.UserProfileDto;
+import com.ocho.what2do.user.dto.UserResponseDto;
+import com.ocho.what2do.user.dto.WithdrawalRequestDto;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +24,7 @@ public interface UserService {
      * @param userId 삭제할 사용자의 식별 ID
      * @param user 삭제할 정보를 소유하고 있는 사용자 본인 혹은 관리자에 대한 정보
      */
-    void deleteUserInfo(Long userId, User user);
+    void deleteUserInfo(WithdrawalRequestDto requestDto, User user);
 
     /*
      * 유저 비밀번호 수정
@@ -52,6 +54,13 @@ public interface UserService {
      * @return UserProfileDto 프로필 정보
      */
     UserProfileDto getUserProfile(User user);
+
+    /*
+     * 사용자정보 조회
+     * @param User 사용자 정보
+     * @return UserResponseDto 사용자 정보
+     */
+    UserResponseDto getUserInfo(User user);
 
     /*
      * 유저 정보 수정

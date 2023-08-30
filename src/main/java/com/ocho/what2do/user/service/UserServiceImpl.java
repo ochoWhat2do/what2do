@@ -10,6 +10,8 @@ import com.ocho.what2do.common.security.UserDetailsImpl;
 import com.ocho.what2do.user.dto.EditUserRequestDto;
 import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.dto.UserProfileDto;
+import com.ocho.what2do.user.dto.UserResponseDto;
+import com.ocho.what2do.user.dto.WithdrawalRequestDto;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
@@ -75,9 +77,9 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public void deleteUserInfo(Long userId, User user) {
-    User found = findUser(userId);
-
+  public void deleteUserInfo(WithdrawalRequestDto requestDto, User user) {
+    User found = findUser(user.getId());
+    checkPassword(requestDto.getPassword(), found.getPassword());
     confirmUser(found, user);
 
     userPasswordRepository.deleteAllByUser_Id(found.getId());
@@ -140,6 +142,13 @@ public class UserServiceImpl implements UserService {
   public UserProfileDto getUserProfile(User user) {
     User foundUser = findUser(user.getId());
     return new UserProfileDto(foundUser);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public UserResponseDto getUserInfo(User user) {
+    User foundUser = findUser(user.getId());
+    return new UserResponseDto(foundUser);
   }
 
   @Override
