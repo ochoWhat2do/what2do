@@ -1,6 +1,8 @@
 package com.ocho.what2do.review.service;
 
 import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.file.FileUploader;
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
@@ -18,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ReviewLikeRepository reviewLikeRepository;
+    private final FileUploader fileUploader;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,18 +62,22 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDto createReview(ReviewRequestDto requestDto, User user) {
+    public ReviewResponseDto createReview(ReviewRequestDto requestDto, User user, List<MultipartFile> files)
+            throws IOException {
         user = findUser(user.getId());
 
-
-        if (reviewRepository.findByContent(requestDto.getContent()).isPresent()) {
-            throw new CustomException(CustomErrorCode.REVIEW_ALREADY_EXIST, null);
+        //파일 등록
+        List<S3FileDto> fileDtoList = null;
+        if (!(files == null || (files.size() == 1 && files.get(0).isEmpty()))) {
+            fileDtoList = fileUploader.uploadFiles(files, "files");
+            requestDto.setAttachment(fileDtoList);
         }
 
         Review review = Review.builder()
                 .title(requestDto.getTitle())
                 .content(requestDto.getContent())
                 .user(user)
+                .attachment(fileDtoList)
                 .build();
 
         reviewRepository.save(review);
@@ -78,11 +87,34 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto, User user) {
+    public ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto, User user, List<MultipartFile> files)
+            throws IOException {
+
+        // 파일첨부
+        List<S3FileDto> fileDtoList = null;
         Review review = findReview(reviewId);
+
+        // 파일정보 불러오기
+        List<S3FileDto> attachment = review.getAttachment();
+
+        // 기존 파일 삭제
+        if (attachment != null && !attachment.isEmpty()) {
+            for (S3FileDto s3FileDto : attachment) {
+                fileUploader.deleteFile(s3FileDto.getUploadFilePath(),
+                        s3FileDto.getUploadFileName());
+            }
+        }
+
+        // 파일 등록
+        if (!(files == null || (files.size() == 1 && files.get(0).isEmpty()))) {
+            fileDtoList = fileUploader.uploadFiles(files, "files");
+            requestDto.setAttachment(fileDtoList);
+        }
+
+
         confirmUser(review, user);
 
-        review.updateReview(requestDto.getContent());
+        review.updateReview(requestDto);
         return new ReviewResponseDto(review);
     }
 
@@ -91,6 +123,17 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
         confirmUser(review, user);
+
+        // 파일정보 불러오기
+        List<S3FileDto> attachment = review.getAttachment();
+
+        // 기존 파일 삭제
+        if (attachment != null && !attachment.isEmpty()) {
+            for (S3FileDto s3FileDto : attachment) {
+                fileUploader.deleteFile(s3FileDto.getUploadFilePath(),
+                        s3FileDto.getUploadFileName());
+            }
+        }
 
         reviewRepository.deleteById(reviewId);
     }
