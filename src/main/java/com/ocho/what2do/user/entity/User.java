@@ -58,6 +58,9 @@ public class User {
     @Column
     private String socialId; // 로그인한 소셜 타입의 식별자 값 (일반 로그인인 경우 null)
 
+    @Column
+    private boolean locked = false;
+
     public User(String email, String password, UserRoleEnum role) {
         this.email = email;
         this.password = password;
@@ -90,6 +93,17 @@ public class User {
         this.nickname = nickname;
         this.introduction = introduction;
         this.picture = picture;
+    }
+
+    public User userLock(boolean locked){
+        this.locked = locked;
+        return this;
+    }
+
+    // 역할 변경
+    public User updateRole(UserRoleEnum role){
+        this.role = role;
+        return this;
     }
 
     // 소셜로그인 시 활용

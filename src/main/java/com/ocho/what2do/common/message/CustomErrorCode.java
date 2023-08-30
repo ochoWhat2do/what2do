@@ -27,6 +27,9 @@ public enum CustomErrorCode {
   REVIEW_NOT_LIKED(HttpStatus.BAD_REQUEST.value()," 이미 좋아요를 누른 리뷰입니다." ),
   STORE_FAVORITE_ALREADY_EXIST(HttpStatus.BAD_REQUEST.value(),"이미 찜한 가게입니다."),
   STORE_FAVORITE_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "해당 가게에 취소할 찜이 없습니다."),
+  NOT_ADMIN_AUTH(HttpStatus.BAD_REQUEST.value(),"관리자 권한이 없습니다."),
+  HAVE_NOT_USER_ROLE(HttpStatus.BAD_REQUEST.value(),"유효한 사용자 권한이 아닙니다."),
+  LOGIN_USER_ACCOUNT_LOCKED(HttpStatus.BAD_REQUEST.value(),"계정이 정지되었습니다. 관리자에게 문의하세요."),
   ;
 
   private final int errorCode;
