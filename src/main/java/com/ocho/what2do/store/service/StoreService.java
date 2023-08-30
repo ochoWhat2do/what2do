@@ -34,19 +34,19 @@ public interface StoreService{
 
         /**
          * 가게 업데이트
-         * @param store 업데이트 할 가게
+         * @param storeId 업데이트 할 가게
          * @param requestDto 업데이트 할 가게 정보
          * @param user 가게 업데이트 요청자
          * @return 업데이트된 가게 정보
          */
-        StoreResponseDto updateStore(Store store, StoreRequestDto requestDto, User user);
+        StoreResponseDto updateStore(Long storeId, StoreRequestDto requestDto, User user);
 
         /**
          * 가게 삭제
-         * @param store 삭제 요청 가게
+         * @param storeId 삭제 요청 가게
          * @param user 가게 삭제 요청자
          */
-        void deleteStore(Store store, User user);
+        void deleteStore(Long storeId, User user);
 
         /**
          * 가게 Entity 단건 조회

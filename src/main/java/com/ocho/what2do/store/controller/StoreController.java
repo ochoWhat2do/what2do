@@ -43,15 +43,13 @@ public class StoreController {
     @PutMapping("/stores/{storeId}") //가게 수정
     public ResponseEntity<ApiResponseDto> updateStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId, @RequestBody StoreRequestDto requestDto) {
         StoreResponseDto result;
-            Store store = storeService.findStore(storeId);
-            result = storeService.updateStore(store, requestDto, userDetails.getUser());
+            result = storeService.updateStore(storeId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/stores/{storeId}") //가게 삭제
     public ResponseEntity<ApiResponseDto> deleteStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId) {
-            Store store = storeService.findStore(storeId);
-            storeService.deleteStore(store, userDetails.getUser());
+            storeService.deleteStore(storeId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 삭제 성공"));
     }
 

@@ -57,15 +57,16 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    public StoreResponseDto updateStore(Store store, StoreRequestDto requestDto, User user) {
+    public StoreResponseDto updateStore(Long storeId, StoreRequestDto requestDto, User user) {
+        Store store = findStore(storeId);
         store.update(requestDto);
         return new StoreResponseDto(store);
     }
 
     @Override
     @Transactional
-    public void deleteStore(Store store, User user) {
-        storeRepository.delete(store);
+    public void deleteStore(Long storeId, User user) {
+        storeRepository.deleteById(storeId);
     }
 
 
