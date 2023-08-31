@@ -69,4 +69,9 @@ public interface UserService {
      * @return user 수정된 정보를 지닌 사용자를 반환
      */
     UserProfileDto editUserInfo(MultipartFile profilePic, EditUserRequestDto requestDto, User user);
+
+    /*
+
+    */
+    User findUserById(Long userId);
 }

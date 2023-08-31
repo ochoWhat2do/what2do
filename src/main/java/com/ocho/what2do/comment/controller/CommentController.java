@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/stores/{storeId}")
 @Tag(name = "Comment API", description = "댓글 기능과 관련된 API 정보를 담고 있습니다.")
 public class CommentController {
 
@@ -41,8 +41,9 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 생성", description = "댓글을 생성합니다.")
-    @PostMapping("/comments")
+    @PostMapping("/reviews/{reviewId}/comments")
     public ResponseEntity<ApiResponseDto> createComment(
+            @PathVariable Long reviewId,
             @RequestBody CommentCreateRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
@@ -51,7 +52,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
-    @PutMapping("/comments/{commentId}")
+    @PutMapping("/reviews/{reviewId}/comments/{commentId}")
     public ResponseEntity<ApiResponseDto> editComment(
             @PathVariable Long commentId,
             @RequestBody CommentEditRequestDto requestDto,
@@ -63,7 +64,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/reviews/{reviewId}/comments/{commentId}")
     public ResponseEntity<ApiResponseDto> deleteComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -73,7 +74,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 좋아요", description = "댓글에 좋아요를 표시합니다.")
-    @PostMapping("/comments/{commentId}/likes")
+    @PostMapping("/reviews/{reviewId}/comments/{commentId}/likes")
     public ResponseEntity<CommentLikeResponseDto> likeComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -82,7 +83,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 좋아요 취소", description = "댓글의 좋아요를 취소합니다.")
-    @DeleteMapping("/comments/{commentId}/likes")
+    @DeleteMapping("/reviews/{reviewId}/comments/{commentId}/likes")
     public ResponseEntity<ApiResponseDto> unlikeComment(
             @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {

@@ -37,13 +37,6 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReviewResponseDto showReview(Long reviewId) {
-        Review review = findReview(reviewId);
-        return new ReviewResponseDto(review);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<ReviewResponseDto> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
         return reviews.stream()
@@ -58,6 +51,18 @@ public class ReviewServiceImpl implements ReviewService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         return reviewRepository.findAll(pageable).stream().map(ReviewResponseDto::new).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReviewResponseDto> getUserReviewsPaged(User user, int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+       return reviewRepository.findByUser(user, pageable)
+                .stream()
+                .map(ReviewResponseDto::new)
+                .toList();
     }
 
     @Override
@@ -140,7 +145,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReviewResponseDto getReviewDetail(Long reviewId, User user) {
+    public ReviewResponseDto getReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
         return new ReviewResponseDto(review);
     }
