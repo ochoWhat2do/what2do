@@ -1,4 +1,4 @@
-package com.ocho.what2do.store.entity;
+package com.ocho.what2do.common.daum.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StoreDetail {
+public class ApiStore {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,7 +38,7 @@ public class StoreDetail {
 //    private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 
     @Builder
-    public StoreDetail(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
+    public ApiStore(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
         this.storeKey = storeKey;
         this.title = title;
         this.homePageLink = homePageLink;

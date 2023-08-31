@@ -1,8 +1,8 @@
 package com.ocho.what2do.common.daum.service;
 
-import com.ocho.what2do.store.dto.StoreApiDto;
-import com.ocho.what2do.store.entity.Store;
-import com.ocho.what2do.store.repository.StoreRepository;
+import com.ocho.what2do.common.daum.entity.ApiStore;
+import com.ocho.what2do.common.daum.repository.ApiStoreRepository;
+import com.ocho.what2do.store.dto.StoreResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -24,13 +24,13 @@ import java.util.List;
 public class DaumApiServiceImpl implements DaumApiService {
 
     private final RestTemplate restTemplate;
-    private final StoreRepository storeRepository;
+    private final ApiStoreRepository apiStoreRepository;
 
     @Value("${kakao.Authorization}")
     private String Authorization;
 
     @Override
-    public List<StoreApiDto> searchItems(String query, String page) {
+    public List<StoreResponseDto> searchItems(String query, String page) {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://dapi.kakao.com")
@@ -57,27 +57,27 @@ public class DaumApiServiceImpl implements DaumApiService {
     }
 
     @Override
-    public List<StoreApiDto> fromJSONtoItems(String responseEntity) {
+    public List<StoreResponseDto> fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
         JSONArray documents = jsonObject.getJSONArray("documents");
-        List<StoreApiDto> storeApiDtoList = new ArrayList<>();
+        List<StoreResponseDto> storeResponseDtoList = new ArrayList<>();
 
         for (Object item : documents) {
-            StoreApiDto storeApiDto = new StoreApiDto((JSONObject) item);
-            Store store = Store.builder().storeKey(storeApiDto.getStoreKey())
-                    .title(storeApiDto.getTitle())
-                    .homePageLink(storeApiDto.getHomePageLink())
-                    .category(storeApiDto.getCategory())
-                    .address(storeApiDto.getAddress())
-                    .roadAddress(storeApiDto.getRoadAddress())
-                    .latitude(storeApiDto.getLatitude())
-                    .longitude(storeApiDto.getLongitude())
+            StoreResponseDto storeResponseDto = new StoreResponseDto((JSONObject) item);
+            ApiStore store = ApiStore.builder().storeKey(storeResponseDto.getStoreKey())
+                    .title(storeResponseDto.getTitle())
+                    .homePageLink(storeResponseDto.getHomePageLink())
+                    .category(storeResponseDto.getCategory())
+                    .address(storeResponseDto.getAddress())
+                    .roadAddress(storeResponseDto.getRoadAddress())
+                    .latitude(storeResponseDto.getLatitude())
+                    .longitude(storeResponseDto.getLongitude())
                     .build();
-            if (!storeRepository.existsStoreByAddress(store.getAddress())) {
-                storeRepository.save(store);
+            if (!apiStoreRepository.existsApiStoreByAddress(store.getAddress())) {
+                apiStoreRepository.save(store);
             }
-            storeApiDtoList.add(storeApiDto);
+            storeResponseDtoList.add(storeResponseDto);
         }
-        return storeApiDtoList;
+        return storeResponseDtoList;
     }
 }
