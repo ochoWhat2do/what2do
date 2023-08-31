@@ -86,8 +86,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    public void deleteStore(Store store, User user) {
-        storeRepository.delete(store);
+    public void deleteStore(Long storeId, User user) {
+        storeRepository.deleteById(storeId);
     }
 
 

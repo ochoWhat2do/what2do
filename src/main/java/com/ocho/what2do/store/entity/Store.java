@@ -1,5 +1,6 @@
 package com.ocho.what2do.store.entity;
 
+import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import jakarta.persistence.*;
@@ -56,6 +57,17 @@ public class Store {
 
   public void update(StoreRequestDto requestDto){
     this.storeKey = requestDto.getStoreKey();
+    this.title = requestDto.getTitle();
+    this.homePageLink = requestDto.getHomePageLink();
+    this.category = requestDto.getCategory();
+    this.address = requestDto.getAddress();
+    this.roadAddress = requestDto.getRoadAddress();
+    this.latitude = requestDto.getLatitude();
+    this.longitude = requestDto.getLongitude();
+  }
+
+  // 관리자용 업데이트
+  public void updateAdmin(AdminStoreRequestDto requestDto){
     this.title = requestDto.getTitle();
     this.homePageLink = requestDto.getHomePageLink();
     this.category = requestDto.getCategory();

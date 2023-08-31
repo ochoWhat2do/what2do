@@ -49,10 +49,10 @@ public interface StoreService{
 
         /**
          * 가게 삭제
-         * @param store 삭제 요청 가게
+         * @param storeId 삭제 요청 가게
          * @param user 가게 삭제 요청자
          */
-        void deleteStore(Store store, User user);
+        void deleteStore(Long storeId, User user);
 
         /**
          * 가게 Entity 단건 조회

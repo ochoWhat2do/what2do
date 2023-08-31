@@ -23,17 +23,20 @@ import org.springframework.web.bind.annotation.*;
 public class StoreController {
     private final StoreService storeService;
 
+    @Operation(summary = "가게 등록", description = "가게를 등록합니다.")
     @PostMapping("/stores") //가게 등록
     public ResponseEntity<StoreResponseDto> createStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody StoreRequestDto requestDto) {
         return new ResponseEntity<>(storeService.createStore(requestDto, userDetails.getUser()), HttpStatus.OK);
     }
 
+    @Operation(summary = "가게 조회", description = "가게를 조회합니다.")
     @GetMapping("/stores") //가게 전체 조회
     public ResponseEntity<StoreListResponseDto> getStores() {
         StoreListResponseDto result = storeService.getStores();
 
         return ResponseEntity.ok().body(result);
     }
+
 
 //    @GetMapping("/stores/{storeId}") //가게 단건 조회
 //    public ResponseEntity<StoreViewResponseDto> getStoreById(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -44,14 +47,22 @@ public class StoreController {
     public ResponseEntity<StoreResponseDto> getStoresKey(@RequestParam("storeKey") String storeKey) {
         StoreResponseDto result = storeService.getStoresKey(storeKey);
         return ResponseEntity.ok().body(result);
+
+    @Operation(summary = "가게 단건", description = "가게 단건 조회.")
+    @GetMapping("/stores/{storeId}") //가게 단건 조회
+    public ResponseEntity<StoreViewResponseDto> getStoreById(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return new ResponseEntity<>(storeService.getStoreById(storeId, userDetails.getUser()), HttpStatus.OK);
+
     }
 
+    @Operation(summary = "가게 수정", description = "가게를 수정합니다.")
     @PutMapping("/stores/{storeId}") //가게 수정
     public ResponseEntity<ApiResponseDto> updateStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId, @RequestBody StoreRequestDto requestDto) {
         storeService.updateStore(storeId, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 수정 성공"));
     }
 
+    @Operation(summary = "가게 삭제", description = "가게를 삭제합니다.")
     @DeleteMapping("/stores/{storeId}") //가게 삭제
     public ResponseEntity<ApiResponseDto> deleteStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId) {
         Store store = storeService.findStore(storeId);

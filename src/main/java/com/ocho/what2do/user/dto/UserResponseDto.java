@@ -11,6 +11,7 @@ public class UserResponseDto {
     private boolean admin;
     private String role;
     private String nickname;
+    private String picture;
 
     public UserResponseDto(User user) {
         this.id = user.getId();
@@ -18,5 +19,6 @@ public class UserResponseDto {
         this.admin = user.getRole().equals(UserRoleEnum.ADMIN);
         this.nickname = user.getNickname();
         this.role = user.getRole().getAuthority();
+        this.picture = user.getPicture();
     }
 }

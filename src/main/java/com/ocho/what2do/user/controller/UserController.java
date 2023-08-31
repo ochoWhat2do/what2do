@@ -49,6 +49,7 @@ public class UserController {
     @GetMapping("/info")
     public ResponseEntity<UserResponseDto> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
+        UserResponseDto userResponseDto = userService.getUserInfo(user);
         return ResponseEntity.ok().body(new UserResponseDto(user));
     }
 
@@ -62,8 +63,8 @@ public class UserController {
 
     @Operation(summary = "사용자 정보 삭제(회원탈퇴)", description = "전달된 Bearer 토큰을 통해 본인 혹은 관리자 여부 확인 후 userId를 통해 찾은 사용자의 정보를 삭제합니다.")
     @DeleteMapping("/info")
-    public ResponseEntity<ApiResponseDto> deleteUserInfo(@RequestParam("userId") Long userId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.deleteUserInfo(userId, userDetails.getUser());
+    public ResponseEntity<ApiResponseDto> deleteUserInfo(@RequestBody WithdrawalRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.deleteUserInfo(requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "회원 정보 삭제 성공"));
     }
 
