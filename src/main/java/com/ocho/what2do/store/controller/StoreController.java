@@ -47,7 +47,8 @@ public class StoreController {
     public ResponseEntity<StoreResponseDto> getStoresKey(@RequestParam("storeKey") String storeKey) {
         StoreResponseDto result = storeService.getStoresKey(storeKey);
         return ResponseEntity.ok().body(result);
-
+    }
+    
     @Operation(summary = "가게 단건", description = "가게 단건 조회.")
     @GetMapping("/stores/{storeId}") //가게 단건 조회
     public ResponseEntity<StoreViewResponseDto> getStoreById(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
