@@ -152,6 +152,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
+  public User findUserById(Long userId) {
+    return userRepository.findById(userId)
+            .orElseThrow(() -> new CustomException(CustomErrorCode.USER_NOT_FOUND, null));
+  }
+
+  @Override
   @Transactional
   public UserProfileDto editUserInfo(MultipartFile profilePic, EditUserRequestDto requestDto, User user) {
     User foundUser = findUser(user.getId());

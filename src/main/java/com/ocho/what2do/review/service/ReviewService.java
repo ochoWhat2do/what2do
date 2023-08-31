@@ -10,12 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ReviewService {
-    /*
-     * 리뷰 단일 조회
-     * @param reviewId 조회할 리뷰 ID
-     * @return 조회한 리뷰 정보
-     */
-    ReviewResponseDto showReview(Long reviewId);
 
     /*
      * 전체 리뷰 조회
@@ -29,6 +23,13 @@ public interface ReviewService {
      * @return 전체 리뷰 페이지
      */
     List<ReviewResponseDto> getAllReviewsPaged(int page, int size, String sorBy, boolean isAsc);
+
+    /*
+     * 내 리뷰 페이징 조회
+     * @param pageable 페이징 정보
+     * @return 내 리뷰 페이지
+     */
+    List<ReviewResponseDto> getUserReviews(User user, int page, int size, String sortBy, boolean isAsc);
 
     /*
      * 리뷰 등록
@@ -62,7 +63,7 @@ public interface ReviewService {
      * @param user 조회 사용자 정보
      * @return 리뷰 상세 정보
      */
-    ReviewResponseDto getReviewDetail(Long reviewId, User user);
+    ReviewResponseDto getReview(Long reviewId, User user);
 
     /*
      * 리뷰 좋아요

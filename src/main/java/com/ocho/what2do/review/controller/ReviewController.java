@@ -6,6 +6,8 @@ import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.review.service.ReviewService;
+import com.ocho.what2do.user.entity.User;
+import com.ocho.what2do.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -26,23 +28,18 @@ import java.util.List;
 
 public class ReviewController {
     private final ReviewService reviewService;
+    private final UserService userService;
 
-    @Operation(summary = "리뷰 조회", description = "현재 선택한 리뷰의 내부를 조회합니다.")
-    @GetMapping("/reviews/{reviewId}") // /api/stores/{store_id}/reviews
-    public ResponseEntity<ReviewResponseDto> showReview(@PathVariable("reviewId") Long reviewId) {
-        ReviewResponseDto responseDto = reviewService.showReview(reviewId);
-        return ResponseEntity.ok().body(responseDto);
-    }
 
     @Operation(summary = "전체 리뷰 조회", description = "모든 리뷰 정보를 조회합니다.")
-    @GetMapping("/reviews")
+    @GetMapping("/stores/{storeId}/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
         List<ReviewResponseDto> responseDtoList = reviewService.getAllReviews();
         return ResponseEntity.ok(responseDtoList);
     }
 
     @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
-    @GetMapping("/reviews/paged")
+    @GetMapping("/stores/{storeId}/reviews/paged")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviewsPaged(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
@@ -53,9 +50,25 @@ public class ReviewController {
 
     }
 
+    @Operation(summary = "특정 사용자가 작성한 리뷰 페이징 조회", description = "특정 사용자가 작성한 리뷰를 페이징하여 조회합니다.")
+    @GetMapping("/users/{userId}/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getUserReviews(
+            @PathVariable("userId") Long userId,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userService.findUserById(userId);
+        List<ReviewResponseDto> responseDto = reviewService.getUserReviews(user, page - 1, size, sortBy, isAsc);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
-    @PostMapping("/reviews") //  /api/stores/{storeId}/reviews
+    @PostMapping("/stores/{storeId}/reviews")
     public ResponseEntity<ReviewResponseDto> createReview(
+            @PathVariable("storeId") Long storeId,
             @RequestPart @Valid ReviewRequestDto requestDto,
             @RequestPart(required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -64,8 +77,9 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 수정", description = "선택한 리뷰의 내용을 수정합니다.")
-    @PutMapping("/reviews/{reviewId}")
+    @PatchMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<ReviewResponseDto> updateReview(
+            @PathVariable("storeId") Long storeId,
             @PathVariable("reviewId") Long reviewId,
             @Valid @RequestPart ReviewRequestDto requestDto,
             @RequestPart(required = false) List<MultipartFile> files,
@@ -76,8 +90,9 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 삭제", description = "선택한 리뷰를 삭제합니다.")
-    @DeleteMapping("/reviews/{reviewId}")
+    @DeleteMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<ApiResponseDto> deleteReview(
+            @PathVariable("storeId") Long storeId,
             @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewService.deleteReview(reviewId, userDetails.getUser());
@@ -86,16 +101,17 @@ public class ReviewController {
 
 
     @Operation(summary = "리뷰 상세 조회", description = "선택한 리뷰의 상세 정보를 조회합니다.")
-    @GetMapping("/reviews/{reviewId}/detail")
-    public ResponseEntity<ReviewResponseDto> getReviewDetail(
+    @GetMapping("/stores/{storeId}/reviews/{reviewId}")
+    public ResponseEntity<ReviewResponseDto> getReview(
+            @PathVariable("storeId") Long storeId,
             @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        ReviewResponseDto responseDto = reviewService.getReviewDetail(reviewId, userDetails.getUser());
+        ReviewResponseDto responseDto = reviewService.getReview(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(responseDto);
     }
 
     @Operation(summary = "리뷰 좋아요", description = "리뷰에 좋아요를 표시합니다.")
-    @PostMapping("/reviews/{reviewId}/likes")
+    @PostMapping("/stores/{storeId}/reviews/{reviewId}/likes")
     public ResponseEntity<ReviewLikeResponseDto> likeReview(
             @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -104,7 +120,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 좋아요 취소", description = "리뷰의 좋아요를 취소합니다.")
-    @DeleteMapping("/reviews/{reviewId}/likes")
+    @DeleteMapping("/stores/{storeId}/reviews/{reviewId}/likes")
     public ResponseEntity<ApiResponseDto> unlikeReview(
             @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
