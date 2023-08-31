@@ -1,11 +1,11 @@
 package com.ocho.what2do.store.service;
 
+import com.ocho.what2do.common.daum.entity.ApiStore;
+import com.ocho.what2do.common.daum.repository.ApiStoreRepository;
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
-import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
-import com.ocho.what2do.store.dto.StoreViewResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
@@ -25,50 +25,41 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
+    private final ApiStoreRepository apiStoreRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
 
     @Override
-    public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
-        Store store = Store.builder().title(requestDto.getTitle())
-                .homePageLink(requestDto.getHomePageLink())
-                .category(requestDto.getCategory())
-                .address(requestDto.getAddress())
-                .roadAddress(requestDto.getRoadAddress())
-                .latitude(requestDto.getLatitude())
-                .longitude(requestDto.getLongitude())
-                .build();
-        return new StoreResponseDto(storeRepository.save(store));
-
-    }
-
-    @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public StoreListResponseDto getStores() {
-        List<StoreResponseDto> storeList = storeRepository.findAll().stream().map(StoreResponseDto::new).collect(Collectors.toList());
+        List<StoreResponseDto> storeList = apiStoreRepository.findAll().stream().map(StoreResponseDto::new).collect(Collectors.toList());
         return new StoreListResponseDto(storeList);
     }
 
     @Override
     @Transactional
-    public StoreViewResponseDto getStoreById(Long storeId, User user) {
-        Store store = findStore(storeId);
-        return new StoreViewResponseDto(store, user);
+    public StoreResponseDto getStore(String storeKey) {
+        ApiStore findStore = findStoreKey(storeKey);
+        Store store = Store.builder().storeKey(findStore.getStoreKey())
+                .title(findStore.getTitle())
+                .homePageLink(findStore.getHomePageLink())
+                .category(findStore.getCategory())
+                .address(findStore.getAddress())
+                .roadAddress(findStore.getRoadAddress())
+                .latitude(findStore.getLatitude())
+                .longitude(findStore.getLongitude())
+                .build();
+        if (!storeRepository.existsStoreByStoreKey(store.getStoreKey())) {
+            storeRepository.save(store);
+        }
+        return new StoreResponseDto(findStore);
     }
 
     @Override
-    @Transactional
-    public StoreResponseDto updateStore(Long storeId, StoreRequestDto requestDto, User user) {
-        Store store = findStore(storeId);
-        store.update(requestDto);
-        return new StoreResponseDto(store);
+    @Transactional(readOnly = true)
+    public StoreFavoriteListResponseDto getStoreFavorite(User user) {
+        List<StoreFavoriteResponseDto> storeUserList = storeFavoriteRepository.findAll().stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
+        return new StoreFavoriteListResponseDto(storeUserList);
     }
-
-    @Override
-    @Transactional
-    public void deleteStore(Long storeId, User user) {
-        storeRepository.deleteById(storeId);
-    }
-
 
     @Override
     @Transactional
@@ -85,13 +76,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    public StoreFavoriteListResponseDto getStoreFavorite(User user) {
-        List<StoreFavoriteResponseDto> storeUserList = storeFavoriteRepository.findAll().stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
-        return new StoreFavoriteListResponseDto(storeUserList);
-    }
-
-    @Override
-    @Transactional
     public void deleteStoreFavorite(Long storeId, User user) {
         Store store = findStore(storeId);
         Optional<StoreFavorite> storeUserOptional = storeFavoriteRepository.findByUserAndStore(user, store);
@@ -104,6 +88,11 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public Store findStore(Long storeId) {
-        return storeRepository.findById(storeId).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND, null));
+        return storeRepository.findById(storeId).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+    }
+
+    @Override
+    public ApiStore findStoreKey(String storeKey) {
+        return apiStoreRepository.findByStoreKey(storeKey).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
     }
 }

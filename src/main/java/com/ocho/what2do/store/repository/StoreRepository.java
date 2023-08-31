@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {
-    boolean existsStoreByAddress(String address);
+    boolean existsStoreByStoreKey(String storeKey);
 }

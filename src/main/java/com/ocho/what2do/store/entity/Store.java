@@ -1,7 +1,6 @@
 package com.ocho.what2do.store.entity;
 
 import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
-import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -20,6 +19,8 @@ public class Store {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @Column(name = "store_key", length = 500)
+  private String storeKey;
   @Column(name = "title", length = 500, nullable = false)
   private String title;                   // 가게명
   @Column(name = "homepage_link", length = 500)
@@ -42,7 +43,8 @@ public class Store {
   private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 
   @Builder
-  public Store(String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude){
+  public Store(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude){
+    this.storeKey = storeKey;
     this.title = title;
     this.homePageLink = homePageLink;
     this.category = category;
@@ -50,16 +52,6 @@ public class Store {
     this.roadAddress = roadAddress;
     this.latitude = latitude;
     this.longitude = longitude;
-  }
-
-  public void update(StoreRequestDto requestDto){
-    this.title = requestDto.getTitle();
-    this.homePageLink = requestDto.getHomePageLink();
-    this.category = requestDto.getCategory();
-    this.address = requestDto.getAddress();
-    this.roadAddress = requestDto.getRoadAddress();
-    this.latitude = requestDto.getLatitude();
-    this.longitude = requestDto.getLongitude();
   }
 
   // 관리자용 업데이트
