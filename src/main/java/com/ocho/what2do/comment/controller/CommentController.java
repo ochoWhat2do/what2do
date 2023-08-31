@@ -19,14 +19,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/stores/{storeId}")
+@RequestMapping("/api")
 @Tag(name = "Comment API", description = "댓글 기능과 관련된 API 정보를 담고 있습니다.")
 public class CommentController {
 
     private final CommentService commentService;
 
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록을 조회합니다.")
-    @GetMapping("/comments/{reviewId}")
+    @GetMapping("/stores/{storeId}/comments/{reviewId}")
     @ResponseBody
     public ResponseEntity commentList(
             @PathVariable Long reviewId,
@@ -41,7 +41,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 생성", description = "댓글을 생성합니다.")
-    @PostMapping("/reviews/{reviewId}/comments")
+    @PostMapping("/stores/{storeId}/reviews/{reviewId}/comments")
     public ResponseEntity<ApiResponseDto> createComment(
             @PathVariable Long reviewId,
             @RequestBody CommentCreateRequestDto requestDto,
@@ -52,7 +52,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
-    @PutMapping("/reviews/{reviewId}/comments/{commentId}")
+    @PutMapping("/stores/{storeId}/reviews/{reviewId}/comments/{commentId}")
     public ResponseEntity<ApiResponseDto> editComment(
             @PathVariable Long commentId,
             @RequestBody CommentEditRequestDto requestDto,
@@ -64,7 +64,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
-    @DeleteMapping("/reviews/{reviewId}/comments/{commentId}")
+    @DeleteMapping("/stores/{storeId}/reviews/{reviewId}/comments/{commentId}")
     public ResponseEntity<ApiResponseDto> deleteComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails
@@ -74,7 +74,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 좋아요", description = "댓글에 좋아요를 표시합니다.")
-    @PostMapping("/reviews/{reviewId}/comments/{commentId}/likes")
+    @PostMapping("/stores/{storeId}/reviews/{reviewId}/comments/{commentId}/likes")
     public ResponseEntity<CommentLikeResponseDto> likeComment(
             @PathVariable Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -83,7 +83,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 좋아요 취소", description = "댓글의 좋아요를 취소합니다.")
-    @DeleteMapping("/reviews/{reviewId}/comments/{commentId}/likes")
+    @DeleteMapping("/stores/{storeId}/reviews/{reviewId}/comments/{commentId}/likes")
     public ResponseEntity<ApiResponseDto> unlikeComment(
             @PathVariable("commentId") Long commentId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
