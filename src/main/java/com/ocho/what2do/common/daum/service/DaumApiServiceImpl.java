@@ -30,14 +30,15 @@ public class DaumApiServiceImpl implements DaumApiService {
     private String Authorization;
 
     @Override
-    public List<StoreApiDto> searchItems(String query, String page, String size) {
+    public List<StoreApiDto> searchItems(String query, String page) {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://dapi.kakao.com")
                 .path("/v2/local/search/keyword.json")
                 .queryParam("query", query) // 검색어
                 .queryParam("page", page) // 페이징
-                .queryParam("size", size) // 한 페이지에 출력 할 값의 갯수
+                .queryParam("size", "15") // 한 페이지에 출력 할 값의 갯수 (고정 값 설정)
+                .queryParam("category_group_code", "FD6") // FD6 음식점 코드 (음식점만 검색 결과로 나오게끔)
                 .encode()
                 .build()
                 .toUri();
@@ -63,7 +64,8 @@ public class DaumApiServiceImpl implements DaumApiService {
 
         for (Object item : documents) {
             StoreApiDto storeApiDto = new StoreApiDto((JSONObject) item);
-            Store store = Store.builder().title(storeApiDto.getTitle())
+            Store store = Store.builder().storeKey(storeApiDto.getStoreKey())
+                    .title(storeApiDto.getTitle())
                     .homePageLink(storeApiDto.getHomePageLink())
                     .category(storeApiDto.getCategory())
                     .address(storeApiDto.getAddress())
@@ -76,7 +78,6 @@ public class DaumApiServiceImpl implements DaumApiService {
             }
             storeApiDtoList.add(storeApiDto);
         }
-
         return storeApiDtoList;
     }
 }

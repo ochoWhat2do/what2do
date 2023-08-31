@@ -10,10 +10,9 @@ public interface DaumApiService {
      * DAUM 검색 API 사용
      * @param query 조회할 키워드
      * @param page  조회할 페이지
-     * @param size  조회할 페이지에 보여질 리스트의 갯수
      * @return 키워드로 조회된 목록
      */
-    List<StoreApiDto> searchItems(String query, String page, String size);
+    List<StoreApiDto> searchItems(String query, String page);
 
     /**
      * JSON 처리를 도와주는 라이브러리를 추가하여 받아온 JSON 형태의 String 을 처리
