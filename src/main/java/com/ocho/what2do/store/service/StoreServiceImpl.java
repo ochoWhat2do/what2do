@@ -48,7 +48,7 @@ public class StoreServiceImpl implements StoreService {
                 .latitude(findStore.getLatitude())
                 .longitude(findStore.getLongitude())
                 .build();
-        if (!storeRepository.existsStoreDetailByStoreKey(store.getStoreKey())) {
+        if (!storeRepository.existsStoreByStoreKey(store.getStoreKey())) {
             storeRepository.save(store);
         }
         return new StoreResponseDto(findStore);
