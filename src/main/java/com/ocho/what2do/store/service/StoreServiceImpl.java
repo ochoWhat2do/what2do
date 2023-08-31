@@ -30,6 +30,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreFavoriteRepository storeFavoriteRepository;
 
     @Override
+    @Transactional
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
         Store store = Store.builder().storeKey(requestDto.getStoreKey())
                 .title(requestDto.getTitle())
@@ -44,7 +45,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public StoreListResponseDto getStores() {
         List<StoreResponseDto> storeList = storeRepository.findAll().stream().map(StoreResponseDto::new).collect(Collectors.toList());
         return new StoreListResponseDto(storeList);
