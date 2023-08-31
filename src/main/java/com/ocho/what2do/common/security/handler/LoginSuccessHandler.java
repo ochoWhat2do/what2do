@@ -15,6 +15,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
@@ -33,6 +34,13 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
       Authentication authentication) {
     UserRoleEnum role = ((UserDetailsImpl) authentication.getPrincipal()).getUser().getRole();
     String email = extractUsername(authentication); // 인증 정보에서 Username(email) 추출
+
+    // 만약 계정이 정지되었다면
+    if(((UserDetailsImpl) authentication.getPrincipal()).getUser().isLocked()){
+      // 계정정지 예외 발생
+      throw new CustomException(CustomErrorCode.LOGIN_USER_ACCOUNT_LOCKED);
+    }
+
     String accessToken = jwtUtil.createAccessToken(email,
         role); // JwtService의 createAccessToken을 사용하여 AccessToken 발급
     String refreshToken = jwtUtil.createRefreshToken(); // JwtService의 createRefreshToken을 사용하여 RefreshToken 발급

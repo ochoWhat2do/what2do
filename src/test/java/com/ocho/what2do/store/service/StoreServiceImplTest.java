@@ -1,28 +1,11 @@
 package com.ocho.what2do.store.service;
 
-import com.ocho.what2do.common.exception.CustomException;
-import com.ocho.what2do.store.dto.StoreRequestDto;
-import com.ocho.what2do.store.dto.StoreResponseDto;
-import com.ocho.what2do.store.dto.StoreViewResponseDto;
-import com.ocho.what2do.store.repository.StoreRepository;
-import com.ocho.what2do.user.dto.SignupRequestDto;
-import com.ocho.what2do.user.entity.User;
-import com.ocho.what2do.user.repository.UserRepository;
-import com.ocho.what2do.user.service.UserServiceImpl;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import java.io.IOException;
-import java.util.Optional;
-
-import static org.junit.Assert.*;
-
-@SpringBootTest
+// api 사용으로 인해 테스트 케이스 관리자 클래스에서 실행
+/*@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)*/
 class StoreServiceImplTest {
-    @Autowired
+    /*@Autowired
     private UserServiceImpl userService;
     @Autowired
     private StoreServiceImpl storeService;
@@ -182,5 +165,5 @@ class StoreServiceImplTest {
     @DisplayName("회원가입")
     void SignUp(SignupRequestDto signupRequestDto) {
         userService.signup(signupRequestDto);
-    }
+    }*/
 }

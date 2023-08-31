@@ -38,7 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
   private static final String NO_CHECK_URL = "/api/users/login"; // "login"으로 들어오는 요청은 Filter 작동 X
   private static final String NO_CHECK_URL_SIGNUP = "/api/users/signup";
 
-  private static final String START_CHECK_URL_USER = "/api/users";
+  private static final String START_CHECK_URL_ADMIN = "/api/admin";
 
   public static final String AUTHORIZATION_ACCESS_HEADER = "Authorization";
   private GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
@@ -51,7 +51,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
       HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
       throws ServletException, IOException {
     if (req.getRequestURI().equals(NO_CHECK_URL)
-    || req.getRequestURI().equals(NO_CHECK_URL_SIGNUP)) {
+    || req.getRequestURI().equals(NO_CHECK_URL_SIGNUP)
+    ) {
       filterChain.doFilter(req, res); // "login" 요청이 들어오면, 다음 필터 호출
       return; // return으로 이후 현재 필터 진행 막기 (안해주면 아래로 내려가서 계속 필터 진행시킴)
     }
