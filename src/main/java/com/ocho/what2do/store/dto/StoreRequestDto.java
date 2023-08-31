@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class StoreRequestDto {
+    private String storeKey;
     private String title;
     private String homePageLink;
     private String category;
@@ -16,7 +17,8 @@ public class StoreRequestDto {
     private String longitude;
 
     @Builder
-    public StoreRequestDto(String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
+    public StoreRequestDto(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
+        this.storeKey = storeKey;
         this.title = title;
         this.homePageLink = homePageLink;
         this.category = category;

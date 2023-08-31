@@ -19,6 +19,8 @@ public class Store {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  @Column(name = "store_key", length = 500)
+  private String storeKey;
   @Column(name = "title", length = 500, nullable = false)
   private String title;                   // 가게명
   @Column(name = "homepage_link", length = 500)
@@ -41,7 +43,8 @@ public class Store {
   private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 
   @Builder
-  public Store(String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude){
+  public Store(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude){
+    this.storeKey = storeKey;
     this.title = title;
     this.homePageLink = homePageLink;
     this.category = category;
@@ -52,6 +55,7 @@ public class Store {
   }
 
   public void update(StoreRequestDto requestDto){
+    this.storeKey = requestDto.getStoreKey();
     this.title = requestDto.getTitle();
     this.homePageLink = requestDto.getHomePageLink();
     this.category = requestDto.getCategory();

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 @Getter
 public class StoreApiDto {
 
+  private String storeKey;          // 가게 ID 값
   private String title;             // 가게명
   private String homePageLink;      // 가게 url
   private String category;          // 가게 카테고리
@@ -15,6 +16,7 @@ public class StoreApiDto {
   private String longitude;         // 가게 y
 
   public StoreApiDto(JSONObject itemJson) {
+    this.storeKey = itemJson.getString("id");
     this.title = itemJson.getString("place_name");
     this.homePageLink = itemJson.getString("place_url");
     this.category = itemJson.getString("category_name");

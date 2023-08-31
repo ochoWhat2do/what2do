@@ -7,8 +7,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class StoreResponseDto extends ApiResponseDto {
+public class StoreResponseDto {
     private Long id;
+    private String storeKey;
     private String title;
     private String homePageLink;
     private String category;
@@ -22,6 +23,7 @@ public class StoreResponseDto extends ApiResponseDto {
 
     public StoreResponseDto(Store store) {
         this.id = store.getId();
+        this.storeKey = store.getStoreKey();
         this.title = store.getTitle();
         this.homePageLink = store.getHomePageLink();
         this.category = store.getCategory();

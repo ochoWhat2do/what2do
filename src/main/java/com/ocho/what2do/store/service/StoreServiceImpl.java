@@ -5,8 +5,9 @@ import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
-import com.ocho.what2do.store.dto.StoreViewResponseDto;
 import com.ocho.what2do.store.entity.Store;
+import com.ocho.what2do.store.entity.StoreDetail;
+import com.ocho.what2do.store.repository.StoreDetailRepository;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
@@ -25,11 +26,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
+    private final StoreDetailRepository storeDetailRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
 
     @Override
     public StoreResponseDto createStore(StoreRequestDto requestDto, User user) {
-        Store store = Store.builder().title(requestDto.getTitle())
+        Store store = Store.builder().storeKey(requestDto.getStoreKey())
+                .title(requestDto.getTitle())
                 .homePageLink(requestDto.getHomePageLink())
                 .category(requestDto.getCategory())
                 .address(requestDto.getAddress())
@@ -38,7 +41,6 @@ public class StoreServiceImpl implements StoreService {
                 .longitude(requestDto.getLongitude())
                 .build();
         return new StoreResponseDto(storeRepository.save(store));
-
     }
 
     @Override
@@ -48,16 +50,36 @@ public class StoreServiceImpl implements StoreService {
         return new StoreListResponseDto(storeList);
     }
 
+//    @Override
+//    @Transactional
+//    public StoreViewResponseDto getStoreById(Long storeId, User user) {
+//        Store store = findStore(storeId);
+//        return new StoreViewResponseDto(store, user);
+//    }
+
     @Override
     @Transactional
-    public StoreViewResponseDto getStoreById(Long storeId, User user) {
-        Store store = findStore(storeId);
-        return new StoreViewResponseDto(store, user);
+    public StoreResponseDto getStoresKey(String storeKey) {
+        Store findStore = findStoreKey(storeKey);
+        StoreDetail store = StoreDetail.builder().storeKey(findStore.getStoreKey())
+                .title(findStore.getTitle())
+                .homePageLink(findStore.getHomePageLink())
+                .category(findStore.getCategory())
+                .address(findStore.getAddress())
+                .roadAddress(findStore.getRoadAddress())
+                .latitude(findStore.getLatitude())
+                .longitude(findStore.getLongitude())
+                .build();
+        if (!storeDetailRepository.existsStoreDetailByStoreKey(store.getStoreKey())) {
+            storeDetailRepository.save(store);
+        }
+        return new StoreResponseDto(findStore);
     }
 
     @Override
     @Transactional
-    public StoreResponseDto updateStore(Store store, StoreRequestDto requestDto, User user) {
+    public StoreResponseDto updateStore(Long storeId, StoreRequestDto requestDto, User user) {
+        Store store = findStore(storeId);
         store.update(requestDto);
         return new StoreResponseDto(store);
     }
@@ -104,5 +126,10 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Store findStore(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND, null));
+    }
+
+    @Override
+    public Store findStoreKey(String storeKey) {
+        return storeRepository.findByStoreKey(storeKey).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND, null));
     }
 }

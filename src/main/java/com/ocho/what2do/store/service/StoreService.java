@@ -3,7 +3,6 @@ package com.ocho.what2do.store.service;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreRequestDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
-import com.ocho.what2do.store.dto.StoreViewResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
@@ -25,21 +24,28 @@ public interface StoreService{
          */
         StoreListResponseDto getStores();
 
+//        /**
+//         * 가게 단건 조회
+//         * @param storeId 조회할 가게 ID
+//         * @return 조회된 가게 정보
+//         */
+//        StoreViewResponseDto getStoreById(Long storeId, User user);
+
         /**
-         * 가게 단건 조회
-         * @param storeId 조회할 가게 ID
-         * @return 조회된 가게 정보
+         * storeKey 값으로 가게 단건 조회
+         * @param storeKey 다음 api 검색 결과의 고유 key 값
+         * @return
          */
-        StoreViewResponseDto getStoreById(Long storeId, User user);
+        StoreResponseDto getStoresKey(String storeKey);
 
         /**
          * 가게 업데이트
-         * @param store 업데이트 할 가게
+         * @param storeId 업데이트 할 가게의 ID 값
          * @param requestDto 업데이트 할 가게 정보
          * @param user 가게 업데이트 요청자
          * @return 업데이트된 가게 정보
          */
-        StoreResponseDto updateStore(Store store, StoreRequestDto requestDto, User user);
+        StoreResponseDto updateStore(Long storeId, StoreRequestDto requestDto, User user);
 
         /**
          * 가게 삭제
@@ -54,6 +60,13 @@ public interface StoreService{
          * @return 가게 Entity
          */
         Store findStore(Long storeId);
+
+        /**
+         * 가게 Entity 단건 조회
+         * @param storeKey 조회할 가게 KEY
+         * @return 가게 Entity
+         */
+        Store findStoreKey(String storeKey);
 
         /**
          * 가게 찜하기
