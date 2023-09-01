@@ -173,56 +173,28 @@ public class AdminStoreServiceImplTest {
     @DisplayName("가게 아이디로 조회하기")
     void getStoreByIdTest() {
         // Given
-        AdminStoreRequestDto requestDto = AdminStoreRequestDto.builder()
-                .title("Test Store")
-                .homePageLink("Test Link")
-                .category("Test Category")
-                .address("Test Address")
-                .roadAddress("Test Road Address")
-                .latitude("Test Latitude")
-                .longitude("Test Longitude")
-                .build();
-        MockMultipartFile file1 = null;
-        try {
-            file1 = new MockMultipartFile("files"
-                    , "happy.png"
-                    , "multipart/form-data"
-                    , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        MockMultipartFile file2 = null;
-        try {
-            file2 = new MockMultipartFile("files"
-                    , "lol.png"
-                    , "multipart/form-data"
-                    , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        List<MultipartFile> files = List.of(
-                file1,
-                file2
-        );
-        User user = userRepository.findByEmail("test01@email.com").orElse(null);
-        assertNotNull(user);
-        AdminStoreResponseDto createdStore = storeService.createStore(requestDto, user, files);
-        Long storeId = createdStore.getId();
-
+        String storeKey1 = "-11";
+        String updatedTitle = "Updated Title";
+        String updatedCategory = "Updated Category";
+        String updatedHomepage = "Updated Link";
+        String updatedAddress = "Updated Address";
+        String updatedRoadAddress = "Updated Road Address";
+        String updatedLatitude = "Updated Latitude";
+        String updatedLongitude = "Updated Longitude";
         // When
-        AdminStoreViewResponseDto storedStore = storeService.getStoreById(storeId, user);
+        List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey1);
+        Store findStore = storeService.findStore(storeList.get(storeList.size() - 1).getId());
+        AdminStoreResponseDto storedStore = new AdminStoreResponseDto(findStore);
 
         // Then
-        assertEquals(storeId, storedStore.getId());
-        assertEquals("Test Store", storedStore.getTitle());
-        assertEquals("Test Link", storedStore.getHomePageLink());
-        assertEquals("Test Category", storedStore.getCategory());
-        assertEquals("Test Address", storedStore.getAddress());
-        assertEquals("Test Road Address", storedStore.getRoadAddress());
-
+        assertEquals(storeKey1, storedStore.getStoreKey());
+        assertEquals(updatedTitle, storedStore.getTitle());
+        assertEquals(updatedCategory, storedStore.getCategory());
+        assertEquals(updatedHomepage, storedStore.getHomePageLink());
+        assertEquals(updatedAddress, storedStore.getAddress());
+        assertEquals(updatedRoadAddress, storedStore.getRoadAddress());
+        assertEquals(updatedLatitude, storedStore.getLatitude());
+        assertEquals(updatedLongitude, storedStore.getLongitude());
     }
 
     @Test
@@ -230,13 +202,11 @@ public class AdminStoreServiceImplTest {
     @DisplayName("가게 삭제하기")
     void deleteStoreTest() {
         // Given
-
         User user = userRepository.findByEmail("test01@email.com").orElse(null);
         assertNotNull(user);
         String storeKey1 = "-11";
         List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey1);
         Long storeId = storeList.get(storeList.size() - 1).getId();
-
         // When
         storeService.deleteStore(storeId, user);
 
