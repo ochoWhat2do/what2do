@@ -34,13 +34,6 @@ public interface StoreService {
     void deleteStoreFavorite(Long storeId, User user);
 
     /**
-     * 가게 Entity 단건 조회
-     * @param storeId 조회할 가게 storeId
-     * @return 가게 Entity
-     */
-    Store findStore(Long storeId);
-
-    /**
      * 가게 전체 조회
      * @return api_store 테이블의 모든 가게
      */
@@ -55,8 +48,15 @@ public interface StoreService {
 
     /**
      * 가게 Entity 단건 조회
-     * @param storeKey 조회할 가게 storeKey
+     * @param storeId 조회할 가게 storeId
      * @return 가게 Entity
+     */
+    Store findStore(Long storeId);
+
+    /**
+     * 가게 Entity 단건 조회
+     * @param storeKey 조회할 가게 storeKey
+     * @return 가게 API Entity
      */
     ApiStore findStoreKey(String storeKey);
 
