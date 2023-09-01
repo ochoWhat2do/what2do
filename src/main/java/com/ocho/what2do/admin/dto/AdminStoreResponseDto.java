@@ -22,6 +22,7 @@ public class AdminStoreResponseDto extends ApiResponseDto {
     //    private List<StoreCategory> storeCategoryList;
     private boolean isStoreFavorite = false;
     private List<S3FileDto> images;
+    private String storeKey;
 
     public AdminStoreResponseDto(Store store) {
         this.id = store.getId();
@@ -35,5 +36,6 @@ public class AdminStoreResponseDto extends ApiResponseDto {
 //        this.storeCategoryList = store.getStoreCategoryList().stream().toList();
         this.isStoreFavorite = false;
         this.images = store.getImages();
+        this.storeKey = store.getStoreKey();
     }
 }

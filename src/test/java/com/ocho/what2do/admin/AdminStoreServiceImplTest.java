@@ -5,6 +5,7 @@ import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
 import com.ocho.what2do.admin.dto.AdminStoreViewResponseDto;
 import com.ocho.what2do.admin.service.AdminStoreServiceImpl;
 import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.entity.User;
@@ -27,258 +28,224 @@ import static org.junit.Assert.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminStoreServiceImplTest {
-  @Autowired
-  private UserServiceImpl userService;
-  @Autowired
-  private AdminStoreServiceImpl storeService;
-  @Autowired
-  private UserRepository userRepository;
-  @Autowired
-  private StoreRepository storeRepository;
-  @BeforeEach
-  void setMasterInfo() {
-    Optional<User> user1 = userRepository.findByEmail("test01@email.com");
-    String email = "test01@email.com";
-    String password = "test1234!";
-    SignupRequestDto requestDto;
-    if (!user1.isPresent()) {
-      requestDto = SignupRequestDto.builder()
-          .email(email).password(password).build();
-      SignUp(requestDto);
-    }
-  }
-  @Test
-  @Order(1)
-  @DisplayName("가게 생성")
-  void createStoreTest() throws IOException {
-    //given
-    String storeTitle1 = "TEST가게1";
-    String homePageLink1 = "가게 홈페이지 주소 1";
-    String category1 = "한식";
-    String address1 = "테스트1 가게 주소";
-    String roadAddress1 = "가게 도로명 주소 1";
-    String latitude1 = "가게 x좌표 1";
-    String longitude1 = "가게 y좌표 1";
-    //when
-    AdminStoreRequestDto requestDto1 = AdminStoreRequestDto.builder()
-        .title(storeTitle1)
-        .homePageLink(homePageLink1)
-        .category(category1)
-        .address(address1)
-        .roadAddress(roadAddress1)
-        .latitude(latitude1)
-        .longitude(longitude1)
-        .build();
-    MockMultipartFile file1 = new MockMultipartFile("files"
-            , "happy.png"
-            , "multipart/form-data"
-            , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
-    );
-    MockMultipartFile file2 = new MockMultipartFile("files"
-            , "lol.png"
-            , "multipart/form-data"
-            , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
-    );
+    @Autowired
+    private UserServiceImpl userService;
+    @Autowired
+    private AdminStoreServiceImpl storeService;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private StoreRepository storeRepository;
 
-    List<MultipartFile> files = List.of(
-            file1,
-            file2
-    );
-    //then
-    User user = userRepository.findByEmail("test01@email.com").orElse(null);
-    assertNotNull(user);
-    AdminStoreResponseDto responseDto1 = storeService.createStore(requestDto1, user, files);
-    assertNotNull(responseDto1);
-    assertNotNull(responseDto1.getId());  // 가게 생성 후 ID 값이 있는지 확인
-    assertEquals(storeTitle1, responseDto1.getTitle());
-    assertEquals(homePageLink1, responseDto1.getHomePageLink());
-    assertEquals(category1, responseDto1.getCategory());
-    assertEquals(address1, responseDto1.getAddress());
-    assertEquals(roadAddress1, responseDto1.getRoadAddress());
-    assertEquals(latitude1, responseDto1.getLatitude());
-    assertEquals(longitude1, responseDto1.getLongitude());
-  }
-
-  @Test
-  @Order(2)
-  @DisplayName("가게 수정하기")
-  void updateStoreTest() {
-    // Given
-    AdminStoreRequestDto requestDto = AdminStoreRequestDto.builder()
-        .title("Old Title")
-        .homePageLink("Old Link")
-        .category("Old Category")
-        .address("Old Address")
-        .roadAddress("Old Road Address")
-        .latitude("Old Latitude")
-        .longitude("Old Longitude")
-        .build();
-    MockMultipartFile file1 = null;
-    try {
-      file1 = new MockMultipartFile("files"
-              , "happy.png"
-              , "multipart/form-data"
-              , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    MockMultipartFile file2 = null;
-    try {
-      file2 = new MockMultipartFile("files"
-              , "lol.png"
-              , "multipart/form-data"
-              , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    @BeforeEach
+    void setMasterInfo() {
+        Optional<User> user1 = userRepository.findByEmail("test01@email.com");
+        String email = "test01@email.com";
+        String password = "test1234!";
+        SignupRequestDto requestDto;
+        if (!user1.isPresent()) {
+            requestDto = SignupRequestDto.builder()
+                    .email(email).password(password).build();
+            SignUp(requestDto);
+        }
     }
 
-    List<MultipartFile> files = List.of(
-            file1,
-            file2
-    );
-    User user = userRepository.findByEmail("test01@email.com").orElse(null);
-    assertNotNull(user);
+    @Test
+    @Order(1)
+    @DisplayName("가게 생성")
+    void createStoreTest() throws IOException {
+        //given
+        String storeTitle1 = "TEST가게1";
+        String storeKey1 = "-11";
+        String homePageLink1 = "가게 홈페이지 주소 1";
+        String category1 = "한식";
+        String address1 = "테스트1 가게 주소";
+        String roadAddress1 = "가게 도로명 주소 1";
+        String latitude1 = "가게 x좌표 1";
+        String longitude1 = "가게 y좌표 1";
+        //when
+        AdminStoreRequestDto requestDto1 = AdminStoreRequestDto.builder()
+                .title(storeTitle1)
+                .homePageLink(homePageLink1)
+                .category(category1)
+                .address(address1)
+                .roadAddress(roadAddress1)
+                .latitude(latitude1)
+                .longitude(longitude1)
+                .storeKey(storeKey1)
+                .build();
+        MockMultipartFile file1 = new MockMultipartFile("files"
+                , "happy.png"
+                , "multipart/form-data"
+                , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
+        );
+        MockMultipartFile file2 = new MockMultipartFile("files"
+                , "lol.png"
+                , "multipart/form-data"
+                , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
+        );
 
-    AdminStoreResponseDto createdStore = storeService.createStore(requestDto, user, files);
-    Long storeId = createdStore.getId();
-
-    // When
-    AdminStoreRequestDto updateRequestDto = AdminStoreRequestDto.builder()
-        .title("Updated Title")
-        .homePageLink("Updated Link")
-        .category("Updated Category")
-        .address("Updated Address")
-        .roadAddress("Updated Road Address")
-        .latitude("Updated Latitude")
-        .longitude("Updated Longitude")
-        .build();
-
-
-    AdminStoreResponseDto updateStore = storeService.updateStore(storeId, updateRequestDto, user, files);
-
-    // Then
-    assertEquals(storeId, updateStore.getId());
-    assertEquals(updateRequestDto.getTitle(), updateStore.getTitle());
-    assertEquals(updateRequestDto.getHomePageLink(), updateStore.getHomePageLink());
-    assertEquals(updateRequestDto.getCategory(), updateStore.getCategory());
-    assertEquals(updateRequestDto.getAddress(), updateStore.getAddress());
-    assertEquals(updateRequestDto.getRoadAddress(), updateStore.getRoadAddress());
-    assertEquals(updateRequestDto.getLatitude(), updateStore.getLatitude());
-    assertEquals(updateRequestDto.getLongitude(), updateStore.getLongitude());
-
-  }
-
-  @Test
-  @Order(3)
-  @DisplayName("가게 아이디로 조회하기")
-  void getStoreByIdTest() {
-    // Given
-    AdminStoreRequestDto requestDto = AdminStoreRequestDto.builder()
-        .title("Test Store")
-        .homePageLink("Test Link")
-        .category("Test Category")
-        .address("Test Address")
-        .roadAddress("Test Road Address")
-        .latitude("Test Latitude")
-        .longitude("Test Longitude")
-        .build();
-    MockMultipartFile file1 = null;
-    try {
-      file1 = new MockMultipartFile("files"
-              , "happy.png"
-              , "multipart/form-data"
-              , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    MockMultipartFile file2 = null;
-    try {
-      file2 = new MockMultipartFile("files"
-              , "lol.png"
-              , "multipart/form-data"
-              , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+        List<MultipartFile> files = List.of(
+                file1,
+                file2
+        );
+        //then
+        User user = userRepository.findByEmail("test01@email.com").orElse(null);
+        assertNotNull(user);
+        AdminStoreResponseDto responseDto1 = storeService.createStore(requestDto1, user, files);
+        assertNotNull(responseDto1);
+        assertNotNull(responseDto1.getId());  // 가게 생성 후 ID 값이 있는지 확인
+        assertEquals(storeTitle1, responseDto1.getTitle());
+        assertEquals(homePageLink1, responseDto1.getHomePageLink());
+        assertEquals(category1, responseDto1.getCategory());
+        assertEquals(address1, responseDto1.getAddress());
+        assertEquals(roadAddress1, responseDto1.getRoadAddress());
+        assertEquals(latitude1, responseDto1.getLatitude());
+        assertEquals(longitude1, responseDto1.getLongitude());
+        assertEquals(storeKey1, responseDto1.getStoreKey());
     }
 
-    List<MultipartFile> files = List.of(
-            file1,
-            file2
-    );
-    User user = userRepository.findByEmail("test01@email.com").orElse(null);
-    assertNotNull(user);
-    AdminStoreResponseDto createdStore = storeService.createStore(requestDto, user, files);
-    Long storeId = createdStore.getId();
+    @Test
+    @Order(2)
+    @DisplayName("가게 수정하기")
+    void updateStoreTest() {
+        // Given
+        AdminStoreRequestDto updateRequestDto = AdminStoreRequestDto.builder()
+                .title("Updated Title")
+                .homePageLink("Updated Link")
+                .category("Updated Category")
+                .address("Updated Address")
+                .roadAddress("Updated Road Address")
+                .latitude("Updated Latitude")
+                .longitude("Updated Longitude")
+                .build();
+        MockMultipartFile file1 = null;
+        try {
+            file1 = new MockMultipartFile("files"
+                    , "happy.png"
+                    , "multipart/form-data"
+                    , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        MockMultipartFile file2 = null;
+        try {
+            file2 = new MockMultipartFile("files"
+                    , "lol.png"
+                    , "multipart/form-data"
+                    , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-    // When
-    AdminStoreViewResponseDto storedStore = storeService.getStoreById(storeId, user);
+        List<MultipartFile> files = List.of(
+                file1,
+                file2
+        );
+        User user = userRepository.findByEmail("test01@email.com").orElse(null);
+        assertNotNull(user);
+        String storeKey1 = "-11";
 
-    // Then
-    assertEquals(storeId, storedStore.getId());
-    assertEquals("Test Store", storedStore.getTitle());
-    assertEquals("Test Link", storedStore.getHomePageLink());
-    assertEquals("Test Category", storedStore.getCategory());
-    assertEquals("Test Address", storedStore.getAddress());
-    assertEquals("Test Road Address", storedStore.getRoadAddress());
 
-  }
+        // When
 
-  @Test
-  @Order(4)
-  @DisplayName("가게 삭제하기")
-  void deleteStoreTest() {
-    // Given
-    AdminStoreRequestDto requestDto = AdminStoreRequestDto.builder()
-        .title("Store to Delete")
-        .homePageLink("Delete Link")
-        .category("Delete Category")
-        .address("Delete Address")
-        .roadAddress("Delete Road Address")
-        .latitude("Delete Latitude")
-        .longitude("Delete Longitude")
-        .build();
-    MockMultipartFile file1 = null;
-    try {
-      file1 = new MockMultipartFile("files"
-              , "happy.png"
-              , "multipart/form-data"
-              , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+
+        List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey1);
+        Long storeId = storeList.get(storeList.size() - 1).getId();
+        AdminStoreResponseDto updateStore = storeService.updateStore(storeId, updateRequestDto, user, files);
+
+        // Then
+        assertEquals(storeId, updateStore.getId());
+        assertEquals(updateRequestDto.getTitle(), updateStore.getTitle());
+        assertEquals(updateRequestDto.getHomePageLink(), updateStore.getHomePageLink());
+        assertEquals(updateRequestDto.getCategory(), updateStore.getCategory());
+        assertEquals(updateRequestDto.getAddress(), updateStore.getAddress());
+        assertEquals(updateRequestDto.getRoadAddress(), updateStore.getRoadAddress());
+        assertEquals(updateRequestDto.getLatitude(), updateStore.getLatitude());
+        assertEquals(updateRequestDto.getLongitude(), updateStore.getLongitude());
+
     }
-    MockMultipartFile file2 = null;
-    try {
-      file2 = new MockMultipartFile("files"
-              , "lol.png"
-              , "multipart/form-data"
-              , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
-      );
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+
+    @Test
+    @Order(3)
+    @DisplayName("가게 아이디로 조회하기")
+    void getStoreByIdTest() {
+        // Given
+        AdminStoreRequestDto requestDto = AdminStoreRequestDto.builder()
+                .title("Test Store")
+                .homePageLink("Test Link")
+                .category("Test Category")
+                .address("Test Address")
+                .roadAddress("Test Road Address")
+                .latitude("Test Latitude")
+                .longitude("Test Longitude")
+                .build();
+        MockMultipartFile file1 = null;
+        try {
+            file1 = new MockMultipartFile("files"
+                    , "happy.png"
+                    , "multipart/form-data"
+                    , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        MockMultipartFile file2 = null;
+        try {
+            file2 = new MockMultipartFile("files"
+                    , "lol.png"
+                    , "multipart/form-data"
+                    , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<MultipartFile> files = List.of(
+                file1,
+                file2
+        );
+        User user = userRepository.findByEmail("test01@email.com").orElse(null);
+        assertNotNull(user);
+        AdminStoreResponseDto createdStore = storeService.createStore(requestDto, user, files);
+        Long storeId = createdStore.getId();
+
+        // When
+        AdminStoreViewResponseDto storedStore = storeService.getStoreById(storeId, user);
+
+        // Then
+        assertEquals(storeId, storedStore.getId());
+        assertEquals("Test Store", storedStore.getTitle());
+        assertEquals("Test Link", storedStore.getHomePageLink());
+        assertEquals("Test Category", storedStore.getCategory());
+        assertEquals("Test Address", storedStore.getAddress());
+        assertEquals("Test Road Address", storedStore.getRoadAddress());
+
     }
 
-    List<MultipartFile> files = List.of(
-            file1,
-            file2
-    );
-    User user = userRepository.findByEmail("test01@email.com").orElse(null);
-    assertNotNull(user);
-    AdminStoreResponseDto createdStore = storeService.createStore(requestDto, user, files);
-    Long storeId = createdStore.getId();
+    @Test
+    @Order(4)
+    @DisplayName("가게 삭제하기")
+    void deleteStoreTest() {
+        // Given
 
-    // When
-    storeService.deleteStore(storeId, user);
+        User user = userRepository.findByEmail("test01@email.com").orElse(null);
+        assertNotNull(user);
+        String storeKey1 = "-11";
+        List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey1);
+        Long storeId = storeList.get(storeList.size() - 1).getId();
 
-    // Then
-    assertThrows(CustomException.class, () -> storeService.getStoreById(storeId, user));
-  }
-  @DisplayName("회원가입")
-  void SignUp(SignupRequestDto signupRequestDto) {
-    userService.signup(signupRequestDto);
-  }
+        // When
+        storeService.deleteStore(storeId, user);
+
+        // Then
+        assertThrows(CustomException.class, () -> storeService.getStoreById(storeId, user));
+    }
+
+    @DisplayName("회원가입")
+    void SignUp(SignupRequestDto signupRequestDto) {
+        userService.signup(signupRequestDto);
+    }
 }

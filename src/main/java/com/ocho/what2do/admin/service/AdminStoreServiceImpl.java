@@ -44,6 +44,7 @@ public class AdminStoreServiceImpl implements AdminStoreService {
                 .latitude(requestDto.getLatitude())
                 .longitude(requestDto.getLongitude())
                 .images(requestDto.getImages())
+                .storeKey(requestDto.getStoreKey())
                 .build();
         return new AdminStoreResponseDto(storeRepository.save(store));
 
