@@ -8,6 +8,7 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.user.entity.User;
+import org.springframework.data.domain.PageRequest;
 
 public interface StoreService {
 
@@ -35,9 +36,10 @@ public interface StoreService {
 
     /**
      * 가게 전체 조회
+     * @param page 페이징
      * @return api_store 테이블의 모든 가게
      */
-    StoreListResponseDto getStores();
+    StoreListResponseDto getStores(int page);
 
     /**
      * 가게 단건 조회
@@ -45,6 +47,14 @@ public interface StoreService {
      * @return StoreResponseDto
      */
     StoreResponseDto getStore(String storeKey);
+
+    /**
+     * 가게 카테고리별 조회
+     * @param category 조회할 가게 category
+     * @param page 페이징
+     * @return category 가 포함되는 모든 정보
+     */
+    StoreCategoryListResponseDto getStoreCategory(String category, int page);
 
     /**
      * 가게 Entity 단건 조회
@@ -61,9 +71,9 @@ public interface StoreService {
     ApiStore findStoreKey(String storeKey);
 
     /**
-     * 가게 카테고리별 조회
-     * @param category 조회할 가게 category
-     * @return category 가 포함되는 모든 정보
+     * 페이징 기능 추가 시 1 페이지부터 시작 하도록 설정
+     * @param page 페이지의 int 값
+     * @return int -> PageRequest 값
      */
-    StoreCategoryListResponseDto getStoreCategory(String category);
+    PageRequest pageable(int page);
 }
