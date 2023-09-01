@@ -31,21 +31,15 @@ public class ReviewController {
     private final UserService userService;
 
 
-    @Operation(summary = "전체 리뷰 조회", description = "모든 리뷰 정보를 조회합니다.")
-    @GetMapping("/stores/{storeId}/reviews")
-    public ResponseEntity<List<ReviewResponseDto>> getAllReviews() {
-        List<ReviewResponseDto> responseDtoList = reviewService.getAllReviews();
-        return ResponseEntity.ok(responseDtoList);
-    }
-
     @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
-    @GetMapping("/stores/{storeId}/reviews/paged")
-    public ResponseEntity<List<ReviewResponseDto>> getAllReviewsPaged(
+    @GetMapping("/stores/{storeId}/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getAllReviews(
+            @PathVariable("storeId") Long storeId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("isAsc") boolean isAsc) {
-        List<ReviewResponseDto> responseDto = reviewService.getAllReviewsPaged(page - 1, size, sortBy, isAsc);
+        List<ReviewResponseDto> responseDto = reviewService.getAllReviews(storeId, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(responseDto);
 
     }
@@ -72,7 +66,7 @@ public class ReviewController {
             @RequestPart @Valid ReviewRequestDto requestDto,
             @RequestPart(required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        ReviewResponseDto responseDto = reviewService.createReview(requestDto, userDetails.getUser(), files);
+        ReviewResponseDto responseDto = reviewService.createReview(storeId, requestDto, userDetails.getUser(), files);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -84,7 +78,7 @@ public class ReviewController {
             @Valid @RequestPart ReviewRequestDto requestDto,
             @RequestPart(required = false) List<MultipartFile> files,
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        ReviewResponseDto responseDto = reviewService.updateReview(reviewId, requestDto, userDetails.getUser(), files);
+        ReviewResponseDto responseDto = reviewService.updateReview(storeId, reviewId, requestDto, userDetails.getUser(), files);
         return ResponseEntity.ok().body(responseDto);
 
     }
@@ -92,7 +86,6 @@ public class ReviewController {
     @Operation(summary = "리뷰 삭제", description = "선택한 리뷰를 삭제합니다.")
     @DeleteMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<ApiResponseDto> deleteReview(
-            @PathVariable("storeId") Long storeId,
             @PathVariable("reviewId") Long reviewId,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         reviewService.deleteReview(reviewId, userDetails.getUser());

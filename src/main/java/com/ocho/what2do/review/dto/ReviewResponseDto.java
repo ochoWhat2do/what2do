@@ -18,6 +18,7 @@ public class ReviewResponseDto {
     private LocalDateTime modifiedAt;
     private int likeCount;
     private List<S3FileDto> attachment;
+    private Long orderNo;
 
     public ReviewResponseDto(Review review) {
         this.id = review.getId();
@@ -27,6 +28,7 @@ public class ReviewResponseDto {
         this.modifiedAt = review.getModifiedAt();
         this.likeCount = review.getLikes().size();
         this.attachment = review.getAttachment();
+        this.orderNo = review.getOrderNo();
     }
 
 }

@@ -39,6 +39,7 @@ public class Comment extends Timestamped {
   @JoinColumn(name = "user_id", updatable = false)
   private User user; // 작성자
 
+  @Builder.Default
   @OneToMany(mappedBy = "comment", orphanRemoval = true)
   private List<CommentLike> commentLikes = new ArrayList<>();
 
@@ -49,6 +50,7 @@ public class Comment extends Timestamped {
 
 
   // 자식
+  @Builder.Default
   @OneToMany(mappedBy = "parent", orphanRemoval = true)
   private List<Comment> children = new ArrayList<>();
 

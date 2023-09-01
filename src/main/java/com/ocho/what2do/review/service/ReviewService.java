@@ -11,18 +11,13 @@ import java.util.List;
 
 public interface ReviewService {
 
-    /*
-     * 전체 리뷰 조회
-     * @return 전체 리뷰 목록
-     */
-    List<ReviewResponseDto> getAllReviews();
 
     /*
      * 전체 리뷰 페이징 조회
      * @param pageable 페이징 정보
      * @return 전체 리뷰 페이지
      */
-    List<ReviewResponseDto> getAllReviewsPaged(int page, int size, String sorBy, boolean isAsc);
+    List<ReviewResponseDto> getAllReviews(Long storeId, int page, int size, String sorBy, boolean isAsc);
 
     /*
      * 내 리뷰 페이징 조회
@@ -38,7 +33,7 @@ public interface ReviewService {
      * @return 생성된 리뷰 정보
      * @param files 첨부파일 정보
      */
-    ReviewResponseDto createReview(ReviewRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
+    ReviewResponseDto createReview(Long storeId, ReviewRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
 
     /*
      * 리뷰 수정
@@ -48,7 +43,7 @@ public interface ReviewService {
      * @return 수정된 리뷰 정보
      * @param files 첨부파일 정보
      */
-    ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto, User user,  List<MultipartFile> files) throws IOException;
+    ReviewResponseDto updateReview(Long storeId, Long reviewId, ReviewRequestDto requestDto, User user,  List<MultipartFile> files) throws IOException;
 
     /*
      * 리뷰 삭제

@@ -11,6 +11,9 @@ import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.review.repository.ReviewLikeRepository;
 import com.ocho.what2do.review.repository.ReviewRepository;
+import com.ocho.what2do.store.dto.StoreResponseDto;
+import com.ocho.what2do.store.entity.Store;
+import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
@@ -34,23 +37,19 @@ public class ReviewServiceImpl implements ReviewService {
     private final UserRepository userRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final FileUploader fileUploader;
+    private final StoreRepository storeRepository;
+
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getAllReviews() {
-        List<Review> reviews = reviewRepository.findAll();
-        return reviews.stream()
-                .map(ReviewResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getAllReviewsPaged(int page, int size, String sortBy, boolean isAsc) {
+    public List<ReviewResponseDto> getAllReviews(Long storeId, int page, int size, String sortBy, boolean isAsc) {
+        Store store = findStore(storeId);
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        return reviewRepository.findAll(pageable).stream().map(ReviewResponseDto::new).toList();
+        List<ReviewResponseDto> stoerList = reviewRepository.findAllByStore(store, pageable).stream().map(ReviewResponseDto::new).toList();
+
+        return stoerList;
     }
 
     @Override
@@ -67,9 +66,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDto createReview(ReviewRequestDto requestDto, User user, List<MultipartFile> files)
+    public ReviewResponseDto createReview(Long storeId, ReviewRequestDto requestDto, User user, List<MultipartFile> files)
             throws IOException {
         user = findUser(user.getId());
+        Store store = findStore(storeId);
 
         //파일 등록
         List<S3FileDto> fileDtoList = null;
@@ -83,6 +83,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .content(requestDto.getContent())
                 .user(user)
                 .attachment(fileDtoList)
+                .store(store)
                 .build();
 
         reviewRepository.save(review);
@@ -92,12 +93,14 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewResponseDto updateReview(Long reviewId, ReviewRequestDto requestDto, User user, List<MultipartFile> files)
+    public ReviewResponseDto updateReview(Long storeId, Long reviewId, ReviewRequestDto requestDto, User user, List<MultipartFile> files)
             throws IOException {
 
         // 파일첨부
         List<S3FileDto> fileDtoList = null;
+        findStore(storeId);
         Review review = findReview(reviewId);
+
 
         // 파일정보 불러오기
         List<S3FileDto> attachment = review.getAttachment();
@@ -191,6 +194,10 @@ public class ReviewServiceImpl implements ReviewService {
     private Review findReview(Long reviewId) {
         return reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CustomException(CustomErrorCode.REVIEW_NOT_FOUND, null));
+    }
+
+    public Store findStore(Long storeId) {
+        return storeRepository.findById(storeId).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
     }
 
     private void confirmUser(Review review, User user) {

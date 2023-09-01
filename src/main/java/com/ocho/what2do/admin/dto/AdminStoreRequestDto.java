@@ -14,9 +14,10 @@ public class AdminStoreRequestDto {
     private String roadAddress;
     private String latitude;
     private String longitude;
+    private String storeKey;
 
     @Builder
-    public AdminStoreRequestDto(String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
+    public AdminStoreRequestDto(String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude, String storeKey) {
         this.title = title;
         this.homePageLink = homePageLink;
         this.category = category;
@@ -24,5 +25,6 @@ public class AdminStoreRequestDto {
         this.roadAddress = roadAddress;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.storeKey = storeKey;
     }
 }

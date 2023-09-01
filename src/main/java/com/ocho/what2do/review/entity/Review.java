@@ -4,6 +4,7 @@ import com.ocho.what2do.comment.entity.Comment;
 import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
+import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.user.entity.User;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -44,6 +45,10 @@ public class Review extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
+
     // 파일 첨부 컬럼(여러건 첨부 가능)
     @Convert(converter = S3FileDto.S3FileDtoConverter.class)
     @Type(JsonType.class)
@@ -58,12 +63,13 @@ public class Review extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Review(String title, String content, Long orderNo, User user, List<S3FileDto> attachment) {
+    public Review(String title, String content, Long orderNo, User user, List<S3FileDto> attachment, Store store) {
         this.title = title;
         this.content = content;
         this.orderNo = orderNo;
         this.user = user;
         this.attachment = attachment;
+        this.store = store;
 
     }
 

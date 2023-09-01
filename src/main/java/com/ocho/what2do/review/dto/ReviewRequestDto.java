@@ -2,6 +2,7 @@ package com.ocho.what2do.review.dto;
 
 import com.ocho.what2do.common.file.S3FileDto;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +21,19 @@ public class ReviewRequestDto {
 
     private Long orderNo;
 
+    private Long storeId;
+
 
     public List<S3FileDto> getAttachment() {
         return attachment;
+    }
+
+    @Builder
+
+    public ReviewRequestDto(String title, String content, Long orderNo, Long storeId) {
+        this.title = title;
+        this.content = content;
+        this.orderNo = orderNo;
+        this.storeId = storeId;
     }
 }
