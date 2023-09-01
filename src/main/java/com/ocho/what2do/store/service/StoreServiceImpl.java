@@ -4,6 +4,7 @@ import com.ocho.what2do.common.daum.entity.ApiStore;
 import com.ocho.what2do.common.daum.repository.ApiStoreRepository;
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
+import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.Store;
@@ -52,6 +53,13 @@ public class StoreServiceImpl implements StoreService {
             storeRepository.save(store);
         }
         return new StoreResponseDto(findStore);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StoreCategoryListResponseDto getStoreCategory(String category) {
+        List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category).stream().map(StoreResponseDto::new).toList();
+        return new StoreCategoryListResponseDto(storeCategory);
     }
 
     @Override

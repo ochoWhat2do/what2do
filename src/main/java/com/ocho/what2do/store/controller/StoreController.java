@@ -2,6 +2,7 @@ package com.ocho.what2do.store.controller;
 
 import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.security.UserDetailsImpl;
+import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.service.StoreService;
@@ -31,6 +32,13 @@ public class StoreController {
     @GetMapping("/stores/detail")
     public ResponseEntity<StoreResponseDto> getStoreKey(@RequestParam String storeKey) {
         StoreResponseDto result = storeService.getStore(storeKey);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @Operation(summary = "가게 카테고리 조회", description = "DB 내의 가게를 카테고리로 조회합니다.")
+    @GetMapping("/stores/search")
+    public ResponseEntity<StoreCategoryListResponseDto> getStoreCategory(@RequestParam String category) {
+        StoreCategoryListResponseDto result = storeService.getStoreCategory(category);
         return ResponseEntity.ok().body(result);
     }
 
