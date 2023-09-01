@@ -1,11 +1,13 @@
 package com.ocho.what2do.admin.dto;
 
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storecategory.entity.StoreCategory;
 import com.ocho.what2do.user.entity.User;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -18,8 +20,8 @@ public class AdminStoreViewResponseDto {
     private String address;
     private String roadAddress;
     private List<StoreCategory> storeCategoryList;
-
     private boolean isStoreFavorite = false;
+    private List<S3FileDto> images;
 
     public AdminStoreViewResponseDto(Store store, User user) {
         this.id = store.getId();
@@ -30,5 +32,6 @@ public class AdminStoreViewResponseDto {
         this.roadAddress = store.getRoadAddress();
 //        this.storeCategoryList = store.getStoreCategoryList().stream().toList();
         this.isStoreFavorite = (user == null ? false : store.getStoreFavoriteList().stream().filter(m -> m.getUser().getId() == user.getId()).toList().size() > 0 ? true : false);
+        this.images = store.getImages();
     }
 }

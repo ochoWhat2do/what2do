@@ -7,7 +7,6 @@ import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
-import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
@@ -83,10 +82,11 @@ public class ReviewServiceImplTest {
                 .longitude(longitude1)
                 .storeKey(storeKey)
                 .build();
+
         //then
         User user = userRepository.findByEmail("test01@email.com").orElse(null);
         assertNotNull(user);
-        AdminStoreResponseDto responseDto1 = storeService.createStore(requestDto1, user);
+        AdminStoreResponseDto responseDto1 = storeService.createStore(requestDto1, user, null);
         assertNotNull(responseDto1);
         assertNotNull(responseDto1.getId());  // 가게 생성 후 ID 값이 있는지 확인
         assertEquals(storeTitle1, responseDto1.getTitle());

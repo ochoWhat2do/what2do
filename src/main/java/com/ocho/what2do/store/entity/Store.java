@@ -1,12 +1,15 @@
 package com.ocho.what2do.store.entity;
 
 import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,10 @@ public class Store {
   private String latitude;                // 가게 x 좌표
   @Column(name = "longitude", length = 500)
   private String longitude;               // 가게 y 좌표
+  @Convert(converter = S3FileDto.S3FileDtoConverter.class)
+  @Type(JsonType.class)
+  @Column(name="images",columnDefinition = "json")
+  private List<S3FileDto> images;
 
 //  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
 //  private List<StoreCategory> storeCategoryList = new ArrayList<>();
@@ -43,7 +50,7 @@ public class Store {
   private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 
   @Builder
-  public Store(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude){
+  public Store(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude, List<S3FileDto> images){
     this.storeKey = storeKey;
     this.title = title;
     this.homePageLink = homePageLink;
@@ -52,6 +59,7 @@ public class Store {
     this.roadAddress = roadAddress;
     this.latitude = latitude;
     this.longitude = longitude;
+    this.images = images;
   }
 
   // 관리자용 업데이트
@@ -63,5 +71,6 @@ public class Store {
     this.roadAddress = requestDto.getRoadAddress();
     this.latitude = requestDto.getLatitude();
     this.longitude = requestDto.getLongitude();
+    this.images = requestDto.getImages();
   }
 }
