@@ -82,11 +82,36 @@ public class ReviewServiceImplTest {
                 .longitude(longitude1)
                 .storeKey(storeKey)
                 .build();
+        MockMultipartFile file1 = null;
+        try {
+            file1 = new MockMultipartFile("files"
+                    , "happy.png"
+                    , "multipart/form-data"
+                    , new FileInputStream(getClass().getResource("/image/happy.png").getFile())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        MockMultipartFile file2 = null;
+        try {
+            file2 = new MockMultipartFile("files"
+                    , "lol.png"
+                    , "multipart/form-data"
+                    , new FileInputStream(getClass().getResource("/image/lol.png").getFile())
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<MultipartFile> files = List.of(
+                file1,
+                file2
+        );
 
         //then
         User user = userRepository.findByEmail("test01@email.com").orElse(null);
         assertNotNull(user);
-        AdminStoreResponseDto responseDto1 = storeService.createStore(requestDto1, user, null);
+        AdminStoreResponseDto responseDto1 = storeService.createStore(requestDto1, user, files);
         assertNotNull(responseDto1);
         assertNotNull(responseDto1.getId());  // 가게 생성 후 ID 값이 있는지 확인
         assertEquals(storeTitle1, responseDto1.getTitle());
