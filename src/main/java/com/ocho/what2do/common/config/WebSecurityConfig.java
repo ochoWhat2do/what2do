@@ -93,7 +93,6 @@ public class WebSecurityConfig {
             .requestMatchers(HttpMethod.GET, "/api/users/info").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/users/checkEmail").permitAll()
            //  .requestMatchers("/admin/**").permitAll()
-            .requestMatchers("/api/naver/**").permitAll() // naver 지역 api 요청 접근 허가
             .requestMatchers("/api/daum/**").permitAll() // daum 지역 api 요청 접근 허가
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리
     );
