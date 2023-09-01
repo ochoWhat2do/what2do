@@ -15,6 +15,8 @@ import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +33,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
-    public StoreListResponseDto getStores() {
-        List<StoreResponseDto> storeList = apiStoreRepository.findAll().stream().map(StoreResponseDto::new).collect(Collectors.toList());
+    public StoreListResponseDto getStores(int page) {
+        PageRequest pageRequest = pageable(page);
+        List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
         return new StoreListResponseDto(storeList);
     }
 
@@ -57,8 +60,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
-    public StoreCategoryListResponseDto getStoreCategory(String category) {
-        List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category).stream().map(StoreResponseDto::new).toList();
+    public StoreCategoryListResponseDto getStoreCategory(String category, int page) {
+        PageRequest pageRequest = pageable(page);
+        List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
         return new StoreCategoryListResponseDto(storeCategory);
     }
 
@@ -102,5 +106,18 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public ApiStore findStoreKey(String storeKey) {
         return apiStoreRepository.findByStoreKey(storeKey).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+    }
+
+    @Override
+    public PageRequest pageable(int page) {
+        /*
+         * pageRequest.of(page, size, sort)
+         * page : page -1 -> PageConfig 에서 page 시작 값을 1로 잡았지만 내부적으로는 0부터 시작으로 -1 을 진행
+         * size : 한 page 의 출력 갯수
+         * Sort.by("") : 정렬 기준
+         * ascending : 오름차순 (default)
+         * descending : 내림차순
+         */
+        return PageRequest.of(page - 1, 10, Sort.by("id"));
     }
 }

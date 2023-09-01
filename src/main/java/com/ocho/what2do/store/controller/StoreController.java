@@ -23,8 +23,8 @@ public class StoreController {
 
     @Operation(summary = "가게 전체 조회", description = "DB 내의 모든 가게를 조회합니다.")
     @GetMapping("/stores")
-    public ResponseEntity<StoreListResponseDto> getStores() {
-        StoreListResponseDto result = storeService.getStores();
+    public ResponseEntity<StoreListResponseDto> getStores(@RequestParam(required = false, defaultValue = "0") int page) {
+        StoreListResponseDto result = storeService.getStores(page);
         return ResponseEntity.ok().body(result);
     }
 
@@ -37,8 +37,9 @@ public class StoreController {
 
     @Operation(summary = "가게 카테고리 조회", description = "DB 내의 가게를 카테고리로 조회합니다.")
     @GetMapping("/stores/search")
-    public ResponseEntity<StoreCategoryListResponseDto> getStoreCategory(@RequestParam String category) {
-        StoreCategoryListResponseDto result = storeService.getStoreCategory(category);
+    public ResponseEntity<StoreCategoryListResponseDto> getStoreCategory(@RequestParam String category,
+                                                                         @RequestParam(required = false, defaultValue = "0") int page) {
+        StoreCategoryListResponseDto result = storeService.getStoreCategory(category, page);
         return ResponseEntity.ok().body(result);
     }
 
@@ -64,5 +65,4 @@ public class StoreController {
         storeService.deleteStoreFavorite(storeId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 찜하기 취소 성공"));
     }
-
 }
