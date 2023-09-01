@@ -6,16 +6,21 @@ import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
 import com.ocho.what2do.admin.dto.AdminStoreViewResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.user.entity.User;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public interface AdminStoreService {
 
   /**
    * 가게 생성
+   *
    * @param requestDto 가게 생성 요청 정보
-   * @param user 가게 생성 요청자
+   * @param user       가게 생성 요청자
+   * @param files      가게 첨부 이미지
    * @return 가게 생성 결과
    */
-  AdminStoreResponseDto createStore(AdminStoreRequestDto requestDto, User user);
+  AdminStoreResponseDto createStore(AdminStoreRequestDto requestDto, User user, List<MultipartFile> files);
 
   /**
    * 전체 가게 목록 조회
@@ -32,12 +37,14 @@ public interface AdminStoreService {
 
   /**
    * 가게 업데이트
-   * @param storeId 업데이트 할 가게
+   *
+   * @param storeId    업데이트 할 가게
    * @param requestDto 업데이트 할 가게 정보
-   * @param user 가게 업데이트 요청자
+   * @param user       가게 업데이트 요청자
+   * @param files      업데이트할 가게 첨부 사진
    * @return 업데이트된 가게 정보
    */
-  AdminStoreResponseDto updateStore(Long storeId, AdminStoreRequestDto requestDto, User user);
+  AdminStoreResponseDto updateStore(Long storeId, AdminStoreRequestDto requestDto, User user, List<MultipartFile> files);
 
   /**
    * 가게 삭제

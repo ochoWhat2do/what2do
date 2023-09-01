@@ -13,14 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -31,8 +27,8 @@ public class AdminStoreController {
 
   @Operation(summary = "관리자 가게 등록", description = "가게를 등록합니다.")
   @PostMapping("/stores") //가게 등록
-  public ResponseEntity<AdminStoreResponseDto> createStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody AdminStoreRequestDto requestDto) {
-    return new ResponseEntity<>(storeService.createStore(requestDto, userDetails.getUser()), HttpStatus.OK);
+  public ResponseEntity<AdminStoreResponseDto> createStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestPart AdminStoreRequestDto requestDto, @RequestPart(required = false) List<MultipartFile> files) {
+    return new ResponseEntity<>(storeService.createStore(requestDto, userDetails.getUser(),files), HttpStatus.OK);
   }
 
   @Operation(summary = "관리자 가게 전체 조회", description = "가게를 조회합니다.")
@@ -51,9 +47,9 @@ public class AdminStoreController {
 
   @Operation(summary = "관리자 가게 수정", description = "가게를 수정합니다.")
   @PutMapping("/stores/{storeId}") //가게 수정
-  public ResponseEntity<ApiResponseDto> updateStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId, @RequestBody AdminStoreRequestDto requestDto) {
+  public ResponseEntity<ApiResponseDto> updateStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId, @RequestPart AdminStoreRequestDto requestDto,  @RequestPart(required = false) List<MultipartFile> files) {
     AdminStoreResponseDto result;
-    result = storeService.updateStore(storeId, requestDto, userDetails.getUser());
+    result = storeService.updateStore(storeId, requestDto, userDetails.getUser(), files);
     return ResponseEntity.ok().body(result);
   }
 
