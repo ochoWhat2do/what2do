@@ -49,10 +49,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public String createComment(CommentCreateRequestDto requestDto, User user) {
+    public String createComment(Long reviewId, CommentCreateRequestDto requestDto, User user) {
 
         Comment comment = new Comment(requestDto);
-        Review review = findReview(requestDto.getReviewId());
+        Review review = findReview(reviewId);
         comment.setReview(review);
         comment.setUser(user);
         commentRepository.save(comment);

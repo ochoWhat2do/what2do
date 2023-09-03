@@ -24,7 +24,7 @@ public interface CommentService {
      * @param user 작성자 정보
      * @return 생성된 댓글 정보
      */
-    String createComment(CommentCreateRequestDto requestDto, User user);
+    String createComment(Long reviewId, CommentCreateRequestDto requestDto, User user);
 
     /*
      * 댓글 수정

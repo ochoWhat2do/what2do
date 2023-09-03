@@ -49,7 +49,7 @@ public class CommentController {
             @RequestBody CommentCreateRequestDto requestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        String result = commentService.createComment(requestDto, userDetails.getUser());
+        String result = commentService.createComment(reviewId, requestDto, userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto(HttpStatus.OK.value(), result));
     }
 
