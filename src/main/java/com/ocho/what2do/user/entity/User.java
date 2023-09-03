@@ -66,7 +66,7 @@ public class User {
         this.password = password;
         this.role = role;
         nickname = email.substring(0, email.indexOf('@'));
-        introduction = "I'm " + nickname;
+        introduction = "안녕하세요.";
     }
 
     public User(String email, String password, UserRoleEnum role, String city, String gender) {
@@ -76,7 +76,7 @@ public class User {
         this.city = city;
         this.gender = gender;
         nickname = email.substring(0, email.indexOf('@'));
-        introduction = "I'm " + nickname;
+        introduction = "안녕하세요.";
     }
 
     @Builder
