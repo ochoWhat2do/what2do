@@ -29,6 +29,7 @@ public class CommentController {
     @GetMapping("/stores/{storeId}/reviews/{reviewId}/comments")
     @ResponseBody
     public ResponseEntity commentList(
+            @PathVariable Long storeId,
             @PathVariable Long reviewId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
