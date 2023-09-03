@@ -26,7 +26,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록을 조회합니다.")
-    @GetMapping("/stores/{storeId}/comments/{reviewId}")
+    @GetMapping("/stores/{storeId}/reviews/{reviewId}/comments")
     @ResponseBody
     public ResponseEntity commentList(
             @PathVariable Long reviewId,
