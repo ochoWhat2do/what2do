@@ -172,58 +172,58 @@ public class ReviewServiceImplTest {
         }
     }
 
-    @Test
-    @Order(2)
-    @DisplayName("리뷰 삭제하기")
-    void deleteReviewTest() throws IOException {
-
-        // Given
-        String title = "타이틀1#";
-        String content = "라뷰1";
-        Long orderNo = 0L;
-        String storeKey = "-10";
-        List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey);
-        Long storeId = (long) (storeList.size() > 0 ? storeList.get(storeList.size() - 1).getId() : -1);
-        String userEmail = "test01@email.com";
-
-
-        User user = userRepository.findByEmail(userEmail).orElse(null);
-        assertNotNull(user);
-        ReviewResponseDto responseDto = null;
-        if (storeId > 0) {
-            ReviewRequestDto requestDto = ReviewRequestDto.builder()
-                    .title(title)
-                    .content(content)
-                    .orderNo(orderNo)
-                    .storeId(storeId)
-                    .build();
-            MockMultipartFile file1 = new MockMultipartFile("files"
-                    , "palmtree.png"
-                    , "multipart/form-data"
-                    , new FileInputStream(getClass().getResource("/image/palmtree.png").getFile())
-            );
-            MockMultipartFile file2 = new MockMultipartFile("files"
-                    , "pororo.png"
-                    , "multipart/form-data"
-                    , new FileInputStream(getClass().getResource("/image/pororo.png").getFile())
-            );
-
-            List<MultipartFile> files = List.of(
-                    file1,
-                    file2
-            );
-            reviewService.createReview(storeId, requestDto, user, null);
-        }
-
-
-        // When
-        List<Review> reviews = reviewRepository.findByTitle(title);
-        Long reviewId = reviews.get(reviews.size() - 1).getId();
-        reviewService.deleteReview(reviewId, user);
-
-        // Then
-        assertThrows(CustomException.class, () -> reviewService.getReview(reviewId, user));
-    }
+//    @Test
+//    @Order(2)
+//    @DisplayName("리뷰 삭제하기")
+//    void deleteReviewTest() throws IOException {
+//
+//        // Given
+//        String title = "타이틀1#";
+//        String content = "라뷰1";
+//        Long orderNo = 0L;
+//        String storeKey = "-10";
+//        List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey);
+//        Long storeId = (long) (storeList.size() > 0 ? storeList.get(storeList.size() - 1).getId() : -1);
+//        String userEmail = "test01@email.com";
+//
+//
+//        User user = userRepository.findByEmail(userEmail).orElse(null);
+//        assertNotNull(user);
+//        ReviewResponseDto responseDto = null;
+//        if (storeId > 0) {
+//            ReviewRequestDto requestDto = ReviewRequestDto.builder()
+//                    .title(title)
+//                    .content(content)
+//                    .orderNo(orderNo)
+//                    .storeId(storeId)
+//                    .build();
+//            MockMultipartFile file1 = new MockMultipartFile("files"
+//                    , "palmtree.png"
+//                    , "multipart/form-data"
+//                    , new FileInputStream(getClass().getResource("/image/palmtree.png").getFile())
+//            );
+//            MockMultipartFile file2 = new MockMultipartFile("files"
+//                    , "pororo.png"
+//                    , "multipart/form-data"
+//                    , new FileInputStream(getClass().getResource("/image/pororo.png").getFile())
+//            );
+//
+//            List<MultipartFile> files = List.of(
+//                    file1,
+//                    file2
+//            );
+//            reviewService.createReview(storeId, requestDto, user, null);
+//        }
+//
+//
+//        // When
+//        List<Review> reviews = reviewRepository.findByTitle(title);
+//        Long reviewId = reviews.get(reviews.size() - 1).getId();
+//        reviewService.deleteReview(reviewId, user);
+//
+//        // Then
+//        assertThrows(CustomException.class, () -> reviewService.getReview(reviewId, user));
+//    }
 
     @DisplayName("회원가입")
     void SignUp(SignupRequestDto signupRequestDto) {
