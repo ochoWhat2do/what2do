@@ -61,6 +61,13 @@ public class User {
     @Column
     private boolean locked = false;
 
+
+    public User socialIdUpdate(SocialType socialType, String socialId) {
+        this.socialType = socialType;
+        this.socialId = socialId;
+        return this;
+    }
+
     public User(String email, String password, UserRoleEnum role) {
         this.email = email;
         this.password = password;
@@ -80,13 +87,14 @@ public class User {
     }
 
     @Builder
-    public User(String email, UserRoleEnum role, String nickname, String picture, String socialId, SocialType socialType) {
+    public User(String email, UserRoleEnum role, String nickname, String picture, String socialId, SocialType socialType, String password) {
         this.email = email;
         this.role = role;
         this.nickname = nickname;
         this.picture = picture;
         this.socialId = socialId;
         this.socialType = socialType;
+        this.password = password;
     }
 
     public void editUserInfo(String nickname, String introduction, String picture) {
