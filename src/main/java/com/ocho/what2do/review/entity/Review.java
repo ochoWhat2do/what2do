@@ -41,6 +41,9 @@ public class Review extends Timestamped {
     @Column(name = "order_no")
     private Long orderNo;
 
+    @Column(nullable = false) // 별점 필드 추가
+    private int rate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -63,13 +66,14 @@ public class Review extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Review(String title, String content, Long orderNo, User user, List<S3FileDto> attachment, Store store) {
+    public Review(String title, String content, Long orderNo, User user, List<S3FileDto> attachment, Store store, int rate) {
         this.title = title;
         this.content = content;
         this.orderNo = orderNo;
         this.user = user;
         this.attachment = attachment;
         this.store = store;
+        this.rate = rate;
 
     }
 
@@ -78,6 +82,7 @@ public class Review extends Timestamped {
         this.title = reviewRequestDto.getTitle();
         this.attachment = reviewRequestDto.getAttachment();
         this.orderNo = reviewRequestDto.getOrderNo();
+        this.rate = reviewRequestDto.getRate();
     }
 
     public Collection<ReviewLike> getLikes() {

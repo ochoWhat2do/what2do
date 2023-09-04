@@ -84,6 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .user(user)
                 .attachment(fileDtoList)
                 .store(store)
+                .rate(requestDto.getRate())
                 .build();
 
         reviewRepository.save(review);
