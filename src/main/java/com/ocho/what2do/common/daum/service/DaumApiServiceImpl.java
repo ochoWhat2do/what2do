@@ -2,6 +2,9 @@ package com.ocho.what2do.common.daum.service;
 
 import com.ocho.what2do.common.daum.entity.ApiStore;
 import com.ocho.what2do.common.daum.repository.ApiStoreRepository;
+import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.message.CustomErrorCode;
+import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +33,7 @@ public class DaumApiServiceImpl implements DaumApiService {
     private String Authorization;
 
     @Override
-    public List<StoreResponseDto> searchItems(String query, String page) {
+    public StoreListResponseDto searchItems(String query, String page) {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
                 .fromUriString("https://dapi.kakao.com")
@@ -53,11 +56,14 @@ public class DaumApiServiceImpl implements DaumApiService {
 
         log.info("DAUM API Status Code : " + responseEntity.getStatusCode());
 
+        if (Integer.parseInt(page) > 3) {
+            throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
+        }
         return fromJSONtoItems(responseEntity.getBody());
     }
 
     @Override
-    public List<StoreResponseDto> fromJSONtoItems(String responseEntity) {
+    public StoreListResponseDto fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
         JSONArray documents = jsonObject.getJSONArray("documents");
         List<StoreResponseDto> storeResponseDtoList = new ArrayList<>();
@@ -78,6 +84,17 @@ public class DaumApiServiceImpl implements DaumApiService {
             }
             storeResponseDtoList.add(storeResponseDto);
         }
-        return storeResponseDtoList;
+
+        JSONObject meta = jsonObject.getJSONObject("meta");
+        Integer totalCnt = meta.getInt("total_count");
+        Integer pageCnt = meta.getInt("pageable_count");
+        Boolean pageEnd = meta.getBoolean("is_end");
+
+        JSONObject name = meta.getJSONObject("same_name");
+        String keyWord = name.getString("keyword");
+        String region = name.getString("selected_region");
+
+
+        return new StoreListResponseDto(totalCnt, pageCnt, pageEnd, keyWord, region, storeResponseDtoList);
     }
 }

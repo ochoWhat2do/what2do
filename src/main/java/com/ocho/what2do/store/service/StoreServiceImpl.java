@@ -36,11 +36,18 @@ public class StoreServiceImpl implements StoreService {
     public StoreListResponseDto getStores(int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
-        return new StoreListResponseDto(storeList);
+        Integer totalCnt = apiStoreRepository.findAll().size();
+        Boolean pageEnd = pageEnd(totalCnt, page);
+
+        if (page - 1 > Math.floorDiv(totalCnt, 10)) {
+            throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
+        }
+
+        return new StoreListResponseDto(totalCnt, pageEnd, storeList);
     }
 
     @Override
-    @Transactional
+    @Transactional      // readOnly = true 사용 시 에러
     public StoreResponseDto getStore(String storeKey) {
         ApiStore findStore = findStoreKey(storeKey);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
@@ -63,7 +70,14 @@ public class StoreServiceImpl implements StoreService {
     public StoreCategoryListResponseDto getStoreCategory(String category, int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
-        return new StoreCategoryListResponseDto(storeCategory);
+        Integer totalCnt = apiStoreRepository.findAllByCategoryContains(category).stream().toList().size();
+        Boolean pageEnd = pageEnd(totalCnt, page);
+
+        if (page - 1 > Math.floorDiv(totalCnt, 10)) {
+            throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
+        }
+
+        return new StoreCategoryListResponseDto(totalCnt, pageEnd, storeCategory);
     }
 
     @Override
@@ -119,5 +133,9 @@ public class StoreServiceImpl implements StoreService {
          * descending : 내림차순
          */
         return PageRequest.of(page - 1, 10, Sort.by("id"));
+    }
+
+    public Boolean pageEnd(int totalCnt, int page) {
+        return Math.floorDiv(totalCnt, 10) != page;
     }
 }
