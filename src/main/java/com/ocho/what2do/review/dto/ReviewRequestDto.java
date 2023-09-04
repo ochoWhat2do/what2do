@@ -21,7 +21,7 @@ public class ReviewRequestDto {
 
     private Long orderNo = 1L; // 관리용도로 사용할것
 
-    private Long rate; // 평점
+    private int rate; // 평점
 
     private Long storeId;
 
@@ -32,10 +32,11 @@ public class ReviewRequestDto {
 
     @Builder
 
-    public ReviewRequestDto(String title, String content, Long orderNo, Long storeId) {
+    public ReviewRequestDto(String title, String content, Long orderNo, Long storeId, int rate) {
         this.title = title;
         this.content = content;
-        this.orderNo = orderNo;
+//        this.orderNo = orderNo;
         this.storeId = storeId;
+        this.rate = rate;
     }
 }

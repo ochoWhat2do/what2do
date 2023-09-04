@@ -19,6 +19,7 @@ public class ReviewResponseDto {
     private int likeCount;
     private List<S3FileDto> attachment;
     private Long orderNo;
+    private int rate;
 
     public ReviewResponseDto(Review review) {
         this.id = review.getId();
@@ -29,6 +30,7 @@ public class ReviewResponseDto {
         this.likeCount = review.getLikes().size();
         this.attachment = review.getAttachment();
         this.orderNo = review.getOrderNo();
+        this.rate = review.getRate();
     }
 
 }

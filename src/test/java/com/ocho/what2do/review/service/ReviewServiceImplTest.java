@@ -3,10 +3,8 @@ package com.ocho.what2do.review.service;
 import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
 import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
 import com.ocho.what2do.admin.service.AdminStoreServiceImpl;
-import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
-import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
@@ -25,7 +23,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -133,6 +132,7 @@ public class ReviewServiceImplTest {
         String storeKey = "-10";
         List<Store> storeList = storeRepository.getStoreListByStoreKey(storeKey);
         Long storeId = (long) (storeList.size() > 0 ? storeList.get(storeList.size() - 1).getId() : -1);
+        int rate = 3;
 
         //when
         ReviewResponseDto responseDto = null;
@@ -142,6 +142,7 @@ public class ReviewServiceImplTest {
                     .content(content)
                     .orderNo(orderNo)
                     .storeId(storeId)
+                    .rate(rate)
                     .build();
             MockMultipartFile file1 = new MockMultipartFile("files"
                     , "palmtree.png"
@@ -169,6 +170,7 @@ public class ReviewServiceImplTest {
             assertNotNull(responseDto.getId());  // 리뷰 생성 후 ID 값이 있는지 확인
             assertEquals(title, responseDto.getTitle());
             assertEquals(content, responseDto.getContent());
+            assertEquals(rate, responseDto.getRate());
         }
     }
 
