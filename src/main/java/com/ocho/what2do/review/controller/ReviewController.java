@@ -71,7 +71,7 @@ public class ReviewController {
     }
 
     @Operation(summary = "리뷰 수정", description = "선택한 리뷰의 내용을 수정합니다.")
-    @PatchMapping("/stores/{storeId}/reviews/{reviewId}")
+    @PutMapping("/stores/{storeId}/reviews/{reviewId}")
     public ResponseEntity<ReviewResponseDto> updateReview(
             @PathVariable("storeId") Long storeId,
             @PathVariable("reviewId") Long reviewId,

@@ -19,7 +19,9 @@ public class ReviewRequestDto {
 
     private List<S3FileDto> attachment;
 
-    private Long orderNo;
+    private Long orderNo = 1L; // 관리용도로 사용할것
+
+    private Long rate; // 평점
 
     private Long storeId;
 
