@@ -58,7 +58,7 @@ public class ReviewServiceImpl implements ReviewService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-       return reviewRepository.findByUser(user, pageable)
+        return reviewRepository.findByUser(user, pageable)
                 .stream()
                 .map(ReviewResponseDto::new)
                 .toList();
@@ -84,6 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .user(user)
                 .attachment(fileDtoList)
                 .store(store)
+                .rate(requestDto.getRate())
                 .build();
 
         reviewRepository.save(review);
@@ -123,6 +124,7 @@ public class ReviewServiceImpl implements ReviewService {
         confirmUser(review, user);
 
         review.updateReview(requestDto);
+
         return new ReviewResponseDto(review);
     }
 
@@ -150,6 +152,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public ReviewResponseDto getReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
+
         return new ReviewResponseDto(review);
     }
 
