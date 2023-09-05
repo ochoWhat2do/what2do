@@ -7,6 +7,7 @@ import com.ocho.what2do.common.jwt.JwtUtil;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.common.redis.RedisUtil;
 import com.ocho.what2do.common.security.UserDetailsImpl;
+import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.user.dto.EditUserRequestDto;
 import com.ocho.what2do.user.dto.SignupRequestDto;
 import com.ocho.what2do.user.dto.UserProfileDto;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final ReviewRepository reviewRepository;
   private final UserPasswordRepository userPasswordRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
@@ -82,6 +84,7 @@ public class UserServiceImpl implements UserService {
     checkPassword(requestDto.getPassword(), found.getPassword());
     confirmUser(found, user);
 
+    reviewRepository.deleteAllByUserId(user.getId());
     userPasswordRepository.deleteAllByUser_Id(found.getId());
     userRepository.deleteById(found.getId());
   }

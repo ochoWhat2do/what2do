@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class UserResponseDto {
-    private Long id;
+    private Long userId;
     private String email;
     private boolean admin;
     private String role;
@@ -14,7 +14,7 @@ public class UserResponseDto {
     private String picture;
 
     public UserResponseDto(User user) {
-        this.id = user.getId();
+        this.userId = user.getId();
         this.email = user.getEmail();
         this.admin = user.getRole().equals(UserRoleEnum.ADMIN);
         this.nickname = user.getNickname();
