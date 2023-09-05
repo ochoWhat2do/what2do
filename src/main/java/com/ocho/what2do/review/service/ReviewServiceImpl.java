@@ -153,7 +153,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewResponseDto getReview(Long reviewId, User user) {
         Review review = findReview(reviewId);
 
-        return new ReviewResponseDto(review);
+        return new ReviewResponseDto(review, user);
     }
 
     @Override

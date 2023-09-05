@@ -18,7 +18,7 @@ public class ReviewLikeResponseDto {
         this.email = reviewLike.getUser().getEmail();
         this.nickname = reviewLike.getUser().getNickname();
         this.title = reviewLike.getReview().getTitle();
-
+        this.liked = reviewLike.getReview().getLikes().stream().filter(v -> v.getUser().equals(reviewLike.getUser())).toList().size() > 0;
     }
 
 }
