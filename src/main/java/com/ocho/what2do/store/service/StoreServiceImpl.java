@@ -47,7 +47,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    @Transactional      // readOnly = true 사용 시 에러
+    @Transactional
     public StoreResponseDto getStore(String storeKey) {
         ApiStore findStore = findStoreKey(storeKey);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
@@ -59,10 +59,18 @@ public class StoreServiceImpl implements StoreService {
                 .latitude(findStore.getLatitude())
                 .longitude(findStore.getLongitude())
                 .build();
+        Optional<Store> savedStore = null;
+        // 프론트에서는 db에 저장된 정보를 활용할 필요가 있다. storeKey 로 조회할 때는 ApiStore 테이블에서 조회, storeId가 필요할때는 Store 테이블에서 조회
         if (!storeRepository.existsStoreByStoreKey(store.getStoreKey())) {
-            storeRepository.save(store);
+            savedStore = Optional.of(storeRepository.save(store));
+        } else {
+            savedStore = storeRepository.getStoreByStoreKey(storeKey);
         }
-        return new StoreResponseDto(findStore);
+        if (savedStore.isPresent()) {
+            return new StoreResponseDto(savedStore.get());
+        } else {
+            return new StoreResponseDto(findStore);
+        }
     }
 
     @Override

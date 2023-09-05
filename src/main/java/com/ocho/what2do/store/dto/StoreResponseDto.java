@@ -2,6 +2,7 @@ package com.ocho.what2do.store.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ocho.what2do.common.daum.entity.ApiStore;
+import com.ocho.what2do.store.entity.Store;
 import lombok.Getter;
 import org.json.JSONObject;
 
@@ -30,6 +31,18 @@ public class StoreResponseDto {
     }
 
     public StoreResponseDto(ApiStore store) {
+        this.id = store.getId();
+        this.storeKey = store.getStoreKey();
+        this.title = store.getTitle();
+        this.homePageLink = store.getHomePageLink();
+        this.category = store.getCategory();
+        this.address = store.getAddress();
+        this.roadAddress = store.getRoadAddress();
+        this.latitude = store.getLatitude();
+        this.longitude = store.getLongitude();
+    }
+
+    public StoreResponseDto(Store store) {
         this.id = store.getId();
         this.storeKey = store.getStoreKey();
         this.title = store.getTitle();
