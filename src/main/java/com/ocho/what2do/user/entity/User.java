@@ -2,6 +2,7 @@ package com.ocho.what2do.user.entity;
 
 
 import com.ocho.what2do.comment.entity.CommentLike;
+import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import jakarta.persistence.*;
@@ -36,14 +37,17 @@ public class User {
     @Column
     private String picture;
 
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews = new ArrayList<>();
+
     @Column
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<StoreFavorite> storeFavorites = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<ReviewLike> reviewLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<CommentLike> commentLikes = new ArrayList<>();
 
     private String nickname;

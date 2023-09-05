@@ -16,6 +16,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Optional<Review> findByContent(String content);
     List<Review> findByTitle(String title);
     Page<Review> findByUser(User user, Pageable pageable);
+
+    List<Review> findByUser(User user);
+
     Page<Review> findAllByStore(Store store, Pageable pageable);
+
+    void deleteAllByUserId(Long userId);
 
 }

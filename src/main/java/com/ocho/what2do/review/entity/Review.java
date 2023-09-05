@@ -58,7 +58,7 @@ public class Review extends Timestamped {
     @Column(name="attachment",columnDefinition = "json")
     private List<S3FileDto> attachment;
 
-    @OneToMany(mappedBy = "review", orphanRemoval = true)
+    @OneToMany(mappedBy = "review", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ReviewLike> reviewLikeList = new ArrayList<>();
 
     @OneToMany(mappedBy = "review", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
