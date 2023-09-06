@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface ApiStoreRepository extends JpaRepository<ApiStore, Long> {
-    boolean existsApiStoreByAddress(String address);
+    boolean existsApiStoreByStoreKey(String storeKey);
 
     Optional<ApiStore> findByStoreKey(String storeKey);
 

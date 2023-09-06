@@ -79,7 +79,7 @@ public class DaumApiServiceImpl implements DaumApiService {
                     .latitude(storeResponseDto.getLatitude())
                     .longitude(storeResponseDto.getLongitude())
                     .build();
-            if (!apiStoreRepository.existsApiStoreByAddress(store.getAddress())) {
+            if (!apiStoreRepository.existsApiStoreByStoreKey(store.getStoreKey())) {
                 apiStoreRepository.save(store);
             }
             storeResponseDtoList.add(storeResponseDto);
