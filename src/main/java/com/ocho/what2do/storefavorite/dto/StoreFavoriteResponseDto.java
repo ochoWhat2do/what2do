@@ -14,11 +14,17 @@ public class StoreFavoriteResponseDto extends ApiResponseDto {
     private String title;
     private String email;
     private String storeKey;
+    private String category;
+    private String address;
+    private String homePageLink;
 
     public StoreFavoriteResponseDto(StoreFavorite storeFavorite){
         this.id = storeFavorite.getId();
         this.email = storeFavorite.getUser().getEmail();
         this.title = storeFavorite.getStore().getTitle();
         this.storeKey = storeFavorite.getStore().getStoreKey();
+        this.category = storeFavorite.getStore().getCategory();
+        this.address = storeFavorite.getStore().getAddress();
+        this.homePageLink =storeFavorite.getStore().getHomePageLink();
     }
 }
