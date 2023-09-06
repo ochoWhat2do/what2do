@@ -26,8 +26,8 @@ public class StoreResponseDto {
         this.category = itemJson.getString("category_name");
         this.address = itemJson.getString("address_name");
         this.roadAddress = itemJson.getString("road_address_name");
-        this.latitude = itemJson.getString("x");
-        this.longitude = itemJson.getString("y");
+        this.latitude = itemJson.getString("y");
+        this.longitude = itemJson.getString("x");
     }
 
     public StoreResponseDto(ApiStore store) {
