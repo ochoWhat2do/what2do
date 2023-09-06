@@ -4,12 +4,15 @@ import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.security.UserDetailsImpl;
 import com.ocho.what2do.user.dto.*;
 import com.ocho.what2do.user.entity.User;
+import com.ocho.what2do.user.service.RegisterEmail;
 import com.ocho.what2do.user.service.UserService;
 import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
 import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,9 +36,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "사용자 API", description = "사용자의 회원 가입 기능과 관련된 API 정보를 담고 있습니다.")
 public class UserController {
     private final UserService userService;
+    private final RegisterEmail registerEmail;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RegisterEmail registerEmail) {
         this.userService = userService;
+        this.registerEmail = registerEmail;
     }
 
     @Operation(summary = "회원 가입", description = "SignupRequesetDto를 통해 회원이 제출한 정보의 유효성 검사 후 통과 시 DB에 저장하고 성공 메시지를 반환합니다.")
@@ -56,7 +61,7 @@ public class UserController {
     @Operation(summary = "프로필 수정", description = "프로필 정보를 수정합니다.")
     @PutMapping(value = "/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserProfileDto> changeUserInfo(@RequestPart("profilePic") MultipartFile profilePic,
-        @RequestPart("requestDto") EditUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                                         @RequestPart("requestDto") EditUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         UserProfileDto userProfileDto = userService.editUserInfo(profilePic, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(userProfileDto);
     }
@@ -91,8 +96,14 @@ public class UserController {
 
     @Operation(summary = "프로필 정보", description = "프로필 정보를 받아옵니다.")
     @GetMapping("/profile")
-    public UserProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public UserProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserProfileDto userProfileDto = userService.getUserProfile(userDetails.getUser());
         return userProfileDto;
+    }
+
+    @Operation(summary = "이메일 인증", description = "회원가입 시 이메일 인증")
+    @PostMapping("/confirmEmail")
+    public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
+        return registerEmail.sendSimpleMessage(requestDto.getEmail());
     }
 }
