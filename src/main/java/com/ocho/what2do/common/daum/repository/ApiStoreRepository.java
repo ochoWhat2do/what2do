@@ -1,6 +1,7 @@
 package com.ocho.what2do.common.daum.repository;
 
 import com.ocho.what2do.common.daum.entity.ApiStore;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ApiStoreRepository extends JpaRepository<ApiStore, Long> {
+    @Cacheable("store")
     boolean existsApiStoreByStoreKey(String storeKey);
 
     Optional<ApiStore> findByStoreKey(String storeKey);

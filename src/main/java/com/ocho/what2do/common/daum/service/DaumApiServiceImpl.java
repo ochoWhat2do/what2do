@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,7 @@ public class DaumApiServiceImpl implements DaumApiService {
     }
 
     @Override
+    @Cacheable("store")
     public StoreListResponseDto fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
         JSONArray documents = jsonObject.getJSONArray("documents");
@@ -93,7 +95,6 @@ public class DaumApiServiceImpl implements DaumApiService {
         JSONObject name = meta.getJSONObject("same_name");
         String keyWord = name.getString("keyword");
         String region = name.getString("selected_region");
-
 
         return new StoreListResponseDto(totalCnt, pageCnt, pageEnd, keyWord, region, storeResponseDtoList);
     }

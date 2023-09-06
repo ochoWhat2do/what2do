@@ -15,6 +15,7 @@ import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("store")
     public StoreListResponseDto getStores(int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
@@ -48,6 +50,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
+    @Cacheable(value = "store", key = "#storeKey")
     public StoreResponseDto getStore(String storeKey) {
         ApiStore findStore = findStoreKey(storeKey);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
@@ -75,6 +78,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("store")
     public StoreCategoryListResponseDto getStoreCategory(String category, int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
@@ -143,7 +147,8 @@ public class StoreServiceImpl implements StoreService {
         return PageRequest.of(page - 1, 10, Sort.by("id"));
     }
 
+    @Override
     public Boolean pageEnd(int totalCnt, int page) {
-        return Math.floorDiv(totalCnt, 10) != page;
+        return Math.floorDiv(totalCnt, 10) == page - 1;
     }
 }
