@@ -10,6 +10,7 @@ import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
 import java.io.IOException;
 
 import org.springframework.http.HttpStatus;
@@ -60,7 +61,7 @@ public class UserController {
     @Operation(summary = "프로필 수정", description = "프로필 정보를 수정합니다.")
     @PutMapping(value = "/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserProfileDto> changeUserInfo(@RequestPart("profilePic") MultipartFile profilePic,
-        @RequestPart("requestDto") EditUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                                         @RequestPart("requestDto") EditUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         UserProfileDto userProfileDto = userService.editUserInfo(profilePic, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(userProfileDto);
     }
@@ -95,7 +96,7 @@ public class UserController {
 
     @Operation(summary = "프로필 정보", description = "프로필 정보를 받아옵니다.")
     @GetMapping("/profile")
-    public UserProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public UserProfileDto getUserProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         UserProfileDto userProfileDto = userService.getUserProfile(userDetails.getUser());
         return userProfileDto;
     }
@@ -103,6 +104,6 @@ public class UserController {
     @Operation(summary = "이메일 인증", description = "회원가입 시 이메일 인증")
     @PostMapping("/confirmEmail")
     public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
-        return  registerEmail.sendSimpleMessage(requestDto.getEmail());
+        return registerEmail.sendSimpleMessage(requestDto.getEmail());
     }
 }
