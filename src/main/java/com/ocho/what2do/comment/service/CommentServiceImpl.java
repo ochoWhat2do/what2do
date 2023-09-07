@@ -35,14 +35,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc
+    public List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc, User user
     ) {
         Review review = findReview(reviewId);
         Direction direction = isAsc ? Direction.ASC : Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         List<CommentResponseDto> commentList = commentRepository.findAllByReview(review, pageable).stream()
-                .map(CommentResponseDto::new).toList();
+                .map(v -> new CommentResponseDto(v, user)).toList();
         return commentList;
 
     }
