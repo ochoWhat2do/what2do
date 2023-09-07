@@ -11,4 +11,11 @@ public interface OauthService {
    * @return UserResponseDto 사용자 객체
    */
   SocialUserResponseDto kakaoLogin(String code);
+
+  /**
+   * 구글 로그인
+   * @param code 코드
+   * @return UserResponseDto 사용자 객체
+   */
+  SocialUserResponseDto GoogleLogin(String code);
 }
