@@ -34,7 +34,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("store")
+    //@Cacheable("store")
     public StoreListResponseDto getStores(int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
@@ -50,7 +50,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    @Cacheable(value = "store", key = "#storeKey")
+    //@Cacheable(value = "store", key = "#storeKey")
     public StoreResponseDto getStore(String storeKey) {
         ApiStore findStore = findStoreKey(storeKey);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
@@ -78,7 +78,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("store")
+    //@Cacheable("store")
     public StoreCategoryListResponseDto getStoreCategory(String category, int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
