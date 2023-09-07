@@ -65,6 +65,7 @@ public class DaumApiServiceImpl implements DaumApiService {
 
     @Override
     @Cacheable("store")
+//    @Cacheable("store")
     public StoreListResponseDto fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
         JSONArray documents = jsonObject.getJSONArray("documents");
