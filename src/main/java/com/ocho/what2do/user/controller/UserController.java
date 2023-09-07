@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 
 import java.io.IOException;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -105,5 +106,16 @@ public class UserController {
     @PostMapping("/confirmEmail")
     public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
         return registerEmail.sendSimpleMessage(requestDto.getEmail());
+    }
+
+    @Operation(summary = "사용자 목록 조회", description = "사용자 목록 페이징 조회")
+    @GetMapping("/list")
+    public ResponseEntity<Page<UserInfoResponseDto>> listUsers(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc) {
+        Page<UserInfoResponseDto> userDtoList = userService.getUserList(page - 1, size, sortBy, isAsc);
+        return ResponseEntity.ok(userDtoList);
     }
 }

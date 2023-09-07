@@ -2,6 +2,7 @@ package com.ocho.what2do.user.entity;
 
 
 import com.ocho.what2do.comment.entity.CommentLike;
+import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor // 생성자를 직접 만들어주었기 때문에 기초 생성자가 필수라서 추가
 @Table(name="users")
-public class User {
+public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -145,4 +146,7 @@ public class User {
     public void updateRefreshToken(String updateRefreshToken) {
         this.refreshToken = updateRefreshToken;
     }
+
+    public String getUsername() { return this.email; }
+
 }
