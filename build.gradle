@@ -74,6 +74,8 @@ dependencies {
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	// email
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	// cache
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
 }
 
 tasks.named('test') {
