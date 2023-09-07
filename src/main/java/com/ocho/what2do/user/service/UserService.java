@@ -1,14 +1,10 @@
 package com.ocho.what2do.user.service;
 
 import com.ocho.what2do.common.dto.ApiResponseDto;
-import com.ocho.what2do.user.dto.EditUserRequestDto;
-import com.ocho.what2do.user.dto.SignupRequestDto;
-import com.ocho.what2do.user.dto.UserProfileDto;
-import com.ocho.what2do.user.dto.UserResponseDto;
-import com.ocho.what2do.user.dto.WithdrawalRequestDto;
+import com.ocho.what2do.user.dto.*;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 // 사용자 서비스
@@ -76,4 +72,14 @@ public interface UserService {
      * @return 조회된 사용자 정보, 사용자가 존재하지 않을 경우 null 반환
      */
     User findUserById(Long userId);
+
+    /*
+     * 사용자 목록을 페이지별로 가져옵니다.
+     * @param page 페이지 번호 (0부터 시작)
+     * @param size 한 페이지당 사용자 수
+     * @param sortBy 정렬할 필드
+     * @param isAsc 오름차순 정렬 여부 (true면 오름차순, false면 내림차순)
+     * @return 사용자 정보를 담은 UserDto의 페이지
+     */
+    Page<UserInfoResponseDto> getUserList(int page, int size, String sortBy, boolean isAsc);
 }

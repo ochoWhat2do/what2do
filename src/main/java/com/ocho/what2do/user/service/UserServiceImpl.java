@@ -8,11 +8,7 @@ import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.common.redis.RedisUtil;
 import com.ocho.what2do.common.security.UserDetailsImpl;
 import com.ocho.what2do.review.repository.ReviewRepository;
-import com.ocho.what2do.user.dto.EditUserRequestDto;
-import com.ocho.what2do.user.dto.SignupRequestDto;
-import com.ocho.what2do.user.dto.UserProfileDto;
-import com.ocho.what2do.user.dto.UserResponseDto;
-import com.ocho.what2do.user.dto.WithdrawalRequestDto;
+import com.ocho.what2do.user.dto.*;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
@@ -20,16 +16,17 @@ import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import com.ocho.what2do.userpassword.entity.UserPassword;
 import com.ocho.what2do.userpassword.repository.UserPasswordRepository;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -175,6 +172,16 @@ public class UserServiceImpl implements UserService {
     }
     foundUser.editUserInfo(requestDto.getNickname(), requestDto.getIntroduction(), imageUrl);
     return new UserProfileDto(foundUser);
+  }
+
+  @Override
+  public Page<UserInfoResponseDto> getUserList(int page, int size, String sortBy, boolean isAsc) {
+    Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+    Pageable pageable = PageRequest.of(page, size, direction, sortBy);
+    Page<User> userPage = userRepository.findAll(pageable);
+
+    // UserDto로 변환 후 리턴
+    return userPage.map(UserInfoResponseDto::new);
   }
 
   private User findUserByEmail(String email) {
