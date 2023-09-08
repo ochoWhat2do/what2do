@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface ApiStoreRepository extends JpaRepository<ApiStore, Long> {
-    @Cacheable("store")
+    @Cacheable("store_all")
     boolean existsApiStoreByStoreKey(String storeKey);
 
     Optional<ApiStore> findByStoreKey(String storeKey);

@@ -34,6 +34,7 @@ public class DaumApiServiceImpl implements DaumApiService {
     private String Authorization;
 
     @Override
+//    @TimeTrace
     public StoreListResponseDto searchItems(String query, String page) {
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
@@ -64,7 +65,7 @@ public class DaumApiServiceImpl implements DaumApiService {
     }
 
     @Override
-    @Cacheable("store")
+    @Cacheable("store_all")
     public StoreListResponseDto fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
         JSONArray documents = jsonObject.getJSONArray("documents");
