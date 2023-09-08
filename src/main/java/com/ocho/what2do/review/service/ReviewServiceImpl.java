@@ -11,7 +11,6 @@ import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.review.repository.ReviewLikeRepository;
 import com.ocho.what2do.review.repository.ReviewRepository;
-import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.user.entity.User;
@@ -28,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,9 +45,9 @@ public class ReviewServiceImpl implements ReviewService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<ReviewResponseDto> stoerList = reviewRepository.findAllByStore(store, pageable).stream().map(ReviewResponseDto::new).toList();
+        List<ReviewResponseDto> storeList = reviewRepository.findAllByStore(store, pageable).stream().map(ReviewResponseDto::new).toList();
 
-        return stoerList;
+        return storeList;
     }
 
     @Override

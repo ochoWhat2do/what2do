@@ -76,6 +76,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	// cache
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	// aop
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {

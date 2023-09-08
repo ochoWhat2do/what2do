@@ -20,16 +20,24 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
-        cacheManager.setAllowNullValues(false);
-        cacheManager.setCacheNames(List.of("store"));
+        cacheManager.setAllowNullValues(true);
+        cacheManager.setCacheNames(List.of("store_all", "store_one", "user"));
         return cacheManager;
     }
 
     @Scheduled(fixedDelay = 21600000)   // 6시간 간격으로 캐시메모리 정리 (1초는 fixedDelay = 1000)
     public void evictCache() {
-        Cache cache = cacheManager().getCache("store");
-        if (cache != null) {
-            cache.clear();
+        Cache cache1 = cacheManager().getCache("store_all");
+        if (cache1 != null) {
+            cache1.clear();
+        };
+        Cache cache2 = cacheManager().getCache("store_one");
+        if (cache2 != null) {
+            cache2.clear();
+        };
+        Cache cache3 = cacheManager().getCache("user");
+        if (cache3 != null) {
+            cache3.clear();
         };
         log.info("캐시 메모리 삭제");
     }
