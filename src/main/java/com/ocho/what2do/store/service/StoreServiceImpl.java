@@ -89,7 +89,6 @@ public class StoreServiceImpl implements StoreService {
         if (page - 1 > Math.floorDiv(totalCnt, 10)) {
             throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
         }
-
         return new StoreCategoryListResponseDto(totalCnt, pageEnd, storeCategory);
     }
 
