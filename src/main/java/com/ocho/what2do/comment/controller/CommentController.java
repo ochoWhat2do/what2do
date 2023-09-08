@@ -34,9 +34,10 @@ public class CommentController {
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
-            @RequestParam("isAsc") boolean isAsc
+            @RequestParam("isAsc") boolean isAsc,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
-        List<CommentResponseDto> commentList = commentService.getCommentList(reviewId, page - 1, size, sortBy, isAsc);
+        List<CommentResponseDto> commentList = commentService.getCommentList(reviewId, page - 1, size, sortBy, isAsc, userDetails.getUser());
 
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }

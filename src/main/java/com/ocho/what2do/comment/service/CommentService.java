@@ -16,7 +16,7 @@ public interface CommentService {
      * @param reviewId 조회할 리뷰 ID
      * @return 댓글 목록
      */
-    List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc);
+    List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc, User user);
 
     /*
      * 댓글 생성

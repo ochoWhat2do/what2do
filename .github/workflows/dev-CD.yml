@@ -1,27 +1,17 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: develop CI check
 
 on:
   push:
     branches: [ "dev" ]
-  pull_request:
-    branches: [ "dev" ]
+env:
+  DOCKER_IMAGE: g
 
 permissions:
   checks: write
-  pull-requests: write
 
 jobs:
-  build:
-
+  CD:
     runs-on: ubuntu-22.04
-
     steps:
 
       - name: 레포지토리 체크아웃
@@ -51,10 +41,8 @@ jobs:
           rm -rf ./application.properties
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
-          touch ./application-ds.yml
-          echo "${{ secrets.APPLICATION_DS_YML }}" > ./application-ds.yml
-          touch ./application-s3.yml
-          echo "${{ secrets.APPLICATION_S3_YML }}" > ./application-s3.yml
+          touch ./application-aws.yml
+          echo "${{ secrets.APPLICATION_AWS_YML }}" > ./application-aws.yml
           touch ./application-key.yml
           echo "${{ secrets.APPLICATION_KEY_YML }}" > ./application-key.yml
           touch ./application-oauth.yml
@@ -70,20 +58,29 @@ jobs:
       - name: 어플리케이션 실행 테스트(테스트 코드X)
         run: ./gradlew clean build --exclude-task test
 
-      # build Test
-      - name: 테스트 코드 실행
-        run: ./gradlew --info test
+      - name: 변경된 application.properties 파일 생성
+        run: |
+          sed -i 's/spring.profiles.active=local/spring.profiles.active=dev/' ./src/main/resources/application.properties
+      # 개발서버용 Docker 빌드 생성 및 푸시
+      - name: dev Docker build & push
+        if: contains(github.ref, 'dev')
+        run: |
+          docker login -u  ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/what2do-dev .
+          docker push $${{ secrets.DOCKER_REPO }}/what2do-dev
 
-      - name: 테스트 결과 PR에 코멘트 작성
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()  # 테스트가 실패했을때만 or 테스트가 성공했을때만 알려주기(여기선 둘다!)
+      # 개발서버 SSH접속 및 배포
+      - name: Deploy to Dev
+        uses: appleboy/ssh-action@master
+        id: deploy-dev
+        if: (contains(github.ref, 'dev')
         with:
-          files: |
-            **/build/test-results/**/*.xml
-
-      # Files changed에서 어디에서 잘못되었는지 가르쳐준다.
-      - name: Publish Test Report
-        uses: mikepenz/action-junit-report@v3
-        if: success() || failure() # always run even if the previous step fails
-        with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+          key: ${{ secrets.BACKEND_SSH_PRI_KEY }}
+          host: ${{ secrets.AWS_BACKEND_HOST }}
+          username: ${{ secrets.AWS_BACKEND_USER }}
+          script: |
+            sudo docker login -u $${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker rm -f $(docker ps -q -a)
+            sudo docker pull ${{ secrets.DOCKER_REPO}}/what2do-dev
+            docker-compose up -d
+            docker image prune -f

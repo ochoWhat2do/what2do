@@ -31,6 +31,8 @@ public enum CustomErrorCode {
   HAVE_NOT_USER_ROLE(HttpStatus.BAD_REQUEST.value(),"유효한 사용자 권한이 아닙니다."),
   LOGIN_USER_ACCOUNT_LOCKED(HttpStatus.BAD_REQUEST.value(),"계정이 정지되었습니다. 관리자에게 문의하세요."),
   DATA_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "데이터가 존재하지 않습니다."),
+  NOT_FOUND_PAGE(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 페이지 입니다."),
+  GOOGLE_LOGIN_FAILED(HttpStatus.BAD_REQUEST.value(), "구글 로그인에 실패하였습니다."),
   ;
 
   private final int errorCode;
