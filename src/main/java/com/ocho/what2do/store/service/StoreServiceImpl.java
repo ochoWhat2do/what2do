@@ -31,6 +31,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ApiStoreRepository apiStoreRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
+    private final int pageSize = 20;
 
     @Override
     @Transactional(readOnly = true)
@@ -41,7 +42,7 @@ public class StoreServiceImpl implements StoreService {
         Integer totalCnt = apiStoreRepository.findAll().size();
         Boolean pageEnd = pageEnd(totalCnt, page);
 
-        if (page - 1 > Math.floorDiv(totalCnt, 10)) {
+        if (pageCnt(totalCnt) < page) {
             throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
         }
 
@@ -85,7 +86,7 @@ public class StoreServiceImpl implements StoreService {
         Integer totalCnt = apiStoreRepository.findAllByCategoryContains(category).stream().toList().size();
         Boolean pageEnd = pageEnd(totalCnt, page);
 
-        if (page - 1 > Math.floorDiv(totalCnt, 10)) {
+        if (pageCnt(totalCnt) < page) {
             throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
         }
 
@@ -144,11 +145,19 @@ public class StoreServiceImpl implements StoreService {
          * ascending : 오름차순 (default)
          * descending : 내림차순
          */
-        return PageRequest.of(page - 1, 10, Sort.by("id"));
+        return PageRequest.of(page - 1, pageSize, Sort.by("id"));
     }
 
     @Override
     public Boolean pageEnd(int totalCnt, int page) {
-        return Math.floorDiv(totalCnt, 10) == page - 1;
+        if (Math.floorDiv(totalCnt, pageSize) == page - 1) {
+            return Math.floorMod(totalCnt, pageSize) != 0;
+        } return false;
+    }
+
+    public int pageCnt(int totalCnt) {
+        if (Math.floorMod(totalCnt, pageSize) == 0 ) {
+            return Math.floorDiv(totalCnt, pageSize);
+        } return Math.floorDiv(totalCnt, pageSize) + 1;
     }
 }
