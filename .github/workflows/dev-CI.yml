@@ -45,6 +45,16 @@ jobs:
           mysql user: admin # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Of course you can use secrets, too
           mysql password: ${{ secrets.DB_PASSWORD }}
 
+      - name: 설정 AWS CLI
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_RDS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_RDS_SECRET_ACCESS_KEY }}
+          aws configure set default.region ${{ secrets.AWS_BACKEND_DEFAULT_AREA }}
+      - name: RDS에 접속
+        run: |
+          # RDS 연결 명령 실행
+          aws rds describe-db-instances --db-instance-identifier db-ocho-what2do
+
       - name: yml 파일 생성
         run: |
           cd ./src/main/resources
