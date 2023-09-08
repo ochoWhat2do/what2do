@@ -8,6 +8,7 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.user.entity.User;
+import java.util.List;
 import org.springframework.data.domain.PageRequest;
 
 public interface StoreService {
@@ -68,7 +69,7 @@ public interface StoreService {
      * @param storeKey 조회할 가게 storeKey
      * @return 가게 API Entity
      */
-    ApiStore findStoreKey(String storeKey);
+    List<ApiStore> findStoreKey(String storeKey);
 
     /**
      * 페이징 기능 추가 시 1 페이지부터 시작 하도록 설정
