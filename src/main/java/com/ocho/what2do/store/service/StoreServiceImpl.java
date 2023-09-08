@@ -15,7 +15,6 @@ import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ApiStoreRepository apiStoreRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
+    private final int pageSize = 15;    // 한 페이지에 출력할 데이터 갯수(변경 가능)
 
     @Override
     @Transactional(readOnly = true)
@@ -39,20 +39,20 @@ public class StoreServiceImpl implements StoreService {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
         Integer totalCnt = apiStoreRepository.findAll().size();
-        Boolean pageEnd = pageEnd(totalCnt, page);
 
-        if (page - 1 > Math.floorDiv(totalCnt, 10)) {
-            throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
+        if (pageCnt(totalCnt) < page) {
+            throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
         }
 
-        return new StoreListResponseDto(totalCnt, pageEnd, storeList);
+        return new StoreListResponseDto(totalCnt, storeList);
     }
 
     @Override
     @Transactional
     @Cacheable(value = "store_one", key = "#storeKey")
     public StoreResponseDto getStore(String storeKey) {
-        ApiStore findStore = findStoreKey(storeKey);
+        List<ApiStore> findList = findStoreKey(storeKey);
+        ApiStore findStore = findList.get(0);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
                 .title(findStore.getTitle())
                 .homePageLink(findStore.getHomePageLink())
@@ -61,6 +61,7 @@ public class StoreServiceImpl implements StoreService {
                 .roadAddress(findStore.getRoadAddress())
                 .latitude(findStore.getLatitude())
                 .longitude(findStore.getLongitude())
+                .viewCount(0)
                 .build();
         Optional<Store> savedStore = null;
         // 프론트에서는 db에 저장된 정보를 활용할 필요가 있다. storeKey 로 조회할 때는 ApiStore 테이블에서 조회, storeId가 필요할때는 Store 테이블에서 조회
@@ -83,13 +84,11 @@ public class StoreServiceImpl implements StoreService {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
         Integer totalCnt = apiStoreRepository.findAllByCategoryContains(category).stream().toList().size();
-        Boolean pageEnd = pageEnd(totalCnt, page);
 
-        if (page - 1 > Math.floorDiv(totalCnt, 10)) {
-            throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
+        if (pageCnt(totalCnt) < page || totalCnt == 0) {
+            throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
         }
-
-        return new StoreCategoryListResponseDto(totalCnt, pageEnd, storeCategory);
+        return new StoreCategoryListResponseDto(totalCnt, storeCategory);
     }
 
     @Override
@@ -130,8 +129,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ApiStore findStoreKey(String storeKey) {
-        return apiStoreRepository.findByStoreKey(storeKey).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+    public List<ApiStore> findStoreKey(String storeKey) {
+        return apiStoreRepository.findByStoreKey(storeKey);
     }
 
     @Override
@@ -144,11 +143,13 @@ public class StoreServiceImpl implements StoreService {
          * ascending : 오름차순 (default)
          * descending : 내림차순
          */
-        return PageRequest.of(page - 1, 10, Sort.by("id"));
+        return PageRequest.of(page - 1, pageSize, Sort.by("id"));
     }
 
     @Override
-    public Boolean pageEnd(int totalCnt, int page) {
-        return Math.floorDiv(totalCnt, 10) == page - 1;
+    public int pageCnt(int totalCnt) {
+        if (Math.floorMod(totalCnt, pageSize) == 0 ) {  // 전체 갯수를 출력할 데이터의 갯수로 나눴을 때 나머지가 0이면
+            return Math.floorDiv(totalCnt, pageSize);   // 페이지는 몫을 반환함 ex) 10개의 데이터를 10개로 한 페이지에 표출하면 1페이지가 마지막 페이지
+        } return Math.floorDiv(totalCnt, pageSize) + 1; // 나머지가 0이 아닌 경우는 몫 + 1 ex) 11개의 데이터를 한 페이지에 10개로 표출하면 2페이지가 마지막 페이지
     }
 }

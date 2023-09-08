@@ -8,6 +8,7 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.user.entity.User;
+import java.util.List;
 import org.springframework.data.domain.PageRequest;
 
 public interface StoreService {
@@ -68,7 +69,7 @@ public interface StoreService {
      * @param storeKey 조회할 가게 storeKey
      * @return 가게 API Entity
      */
-    ApiStore findStoreKey(String storeKey);
+    List<ApiStore> findStoreKey(String storeKey);
 
     /**
      * 페이징 기능 추가 시 1 페이지부터 시작 하도록 설정
@@ -78,10 +79,9 @@ public interface StoreService {
     PageRequest pageable(int page);
 
     /**
-     * 마지막 페이지 확인
-     * @param totalCnt 총 검색 결과 값
-     * @param page 현재 보고 있는 페이지
-     * @return true : 마지막 페이지, false : 다음 페이지 존재
+     * 페이지 수 체크 및 반환
+     * @param totalCnt 검색한 결과 값들의 갯수
+     * @return 페이지 최대 수 반환
      */
-    Boolean pageEnd(int totalCnt, int page);
+    public int pageCnt(int totalCnt);
 }
