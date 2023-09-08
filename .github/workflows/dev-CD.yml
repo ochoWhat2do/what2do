@@ -41,7 +41,6 @@ jobs:
           rm -rf ./application.properties
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
-          echo "${{ secrets.APPLICATION_LOCAL_YML }}" > ./application.yml
           touch ./application-aws.yml
           echo "${{ secrets.APPLICATION_AWS_YML }}" > ./application-aws.yml
           touch ./application-key.yml
@@ -59,6 +58,9 @@ jobs:
       - name: 어플리케이션 실행 테스트(테스트 코드X)
         run: ./gradlew clean build --exclude-task test
 
+      - name: 변경된 application.properties 파일 생성
+        run: |
+          sed -i 's/spring.profiles.active=local/spring.profiles.active=dev/' ./src/main/resources/application.properties
       # 개발서버용 Docker 빌드 생성 및 푸시
       - name: dev Docker build & push
         if: contains(github.ref, 'dev')
