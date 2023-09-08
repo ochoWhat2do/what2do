@@ -51,8 +51,8 @@ public class StoreServiceImpl implements StoreService {
     @Transactional
     //@Cacheable(value = "store", key = "#storeKey")
     public StoreResponseDto getStore(String storeKey) {
-        ApiStore findStore = findStoreKey(storeKey);
-        storeRepository.updateView(storeKey);
+        List<ApiStore> findList = findStoreKey(storeKey);
+        ApiStore findStore = findList.get(0);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
                 .title(findStore.getTitle())
                 .homePageLink(findStore.getHomePageLink())
@@ -130,8 +130,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public ApiStore findStoreKey(String storeKey) {
-        return apiStoreRepository.findByStoreKey(storeKey).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+    public List<ApiStore> findStoreKey(String storeKey) {
+        return apiStoreRepository.findByStoreKey(storeKey);
     }
 
     @Override
