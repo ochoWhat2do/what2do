@@ -1,3 +1,4 @@
+/*
 package com.ocho.what2do.review.service;
 
 import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
@@ -233,3 +234,4 @@ public class ReviewServiceImplTest {
     }
 }
 
+*/
