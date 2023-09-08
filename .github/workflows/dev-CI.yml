@@ -51,6 +51,8 @@ jobs:
           rm -rf ./application.properties
           touch ./application.yml
           echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+          touch ./application-ds.yml
+          echo "${{ secrets.APPLICATION_DS_YML }}" > ./application-ds.yml
           touch ./application-s3.yml
           echo "${{ secrets.APPLICATION_S3_YML }}" > ./application-s3.yml
           touch ./application-key.yml
