@@ -78,10 +78,9 @@ public interface StoreService {
     PageRequest pageable(int page);
 
     /**
-     * 마지막 페이지 확인
-     * @param totalCnt 총 검색 결과 값
-     * @param page 현재 보고 있는 페이지
-     * @return true : 마지막 페이지, false : 다음 페이지 존재
+     * 페이지 수 체크 및 반환
+     * @param totalCnt 검색한 결과 값들의 갯수
+     * @return 페이지 최대 수 반환
      */
-    Boolean pageEnd(int totalCnt, int page);
+    public int pageCnt(int totalCnt);
 }

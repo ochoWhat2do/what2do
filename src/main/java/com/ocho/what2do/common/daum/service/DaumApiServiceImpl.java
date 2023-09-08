@@ -59,7 +59,7 @@ public class DaumApiServiceImpl implements DaumApiService {
         log.info("DAUM API Status Code : " + responseEntity.getStatusCode());
 
         if (Integer.parseInt(page) > 3) {
-            throw new CustomException(CustomErrorCode.NOT_FOUND_PAGE);
+            throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
         }
         return fromJSONtoItems(responseEntity.getBody());
     }
@@ -91,12 +91,11 @@ public class DaumApiServiceImpl implements DaumApiService {
         JSONObject meta = jsonObject.getJSONObject("meta");
         Integer totalCnt = meta.getInt("total_count");
         Integer pageCnt = meta.getInt("pageable_count");
-        Boolean pageEnd = meta.getBoolean("is_end");
 
         JSONObject name = meta.getJSONObject("same_name");
         String keyWord = name.getString("keyword");
         String region = name.getString("selected_region");
 
-        return new StoreListResponseDto(totalCnt, pageCnt, pageEnd, keyWord, region, storeResponseDtoList);
+        return new StoreListResponseDto(totalCnt, pageCnt, keyWord, region, storeResponseDtoList);
     }
 }
