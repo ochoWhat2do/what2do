@@ -2,6 +2,8 @@ package com.ocho.what2do.store.repository;
 
 import com.ocho.what2do.store.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,5 +16,9 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<Store> getStoreListByStoreKey(String storeKey);
 
     Optional<Store> getStoreByStoreKey(String storeKey);
+
+    @Modifying
+    @Query("update Store s set s.viewCount = s.viewCount + 1 where s.storeKey = :storeKey")
+    int updateView(String storeKey);
 
 }

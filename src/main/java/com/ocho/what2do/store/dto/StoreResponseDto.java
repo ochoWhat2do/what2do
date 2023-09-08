@@ -18,6 +18,7 @@ public class StoreResponseDto {
     private String roadAddress;
     private String latitude;
     private String longitude;
+    private int viewCount;
 
     public StoreResponseDto(JSONObject itemJson) {
         this.storeKey = itemJson.getString("id");
@@ -52,5 +53,7 @@ public class StoreResponseDto {
         this.roadAddress = store.getRoadAddress();
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
+        this.viewCount = store.getViewCount();
+
     }
 }
