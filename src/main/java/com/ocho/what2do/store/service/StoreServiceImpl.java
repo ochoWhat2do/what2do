@@ -15,7 +15,6 @@ import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -62,6 +61,7 @@ public class StoreServiceImpl implements StoreService {
                 .roadAddress(findStore.getRoadAddress())
                 .latitude(findStore.getLatitude())
                 .longitude(findStore.getLongitude())
+                .viewCount(0)
                 .build();
         Optional<Store> savedStore = null;
         // 프론트에서는 db에 저장된 정보를 활용할 필요가 있다. storeKey 로 조회할 때는 ApiStore 테이블에서 조회, storeId가 필요할때는 Store 테이블에서 조회
@@ -88,7 +88,6 @@ public class StoreServiceImpl implements StoreService {
         if (pageCnt(totalCnt) < page || totalCnt == 0) {
             throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
         }
-
         return new StoreCategoryListResponseDto(totalCnt, storeCategory);
     }
 
