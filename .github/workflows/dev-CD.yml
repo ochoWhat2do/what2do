@@ -84,7 +84,7 @@ jobs:
         if: contains(github.ref, 'dev')
         run: |
           docker login -u  ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -f Dockerfile-dev -t ${{ secrets.DOCKER_REPO }}/what2do-dev .
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_REPO }}/what2do-dev .
           docker push $${{ secrets.DOCKER_REPO }}/what2do-dev
 
       # 개발서버 SSH접속 및 배포
