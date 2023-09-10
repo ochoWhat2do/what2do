@@ -82,5 +82,5 @@ jobs:
             sudo docker login -u $${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
             sudo docker rm -f $(docker ps -q -a)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:what2do-img
-            docker-compose up -d
+            docker-compose -f /home/ubuntu/backend/what2do/docker-compose.yml up -d
             docker image prune -f
