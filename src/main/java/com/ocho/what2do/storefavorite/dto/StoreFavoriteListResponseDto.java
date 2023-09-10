@@ -6,9 +6,10 @@ import java.util.List;
 
 @Getter
 public class StoreFavoriteListResponseDto {
-    private List<StoreFavoriteResponseDto> storeFavoriteList;
 
-    public StoreFavoriteListResponseDto(List<StoreFavoriteResponseDto> storeFavoriteList) {
-        this.storeFavoriteList = storeFavoriteList;
-    }
+  private List<StoreFavoriteResponseDto> storeFavoriteList;
+
+  public StoreFavoriteListResponseDto(List<StoreFavoriteResponseDto> storeFavoriteList) {
+    this.storeFavoriteList = storeFavoriteList;
+  }
 }
