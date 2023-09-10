@@ -50,6 +50,7 @@ jobs:
           touch ./application-template.yml
           echo "${{ secrets.APPLICATION_TEMPLATE_YML }}" > ./application-template.yml
         shell: bash
+        working-directory: ./src/main/resources
 
       # gradle 실행 허가
       - name: Run chmod to make gradlew executable
