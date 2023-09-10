@@ -1,4 +1,4 @@
-name: develop CI check
+name: develop CD check
 
 on:
   push:
