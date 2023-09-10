@@ -73,7 +73,7 @@ jobs:
       - name: Deploy to Dev
         uses: appleboy/ssh-action@master
         id: deploy-dev
-        if: (contains(github.ref, 'dev')
+        if: contains(github.ref, 'dev')
         with:
           key: ${{ secrets.BACKEND_SSH_PRI_KEY }}
           host: ${{ secrets.AWS_BACKEND_HOST }}
