@@ -48,6 +48,7 @@ jobs:
           echo "${{ secrets.APPLICATION_OAUTH_PROP }}" > ./application-oauth.properties
           touch ./application-template.properties
           echo "${{ secrets.APPLICATION_TEMPLATE_PROP }}" > ./application-template.properties
+          cd ..
         shell: bash
 
 
