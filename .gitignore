@@ -38,6 +38,8 @@ out/
 
 ###application.properties custom###
 application-ds.properties
+application-local.properties
+application-dev.properties
 application-key.properties
 application-s3.properties
 application-oauth.properties
