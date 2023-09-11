@@ -125,6 +125,23 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+        public StoreResponseDto getStoresByAddress(String address) {
+
+        // 주소로 가게를 조회하는 로직을 구현
+        List<Store> stores = storeRepository.findByAddress(address);
+
+        if (stores.isEmpty()) {
+            throw new CustomException(CustomErrorCode.STORE_NOT_FOUND);
+        }
+
+        Store findStore = stores.get(0);
+        StoreResponseDto responseDto = new StoreResponseDto(findStore);
+
+        return responseDto;
+}
+
+
+    @Override
     public Store findStore(Long storeId) {
         return storeRepository.findById(storeId).orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
     }
@@ -149,8 +166,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public int pageCnt(int totalCnt) {
-        if (Math.floorMod(totalCnt, pageSize) == 0 ) {  // 전체 갯수를 출력할 데이터의 갯수로 나눴을 때 나머지가 0이면
+        if (Math.floorMod(totalCnt, pageSize) == 0) {  // 전체 갯수를 출력할 데이터의 갯수로 나눴을 때 나머지가 0이면
             return Math.floorDiv(totalCnt, pageSize);   // 페이지는 몫을 반환함 ex) 10개의 데이터를 10개로 한 페이지에 표출하면 1페이지가 마지막 페이지
-        } return Math.floorDiv(totalCnt, pageSize) + 1; // 나머지가 0이 아닌 경우는 몫 + 1 ex) 11개의 데이터를 한 페이지에 10개로 표출하면 2페이지가 마지막 페이지
+        }
+        return Math.floorDiv(totalCnt, pageSize) + 1; // 나머지가 0이 아닌 경우는 몫 + 1 ex) 11개의 데이터를 한 페이지에 10개로 표출하면 2페이지가 마지막 페이지
     }
 }

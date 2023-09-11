@@ -84,4 +84,11 @@ public interface StoreService {
      * @return 페이지 최대 수 반환
      */
     public int pageCnt(int totalCnt);
+
+    /**
+     * 주소로 가게 조회
+     * @param address 조회할 가게의 주소
+     * @return 해당 주소에 속한 가게
+     */
+    StoreResponseDto getStoresByAddress(String address);
 }

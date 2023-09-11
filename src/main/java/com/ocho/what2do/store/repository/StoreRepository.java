@@ -19,6 +19,8 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     Optional<Store> getStoreByStoreKey(String storeKey);
 
+    List<Store> findByAddress(String address);
+
     @Modifying
     @Query("update Store s set s.viewCount = s.viewCount + 1 where s.storeKey = :storeKey")
     int updateView(String storeKey);
