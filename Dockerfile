@@ -1,10 +1,8 @@
 FROM openjdk:17-jdk
 COPY ./build/libs/what2do-0.0.1-SNAPSHOT.jar what2do.jar
 
-
 WORKDIR /app
 
-COPY build/libs/*.jar app.jar
 COPY src/main/resources/application-ds.properties /app/application-ds.properties
 COPY src/main/resources/application-s3.properties /app/application-s3.properties
 COPY src/main/resources/application-key.properties /app/application-key.properties
