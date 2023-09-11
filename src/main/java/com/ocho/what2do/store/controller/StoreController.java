@@ -1,19 +1,27 @@
 package com.ocho.what2do.store.controller;
 
 import com.ocho.what2do.common.dto.ApiResponseDto;
+import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.common.security.UserDetailsImpl;
+import com.ocho.what2do.store.dto.StoreAddressRequestDto;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
+import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.service.StoreService;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
+import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -64,5 +72,13 @@ public class StoreController {
                                                               @PathVariable Long storeId) {
         storeService.deleteStoreFavorite(storeId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "가게 찜하기 취소 성공"));
+    }
+
+    @Operation(summary = "주소로 가게 상세 조회", description = "DB 내의 가게의 상세 정보를 주소로 조회합니다.")
+    @GetMapping("stores/address")
+    public ResponseEntity<StoreResponseDto> getStoreByAddress(@Valid @RequestBody StoreAddressRequestDto requestDto) {
+        StoreResponseDto storeResponseDto = storeService.getStoresByAddress(requestDto.getAddress());
+
+        return ResponseEntity.ok(storeResponseDto);
     }
 }
