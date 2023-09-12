@@ -94,6 +94,10 @@ public interface StoreService {
 
     /**
      * 리뷰 건수를 기준으로 가게와 리뷰를 조인하여 조회하고, 리뷰 건수 순으로 정렬합니다.
+     * @param page    페이지 번호
+     * @param size    페이지 크기
+     * @param sortBy  정렬 기준 필드 (예: "title" 또는 "createdAt")
+     * @param isAsc   오름차순 정렬 여부 (true: 오름차순, false: 내림차순)
      * @return 리뷰 건수가 높은 순으로 정렬된 가게 목록
      */
     List<StoreResponseDto> findStoresListReview(int page, int size, String sortBy, boolean isAsc);

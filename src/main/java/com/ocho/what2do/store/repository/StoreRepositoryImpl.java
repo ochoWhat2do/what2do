@@ -31,7 +31,6 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
                         review.id.isNotNull()
                 ).offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-//                .orderBy(storeSort(pageable), store.reviews.size())
                 .orderBy(store.reviews.size().desc());
 
         var lists = query.fetch();

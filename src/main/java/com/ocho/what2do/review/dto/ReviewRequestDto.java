@@ -35,7 +35,6 @@ public class ReviewRequestDto {
     public ReviewRequestDto(String title, String content, Long orderNo, Long storeId, int rate) {
         this.title = title;
         this.content = content;
-//      this.orderNo = orderNo;
         this.storeId = storeId;
         this.rate = rate;
     }

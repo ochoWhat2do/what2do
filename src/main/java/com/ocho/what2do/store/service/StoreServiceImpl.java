@@ -140,7 +140,7 @@ public class StoreServiceImpl implements StoreService {
 
         return responseDto;
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<StoreResponseDto> findStoresListReview(int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
