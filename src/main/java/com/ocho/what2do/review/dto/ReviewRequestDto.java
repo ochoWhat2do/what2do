@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ReviewRequestDto {
+
     @NotBlank(message = "리뷰 제목은 필수입니다.")
     private String title;
 
@@ -25,7 +26,6 @@ public class ReviewRequestDto {
 
     private Long storeId;
 
-
     public List<S3FileDto> getAttachment() {
         return attachment;
     }
@@ -35,7 +35,7 @@ public class ReviewRequestDto {
     public ReviewRequestDto(String title, String content, Long orderNo, Long storeId, int rate) {
         this.title = title;
         this.content = content;
-//        this.orderNo = orderNo;
+//      this.orderNo = orderNo;
         this.storeId = storeId;
         this.rate = rate;
     }

@@ -17,6 +17,7 @@ import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,7 +126,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-        public StoreResponseDto getStoresByAddress(String address) {
+    public StoreResponseDto getStoresByAddress(String address) {
 
         // 주소로 가게를 조회하는 로직을 구현
         List<Store> stores = storeRepository.findByAddress(address);
@@ -138,8 +139,16 @@ public class StoreServiceImpl implements StoreService {
         StoreResponseDto responseDto = new StoreResponseDto(findStore);
 
         return responseDto;
-}
+    }
 
+    @Override
+    public List<StoreResponseDto> findStoresListReview(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return storeRepository.findStoresListReview(pageable);
+    }
 
     @Override
     public Store findStore(Long storeId) {

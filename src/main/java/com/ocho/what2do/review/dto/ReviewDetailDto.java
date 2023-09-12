@@ -15,12 +15,10 @@ public class ReviewDetailDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
-
     public ReviewDetailDto(Long id, String content, LocalDateTime createdAt, LocalDateTime modifiedAt, List<CommentResponseDto> comments) {
         this.id = id;
         this.content = content;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-
     }
 }

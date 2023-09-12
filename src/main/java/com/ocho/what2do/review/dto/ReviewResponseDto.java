@@ -60,5 +60,4 @@ public class ReviewResponseDto {
         }
         this.storeId = review.getStore().getId();
     }
-
 }

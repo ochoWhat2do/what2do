@@ -91,4 +91,10 @@ public interface StoreService {
      * @return 해당 주소에 속한 가게
      */
     StoreResponseDto getStoresByAddress(String address);
+
+    /**
+     * 리뷰 건수를 기준으로 가게와 리뷰를 조인하여 조회하고, 리뷰 건수 순으로 정렬합니다.
+     * @return 리뷰 건수가 높은 순으로 정렬된 가게 목록
+     */
+    List<StoreResponseDto> findStoresListReview(int page, int size, String sortBy, boolean isAsc);
 }

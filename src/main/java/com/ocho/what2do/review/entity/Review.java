@@ -74,7 +74,6 @@ public class Review extends Timestamped {
         this.attachment = attachment;
         this.store = store;
         this.rate = rate;
-
     }
 
     public void updateReview(ReviewRequestDto reviewRequestDto) {
