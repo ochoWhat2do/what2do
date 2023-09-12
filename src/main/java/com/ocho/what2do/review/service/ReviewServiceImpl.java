@@ -37,7 +37,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final FileUploader fileUploader;
     private final StoreRepository storeRepository;
 
-
     @Override
     @Transactional(readOnly = true)
     public List<ReviewResponseDto> getAllReviews(Long storeId, int page, int size, String sortBy, boolean isAsc) {
@@ -100,7 +99,6 @@ public class ReviewServiceImpl implements ReviewService {
         findStore(storeId);
         Review review = findReview(reviewId);
 
-
         // 파일정보 불러오기
         List<S3FileDto> attachment = review.getAttachment();
 
@@ -111,13 +109,11 @@ public class ReviewServiceImpl implements ReviewService {
                         s3FileDto.getUploadFileName());
             }
         }
-
         // 파일 등록
         if (!(files == null || (files.size() == 1 && files.get(0).isEmpty()))) {
             fileDtoList = fileUploader.uploadFiles(files, "files");
             requestDto.setAttachment(fileDtoList);
         }
-
 
         confirmUser(review, user);
 
@@ -184,7 +180,6 @@ public class ReviewServiceImpl implements ReviewService {
 
         // 해당 좋아요 엔티티 제거
         reviewLikeRepository.delete(reviewLike);
-
     }
 
     private User findUser(Long userId) {

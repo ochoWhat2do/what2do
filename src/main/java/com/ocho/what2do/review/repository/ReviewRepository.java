@@ -22,5 +22,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     Page<Review> findAllByStore(Store store, Pageable pageable);
 
     void deleteAllByUserId(Long userId);
-
 }

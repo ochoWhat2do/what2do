@@ -1,7 +1,9 @@
 package com.ocho.what2do.store.entity;
 
 import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
+import com.ocho.what2do.common.entity.Timestamped;
 import com.ocho.what2do.common.file.S3FileDto;
+import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
@@ -17,7 +19,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Store {
+public class Store extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +49,9 @@ public class Store {
 
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> reviews;
 
     @Builder
     public Store(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude, List<S3FileDto> images, int viewCount) {

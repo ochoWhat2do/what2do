@@ -30,7 +30,6 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final UserService userService;
 
-
     @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
     @GetMapping("/stores/{storeId}/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getAllReviews(
@@ -41,7 +40,6 @@ public class ReviewController {
             @RequestParam("isAsc") boolean isAsc) {
         List<ReviewResponseDto> responseDto = reviewService.getAllReviews(storeId, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(responseDto);
-
     }
 
     @Operation(summary = "특정 사용자가 작성한 리뷰 페이징 조회", description = "특정 사용자가 작성한 리뷰를 페이징하여 조회합니다.")
@@ -57,7 +55,6 @@ public class ReviewController {
         List<ReviewResponseDto> responseDto = reviewService.getUserReviews(user, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(responseDto);
     }
-
 
     @Operation(summary = "리뷰 등록", description = "새로운 리뷰를 등록합니다.")
     @PostMapping("/stores/{storeId}/reviews")
@@ -80,7 +77,6 @@ public class ReviewController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         ReviewResponseDto responseDto = reviewService.updateReview(storeId, reviewId, requestDto, userDetails.getUser(), files);
         return ResponseEntity.ok().body(responseDto);
-
     }
 
     @Operation(summary = "리뷰 삭제", description = "선택한 리뷰를 삭제합니다.")
@@ -91,7 +87,6 @@ public class ReviewController {
         reviewService.deleteReview(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "리뷰 삭제 성공"));
     }
-
 
     @Operation(summary = "리뷰 상세 조회", description = "선택한 리뷰의 상세 정보를 조회합니다.")
     @GetMapping("/stores/{storeId}/reviews/{reviewId}")
@@ -120,6 +115,5 @@ public class ReviewController {
         reviewService.unlikeReview(reviewId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "좋아요가 취소되었습니다."));
     }
-
 
 }
