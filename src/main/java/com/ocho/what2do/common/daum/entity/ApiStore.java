@@ -14,7 +14,7 @@ public class ApiStore {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "store_key", length = 500)
+    @Column(name = "store_key", length = 500, unique = true)
     private String storeKey;
     @Column(name = "title", length = 500, nullable = false)
     private String title;                   // 가게명
@@ -30,12 +30,6 @@ public class ApiStore {
     private String latitude;                // 가게 x 좌표
     @Column(name = "longitude", length = 500)
     private String longitude;               // 가게 y 좌표
-
-//  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<StoreCategory> storeCategoryList = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "store_detail", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 
     @Builder
     public ApiStore(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {

@@ -33,6 +33,7 @@ public enum CustomErrorCode {
   DATA_NOT_FOUND(HttpStatus.BAD_REQUEST.value(), "데이터가 존재하지 않습니다."),
   NOT_FOUND_PAGE(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 페이지 입니다."),
   GOOGLE_LOGIN_FAILED(HttpStatus.BAD_REQUEST.value(), "구글 로그인에 실패하였습니다."),
+  NOT_FOUND_KEYWORD_REGION(HttpStatus.BAD_REQUEST.value(), "지역 + 검색어 형태로 입력해주세요.")
   ;
 
   private final int errorCode;

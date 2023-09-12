@@ -15,7 +15,6 @@ import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -31,11 +30,10 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ApiStoreRepository apiStoreRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
-    private final int pageSize = 15;    // 한 페이지에 출력할 데이터 갯수(변경 가능)
+    private final int pageSize = 1000;    // 한 페이지에 출력할 데이터 갯수(변경 가능)
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("store_all")
     public StoreListResponseDto getStores(int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
@@ -50,7 +48,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    @Cacheable(value = "store_one", key = "#storeKey")
     public StoreResponseDto getStore(String storeKey) {
         List<ApiStore> findList = findStoreKey(storeKey);
         ApiStore findStore = findList.get(0);
@@ -80,7 +77,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("store_all")
     public StoreCategoryListResponseDto getStoreCategory(String category, int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
@@ -149,8 +145,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public int pageCnt(int totalCnt) {
-        if (Math.floorMod(totalCnt, pageSize) == 0 ) {  // 전체 갯수를 출력할 데이터의 갯수로 나눴을 때 나머지가 0이면
+        if (Math.floorMod(totalCnt, pageSize) == 0) {  // 전체 갯수를 출력할 데이터의 갯수로 나눴을 때 나머지가 0이면
             return Math.floorDiv(totalCnt, pageSize);   // 페이지는 몫을 반환함 ex) 10개의 데이터를 10개로 한 페이지에 표출하면 1페이지가 마지막 페이지
-        } return Math.floorDiv(totalCnt, pageSize) + 1; // 나머지가 0이 아닌 경우는 몫 + 1 ex) 11개의 데이터를 한 페이지에 10개로 표출하면 2페이지가 마지막 페이지
+        }
+        return Math.floorDiv(totalCnt, pageSize) + 1; // 나머지가 0이 아닌 경우는 몫 + 1 ex) 11개의 데이터를 한 페이지에 10개로 표출하면 2페이지가 마지막 페이지
     }
 }

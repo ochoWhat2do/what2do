@@ -1,7 +1,8 @@
 package com.ocho.what2do.user.entity;
 
-import java.io.Serializable;
 import lombok.Getter;
+
+import java.io.Serializable;
 
 /**
  * 직렬화 기능을 가진 User클래스

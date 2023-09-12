@@ -2,17 +2,12 @@ package com.ocho.what2do.comment.dto;
 
 import com.ocho.what2do.comment.entity.Comment;
 import com.ocho.what2do.comment.entity.CommentLike;
-import com.ocho.what2do.review.entity.ReviewLike;
 import com.ocho.what2do.user.dto.UserResponseDto;
 import com.ocho.what2do.user.entity.User;
-import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Getter
 @Setter

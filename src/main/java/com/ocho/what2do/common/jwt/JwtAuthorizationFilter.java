@@ -1,10 +1,7 @@
 package com.ocho.what2do.common.jwt;
 
 import com.ocho.what2do.common.auth.dto.TokenDto;
-import com.ocho.what2do.common.exception.CustomException;
-import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.common.security.UserDetailsImpl;
-import com.ocho.what2do.common.security.UserDetailsServiceImpl;
 import com.ocho.what2do.common.util.PasswordGenerator;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
@@ -13,8 +10,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +18,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 @RequiredArgsConstructor

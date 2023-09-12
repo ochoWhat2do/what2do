@@ -45,9 +45,6 @@ public class Store {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int viewCount;
 
-//  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<StoreCategory> storeCategoryList = new ArrayList<>();
-
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreFavorite> storeFavoriteList = new ArrayList<>();
 

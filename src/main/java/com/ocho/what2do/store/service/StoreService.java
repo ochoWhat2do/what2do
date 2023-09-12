@@ -8,8 +8,9 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.user.entity.User;
-import java.util.List;
 import org.springframework.data.domain.PageRequest;
+
+import java.util.List;
 
 public interface StoreService {
 
