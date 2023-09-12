@@ -1,7 +1,5 @@
 package com.ocho.what2do.common.auth.userinfo;
 
-import org.springframework.security.core.parameters.P;
-
 import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo {

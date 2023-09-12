@@ -1,7 +1,6 @@
 package com.ocho.what2do.common.auth.service;
 
 import com.ocho.what2do.user.dto.SocialUserResponseDto;
-import com.ocho.what2do.user.dto.UserResponseDto;
 
 public interface OauthService {
 

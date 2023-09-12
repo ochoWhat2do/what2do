@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -65,9 +64,21 @@ public class DaumApiServiceImpl implements DaumApiService {
     }
 
     @Override
-    @Cacheable("store_all")
     public StoreListResponseDto fromJSONtoItems(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
+        JSONObject meta = jsonObject.getJSONObject("meta");
+
+        Integer totalCnt = meta.getInt("total_count");
+        Integer pageCnt = meta.getInt("pageable_count");
+
+        JSONObject name = meta.getJSONObject("same_name");
+        String keyWord = name.getString("keyword");
+        String region = name.getString("selected_region");
+
+        if (region.isBlank() || keyWord.isBlank()) {
+            throw new CustomException(CustomErrorCode.NOT_FOUND_KEYWORD_REGION);
+        }
+
         JSONArray documents = jsonObject.getJSONArray("documents");
         List<StoreResponseDto> storeResponseDtoList = new ArrayList<>();
 
@@ -87,15 +98,6 @@ public class DaumApiServiceImpl implements DaumApiService {
             }
             storeResponseDtoList.add(storeResponseDto);
         }
-
-        JSONObject meta = jsonObject.getJSONObject("meta");
-        Integer totalCnt = meta.getInt("total_count");
-        Integer pageCnt = meta.getInt("pageable_count");
-
-        JSONObject name = meta.getJSONObject("same_name");
-        String keyWord = name.getString("keyword");
-        String region = name.getString("selected_region");
-
         return new StoreListResponseDto(totalCnt, pageCnt, keyWord, region, storeResponseDtoList);
     }
 }

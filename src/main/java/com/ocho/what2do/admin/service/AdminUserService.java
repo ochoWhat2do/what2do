@@ -2,8 +2,6 @@ package com.ocho.what2do.admin.service;
 
 import com.ocho.what2do.admin.dto.UserLockRequestDto;
 import com.ocho.what2do.common.dto.ApiResponseDto;
-import com.ocho.what2do.user.entity.UserRoleEnum;
-import org.springframework.http.ResponseEntity;
 
 public interface AdminUserService {
 

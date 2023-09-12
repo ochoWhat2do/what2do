@@ -22,7 +22,7 @@ public class CacheConfig {
   public CacheManager cacheManager() {
     ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
     cacheManager.setAllowNullValues(true);
-    cacheManager.setCacheNames(List.of("store_all", "store_one"));
+    cacheManager.setCacheNames(List.of("store_all"));
     return cacheManager;
   }
 
@@ -31,13 +31,7 @@ public class CacheConfig {
     Cache cache1 = cacheManager().getCache("store_all");
     if (cache1 != null) {
       cache1.clear();
-    }
-    ;
-    Cache cache2 = cacheManager().getCache("store_one");
-    if (cache2 != null) {
-      cache2.clear();
-    }
-    ;
+    };
     log.info("캐시 메모리 삭제");
   }
 }
