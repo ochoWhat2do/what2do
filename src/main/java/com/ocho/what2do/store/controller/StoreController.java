@@ -1,9 +1,8 @@
 package com.ocho.what2do.store.controller;
 
 import com.ocho.what2do.common.dto.ApiResponseDto;
-import com.ocho.what2do.common.exception.CustomException;
-import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.common.security.UserDetailsImpl;
+import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.store.dto.StoreAddressRequestDto;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
@@ -12,7 +11,6 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.service.StoreService;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
-import com.ocho.what2do.userpassword.dto.EditPasswordRequestDto;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -80,5 +78,16 @@ public class StoreController {
         StoreResponseDto storeResponseDto = storeService.getStoresByAddress(requestDto.getAddress());
 
         return ResponseEntity.ok(storeResponseDto);
+    }
+
+    @Operation(summary = "리뷰 있는 가게 조회", description = "리뷰수 순서대로 정렬합니다.")
+    @GetMapping("/stores/list-review")
+    public ResponseEntity<List<StoreResponseDto>> getStoresListReview(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc) {
+        List<StoreResponseDto> stores = storeService.findStoresListReview(page - 1, size, sortBy, isAsc);
+        return ResponseEntity.ok(stores);
     }
 }

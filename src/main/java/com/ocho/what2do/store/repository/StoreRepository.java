@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface StoreRepository extends JpaRepository<Store, Long> {
+public interface StoreRepository extends JpaRepository<Store, Long>, CustomStoreRepository {
     @Cacheable("store_one")
     boolean existsStoreByStoreKey(String storeKey);
 
@@ -24,5 +24,4 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Modifying
     @Query("update Store s set s.viewCount = s.viewCount + 1 where s.storeKey = :storeKey")
     int updateView(String storeKey);
-
 }
