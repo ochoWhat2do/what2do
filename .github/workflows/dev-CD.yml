@@ -66,6 +66,11 @@ jobs:
         if: contains(github.ref, 'dev')
         run: |
           docker login -u  ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker cp ./src/main/resources/application-ds.properties $(docker ps -q -n 1):/app/src/main/resources/application-ds.properties
+          docker cp ./src/main/resources/application-s3.properties $(docker ps -q -n 1):/app/src/main/resources/application-s3.properties
+          docker cp ./src/main/resources/application-key.properties $(docker ps -q -n 1):/app/src/main/resources/application-key.properties
+          docker cp ./src/main/resources/application-oauth.properties $(docker ps -q -n 1):/app/src/main/resources/application-oauth.properties
+          docker cp ./src/main/resources/application-template.properties $(docker ps -q -n 1):/app/src/main/resources/application-template.properties
           docker build -f Dockerfile -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:what2do-img .
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:what2do-img
 
