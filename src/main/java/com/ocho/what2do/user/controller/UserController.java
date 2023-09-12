@@ -89,7 +89,7 @@ public class UserController {
     }
 
     @Operation(summary = "이메일 중복 체크", description = "입력한 이메일이 이미 등록되었는지 확인합니다.")
-    @GetMapping("/checkEmail")
+    @GetMapping("/check-email")
     public ResponseEntity<Boolean> checkDuplicate(@RequestParam String email) {
         boolean isDuplicate = userService.checkDuplicateEmail(email);
         return ResponseEntity.ok().body(isDuplicate);
@@ -103,7 +103,7 @@ public class UserController {
     }
 
     @Operation(summary = "이메일 인증", description = "회원가입 시 이메일 인증")
-    @PostMapping("/confirmEmail")
+    @PostMapping("/confirm-email")
     public String mailConfirm(@RequestBody EmailAuthRequestDto requestDto) throws Exception {
         return registerEmail.sendSimpleMessage(requestDto.getEmail());
     }
