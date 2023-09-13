@@ -2,12 +2,10 @@ package com.ocho.what2do.store.controller;
 
 import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.security.UserDetailsImpl;
-import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.store.dto.StoreAddressRequestDto;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
-import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.service.StoreService;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
@@ -36,8 +34,8 @@ public class StoreController {
 
     @Operation(summary = "가게 상세 조회", description = "DB 내의 가게의 상세 정보를 조회합니다.")
     @GetMapping("/stores/detail")
-    public ResponseEntity<StoreResponseDto> getStoreKey(@RequestParam String storeKey) {
-        StoreResponseDto result = storeService.getStore(storeKey);
+    public ResponseEntity<StoreResponseDto> getStoreKey(@RequestParam String storeKey, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        StoreResponseDto result = storeService.getStore(storeKey, userDetails.getUser());
         return ResponseEntity.ok().body(result);
     }
 
@@ -74,8 +72,8 @@ public class StoreController {
 
     @Operation(summary = "주소로 가게 상세 조회", description = "DB 내의 가게의 상세 정보를 주소로 조회합니다.")
     @GetMapping("stores/address")
-    public ResponseEntity<StoreResponseDto> getStoreByAddress(@Valid @RequestBody StoreAddressRequestDto requestDto) {
-        StoreResponseDto storeResponseDto = storeService.getStoresByAddress(requestDto.getAddress());
+    public ResponseEntity<StoreResponseDto> getStoreByAddress(@Valid @RequestBody StoreAddressRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        StoreResponseDto storeResponseDto = storeService.getStoresByAddress(requestDto.getAddress(), userDetails.getUser());
 
         return ResponseEntity.ok(storeResponseDto);
     }
