@@ -29,10 +29,10 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
                 .join(store.reviews, review)
                 .where(
                         review.id.isNotNull()
-                ).offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                )
+                //.limit(pageable.getPageSize())
                 .orderBy(store.reviews.size().desc());
-
+//.offset(pageable.getOffset())
         var lists = query.fetch();
 
         List<StoreResponseDto> responseList = lists.stream().map(

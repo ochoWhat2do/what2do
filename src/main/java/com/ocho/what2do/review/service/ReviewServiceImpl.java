@@ -5,6 +5,7 @@ import com.ocho.what2do.common.file.FileUploader;
 import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
+import com.ocho.what2do.review.dto.ReviewListResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.review.entity.Review;
@@ -17,6 +18,8 @@ import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,14 +42,16 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getAllReviews(Long storeId, int page, int size, String sortBy, boolean isAsc) {
+    public ReviewListResponseDto getAllReviews(Long storeId, int page, int size, String sortBy, boolean isAsc) {
         Store store = findStore(storeId);
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<ReviewResponseDto> storeList = reviewRepository.findAllByStore(store, pageable).stream().map(ReviewResponseDto::new).toList();
-
-        return storeList;
+        Page<Review> pageReviews =  reviewRepository.findAllByStore(store, pageable);
+        int totalCount = ((PageImpl) pageReviews).getTotalPages();
+        List<ReviewResponseDto> reviewList = pageReviews.stream().map(ReviewResponseDto::new).toList();
+        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, reviewList);
+        return reviewListResponseDto;
     }
 
     @Override
