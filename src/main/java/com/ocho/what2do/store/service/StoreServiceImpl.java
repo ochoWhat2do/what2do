@@ -15,8 +15,8 @@ import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,11 +31,10 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ApiStoreRepository apiStoreRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
-    private final int pageSize = 15;    // 한 페이지에 출력할 데이터 갯수(변경 가능)
+    private final int pageSize = 1000;    // 한 페이지에 출력할 데이터 갯수(변경 가능)
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("store_all")
     public StoreListResponseDto getStores(int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
@@ -50,7 +49,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    @Cacheable(value = "store_one", key = "#storeKey")
     public StoreResponseDto getStore(String storeKey) {
         List<ApiStore> findList = findStoreKey(storeKey);
         ApiStore findStore = findList.get(0);
@@ -80,7 +78,6 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable("store_all")
     public StoreCategoryListResponseDto getStoreCategory(String category, int page) {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
@@ -125,7 +122,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-        public StoreResponseDto getStoresByAddress(String address) {
+    public StoreResponseDto getStoresByAddress(String address) {
 
         // 주소로 가게를 조회하는 로직을 구현
         List<Store> stores = storeRepository.findByAddress(address);
@@ -138,8 +135,16 @@ public class StoreServiceImpl implements StoreService {
         StoreResponseDto responseDto = new StoreResponseDto(findStore);
 
         return responseDto;
-}
+    }
+    @Transactional(readOnly = true)
+    @Override
+    public List<StoreResponseDto> findStoresListReview(int page, int size, String sortBy, boolean isAsc) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
+        return storeRepository.findStoresListReview(pageable);
+    }
 
     @Override
     public Store findStore(Long storeId) {

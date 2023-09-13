@@ -4,13 +4,14 @@ import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
+
 import java.io.IOException;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface ReviewService {
-
 
     /*
      * 전체 리뷰 페이징 조회
@@ -43,7 +44,7 @@ public interface ReviewService {
      * @return 수정된 리뷰 정보
      * @param files 첨부파일 정보
      */
-    ReviewResponseDto updateReview(Long storeId, Long reviewId, ReviewRequestDto requestDto, User user,  List<MultipartFile> files) throws IOException;
+    ReviewResponseDto updateReview(Long storeId, Long reviewId, ReviewRequestDto requestDto, User user, List<MultipartFile> files) throws IOException;
 
     /*
      * 리뷰 삭제
@@ -75,6 +76,4 @@ public interface ReviewService {
      * @return 업데이트된 리뷰 정보
      */
     void unlikeReview(Long reviewId, User user);
-
-
 }
