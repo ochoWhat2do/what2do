@@ -46,9 +46,10 @@ public interface StoreService {
     /**
      * 가게 단건 조회
      * @param storeKey storeKey 를 변수로 해당되는 가게 단건 조회
+     * @param user user 정보
      * @return StoreResponseDto
      */
-    StoreResponseDto getStore(String storeKey);
+    StoreResponseDto getStore(String storeKey, User user);
 
     /**
      * 가게 카테고리별 조회
@@ -89,9 +90,10 @@ public interface StoreService {
     /**
      * 주소로 가게 조회
      * @param address 조회할 가게의 주소
+     * @param user 사용자 조회
      * @return 해당 주소에 속한 가게
      */
-    StoreResponseDto getStoresByAddress(String address);
+    StoreResponseDto getStoresByAddress(String address, User user);
 
     /**
      * 리뷰 건수를 기준으로 가게와 리뷰를 조인하여 조회하고, 리뷰 건수 순으로 정렬합니다.

@@ -49,7 +49,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     @Transactional
-    public StoreResponseDto getStore(String storeKey) {
+    public StoreResponseDto getStore(String storeKey, User user) {
         List<ApiStore> findList = findStoreKey(storeKey);
         ApiStore findStore = findList.get(0);
         Store store = Store.builder().storeKey(findStore.getStoreKey())
@@ -70,7 +70,7 @@ public class StoreServiceImpl implements StoreService {
             savedStore = storeRepository.getStoreByStoreKey(storeKey);
         }
         if (savedStore.isPresent()) {
-            return new StoreResponseDto(savedStore.get());
+            return new StoreResponseDto(savedStore.get(), user);
         } else {
             return new StoreResponseDto(findStore);
         }
@@ -106,7 +106,7 @@ public class StoreServiceImpl implements StoreService {
         StoreFavorite storeUser = new StoreFavorite(store, user);
         storeFavoriteRepository.save(storeUser);
 
-        return new StoreFavoriteResponseDto(storeUser);
+        return new StoreFavoriteResponseDto(storeUser, user);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public StoreResponseDto getStoresByAddress(String address) {
+    public StoreResponseDto getStoresByAddress(String address, User user) {
 
         // 주소로 가게를 조회하는 로직을 구현
         List<Store> stores = storeRepository.findByAddress(address);
@@ -132,7 +132,7 @@ public class StoreServiceImpl implements StoreService {
         }
 
         Store findStore = stores.get(0);
-        StoreResponseDto responseDto = new StoreResponseDto(findStore);
+        StoreResponseDto responseDto = new StoreResponseDto(findStore, user);
 
         return responseDto;
     }

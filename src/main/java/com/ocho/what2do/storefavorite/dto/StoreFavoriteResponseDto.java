@@ -27,4 +27,8 @@ public class StoreFavoriteResponseDto extends ApiResponseDto {
         this.address = storeFavorite.getStore().getAddress();
         this.homePageLink =storeFavorite.getStore().getHomePageLink();
     }
+
+    public StoreFavoriteResponseDto(StoreFavorite storeFavorite, User loginUser){
+        this.id = storeFavorite.getId();
+    }
 }
