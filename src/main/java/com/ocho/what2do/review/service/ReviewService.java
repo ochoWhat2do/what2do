@@ -26,7 +26,7 @@ public interface ReviewService {
      * @param pageable 페이징 정보
      * @return 내 리뷰 페이지
      */
-    List<ReviewResponseDto> getUserReviews(User user, int page, int size, String sortBy, boolean isAsc);
+    ReviewListResponseDto getUserReviews(User user, int page, int size, String sortBy, boolean isAsc);
 
     /*
      * 리뷰 등록
