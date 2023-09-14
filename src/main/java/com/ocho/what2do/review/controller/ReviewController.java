@@ -3,6 +3,7 @@ package com.ocho.what2do.review.controller;
 import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.security.UserDetailsImpl;
 import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
+import com.ocho.what2do.review.dto.ReviewListResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.review.service.ReviewService;
@@ -32,13 +33,13 @@ public class ReviewController {
 
     @Operation(summary = "전체 리뷰 페이징 조회", description = "전체 리뷰를 페이징하여 조회합니다.")
     @GetMapping("/stores/{storeId}/reviews")
-    public ResponseEntity<List<ReviewResponseDto>> getAllReviews(
+    public ResponseEntity<ReviewListResponseDto> getAllReviews(
             @PathVariable("storeId") Long storeId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("isAsc") boolean isAsc) {
-        List<ReviewResponseDto> responseDto = reviewService.getAllReviews(storeId, page - 1, size, sortBy, isAsc);
+        ReviewListResponseDto responseDto = reviewService.getAllReviews(storeId, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(responseDto);
     }
 

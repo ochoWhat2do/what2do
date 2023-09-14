@@ -1,6 +1,7 @@
 package com.ocho.what2do.review.service;
 
 import com.ocho.what2do.review.dto.ReviewLikeResponseDto;
+import com.ocho.what2do.review.dto.ReviewListResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
@@ -18,7 +19,7 @@ public interface ReviewService {
      * @param pageable 페이징 정보
      * @return 전체 리뷰 페이지
      */
-    List<ReviewResponseDto> getAllReviews(Long storeId, int page, int size, String sorBy, boolean isAsc);
+    ReviewListResponseDto getAllReviews(Long storeId, int page, int size, String sorBy, boolean isAsc);
 
     /*
      * 내 리뷰 페이징 조회

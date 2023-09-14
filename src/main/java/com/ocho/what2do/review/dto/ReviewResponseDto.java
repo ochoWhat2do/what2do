@@ -25,6 +25,7 @@ public class ReviewResponseDto {
     private int rate;
     private boolean liked;
     private String createEmail;
+    private String createNickName;
     private Long storeId;
 
     public ReviewResponseDto(Review review) {
@@ -38,6 +39,7 @@ public class ReviewResponseDto {
         this.orderNo = review.getOrderNo();
         this.rate = review.getRate();
         this.createEmail = review.getUser().getEmail();
+        this.createNickName = review.getUser().getNickname();
         this.storeId = review.getStore().getId();
     }
 
@@ -52,6 +54,7 @@ public class ReviewResponseDto {
         this.orderNo = review.getOrderNo();
         this.rate = review.getRate();
         this.createEmail = review.getUser().getEmail();
+        this.createNickName = review.getUser().getNickname();
         Optional<ReviewLike> userLike = review.getLikes().stream().filter(v -> v.getUser().getId().equals(loginUser.getId())).findFirst();
         if (userLike.isPresent()) {
             this.liked = true;

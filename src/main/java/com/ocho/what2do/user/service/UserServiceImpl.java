@@ -162,14 +162,20 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public UserProfileDto editUserInfo(MultipartFile profilePic, EditUserRequestDto requestDto, User user) {
     User foundUser = findUser(user.getId());
-    String imageUrl = null;
-    if (profilePic != null) {
+    String imageUrl = "";
+    if (profilePic != null && requestDto.getDefaultPicture().isEmpty()) {
       try {
         imageUrl = fileUploader.uploadFile(profilePic, "image");
       } catch (IOException e) {
         throw new RuntimeException(e);
       }
     }
+    if(imageUrl == null || imageUrl.isEmpty()) {
+       if(!requestDto.getDefaultPicture().isEmpty()) {
+         imageUrl = requestDto.getDefaultPicture();
+       }
+    }
+
     foundUser.editUserInfo(requestDto.getNickname(), requestDto.getIntroduction(), imageUrl);
     return new UserProfileDto(foundUser);
   }

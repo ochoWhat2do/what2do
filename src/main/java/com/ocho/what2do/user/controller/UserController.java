@@ -49,7 +49,7 @@ public class UserController {
 
     @Operation(summary = "프로필 수정", description = "프로필 정보를 수정합니다.")
     @PutMapping(value = "/info", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<UserProfileDto> changeUserInfo(@RequestPart("profilePic") MultipartFile profilePic,
+    public ResponseEntity<UserProfileDto> changeUserInfo(@RequestPart(value="profilePic", required = false) MultipartFile profilePic,
                                                          @RequestPart("requestDto") EditUserRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         UserProfileDto userProfileDto = userService.editUserInfo(profilePic, requestDto, userDetails.getUser());
         return ResponseEntity.ok().body(userProfileDto);
