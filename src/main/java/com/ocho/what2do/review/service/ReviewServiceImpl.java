@@ -47,7 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Review> pageReviews =  reviewRepository.findAllByStore(store, pageable);
+        Page<Review> pageReviews = reviewRepository.findAllByStore(store, pageable);
         int totalCount = ((PageImpl) pageReviews).getTotalPages();
         List<ReviewResponseDto> reviewList = pageReviews.stream().map(ReviewResponseDto::new).toList();
         ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, reviewList);
@@ -56,14 +56,15 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReviewResponseDto> getUserReviews(User user, int page, int size, String sortBy, boolean isAsc) {
+    public ReviewListResponseDto getUserReviews(User user, int page, int size, String sortBy, boolean isAsc) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        return reviewRepository.findByUser(user, pageable)
-                .stream()
-                .map(ReviewResponseDto::new)
-                .toList();
+        Page<Review> pageReviews = reviewRepository.findByUser(user, pageable);
+        int totalCount = ((PageImpl) pageReviews).getTotalPages();
+        List<ReviewResponseDto> reviewList = pageReviews.stream().map(ReviewResponseDto::new).toList();
+        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, reviewList);
+        return reviewListResponseDto;
     }
 
     @Override

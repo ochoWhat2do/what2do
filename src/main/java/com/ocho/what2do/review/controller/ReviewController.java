@@ -45,7 +45,7 @@ public class ReviewController {
 
     @Operation(summary = "특정 사용자가 작성한 리뷰 페이징 조회", description = "특정 사용자가 작성한 리뷰를 페이징하여 조회합니다.")
     @GetMapping("/users/{userId}/reviews")
-    public ResponseEntity<List<ReviewResponseDto>> getUserReviews(
+    public ResponseEntity<ReviewListResponseDto> getUserReviews(
             @PathVariable("userId") Long userId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
@@ -53,7 +53,7 @@ public class ReviewController {
             @RequestParam("isAsc") boolean isAsc,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         User user = userService.findUserById(userId);
-        List<ReviewResponseDto> responseDto = reviewService.getUserReviews(user, page - 1, size, sortBy, isAsc);
+        ReviewListResponseDto responseDto = reviewService.getUserReviews(user, page - 1, size, sortBy, isAsc);
         return ResponseEntity.ok().body(responseDto);
     }
 
