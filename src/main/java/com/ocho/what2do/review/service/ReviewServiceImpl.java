@@ -48,9 +48,10 @@ public class ReviewServiceImpl implements ReviewService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Review> pageReviews = reviewRepository.findAllByStore(store, pageable);
-        int totalCount = ((PageImpl) pageReviews).getTotalPages();
+        Long totalCount = ((PageImpl) pageReviews).getTotalElements();
+        int pageCount = ((PageImpl) pageReviews).getTotalPages();
         List<ReviewResponseDto> reviewList = pageReviews.stream().map(ReviewResponseDto::new).toList();
-        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, reviewList);
+        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, pageCount, reviewList);
         return reviewListResponseDto;
     }
 
@@ -61,9 +62,10 @@ public class ReviewServiceImpl implements ReviewService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Review> pageReviews = reviewRepository.findByUser(user, pageable);
-        int totalCount = ((PageImpl) pageReviews).getTotalPages();
+        Long totalCount = ((PageImpl) pageReviews).getTotalElements();
+        int pageCount = ((PageImpl) pageReviews).getTotalPages();
         List<ReviewResponseDto> reviewList = pageReviews.stream().map(ReviewResponseDto::new).toList();
-        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, reviewList);
+        ReviewListResponseDto reviewListResponseDto = new ReviewListResponseDto(totalCount, pageCount, reviewList);
         return reviewListResponseDto;
     }
 

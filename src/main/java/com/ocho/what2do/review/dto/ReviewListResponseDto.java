@@ -5,14 +5,14 @@ import lombok.Getter;
 
 @Getter
 public class ReviewListResponseDto {
-  private int totalCount;   // 총 리뷰 건수
-  private int pageCount;    // 총 리뷰 건수 / 10
+  private Long totalCount;   // 총 리뷰 건수
+  private int pageCount;    // 페이지 개수
 
   private List<ReviewResponseDto> reviewList;
 
-  public ReviewListResponseDto(int totalCount, List<ReviewResponseDto> reviewList) {
+  public ReviewListResponseDto(Long totalCount, int pageCount, List<ReviewResponseDto> reviewList) {
     this.totalCount = totalCount;
-    this.pageCount = totalCount / 10 + 1;
+    this.pageCount = pageCount;
     this.reviewList = reviewList;
   }
 }
