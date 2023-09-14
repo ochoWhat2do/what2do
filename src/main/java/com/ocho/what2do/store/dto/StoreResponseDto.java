@@ -25,6 +25,8 @@ public class StoreResponseDto {
     private int viewCount;
     private  boolean favoriteYn;
 
+    private Long reviewCount; // reviewCount 필드 추가
+
     public StoreResponseDto(JSONObject itemJson) {
         this.storeKey = itemJson.getString("id");
         this.title = itemJson.getString("place_name");
@@ -59,6 +61,20 @@ public class StoreResponseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.viewCount = store.getViewCount();
+    }
+
+    public StoreResponseDto(Store store, Long reviewCount) {
+        this.id = store.getId();
+        this.storeKey = store.getStoreKey();
+        this.title = store.getTitle();
+        this.homePageLink = store.getHomePageLink();
+        this.category = store.getCategory();
+        this.address = store.getAddress();
+        this.roadAddress = store.getRoadAddress();
+        this.latitude = store.getLatitude();
+        this.longitude = store.getLongitude();
+        this.viewCount = store.getViewCount();
+        this.reviewCount = reviewCount;
     }
 
     public StoreResponseDto(Store store, User loginUser) {
