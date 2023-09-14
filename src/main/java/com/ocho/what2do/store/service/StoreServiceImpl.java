@@ -92,7 +92,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     @Transactional(readOnly = true)
     public StoreFavoriteListResponseDto getStoreFavorite(User user) {
-        List<StoreFavoriteResponseDto> storeUserList = storeFavoriteRepository.findAll().stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
+        List<StoreFavoriteResponseDto> storeUserList = storeFavoriteRepository.findAllByUserId(user.getId()).stream().map(StoreFavoriteResponseDto::new).collect(Collectors.toList());
         return new StoreFavoriteListResponseDto(storeUserList);
     }
 
