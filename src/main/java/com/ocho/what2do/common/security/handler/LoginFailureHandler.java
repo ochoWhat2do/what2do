@@ -28,5 +28,6 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         String result = new ObjectMapper().writeValueAsString(new ApiResponseDto(HttpStatus.BAD_REQUEST.value(), "Login Fail"));
 
         response.getOutputStream().print(result);
+        throw new CustomException(CustomErrorCode.REVIEW_ALREADY_LIKED, exception);
     }
 }
