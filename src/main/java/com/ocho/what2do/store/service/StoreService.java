@@ -1,6 +1,6 @@
 package com.ocho.what2do.store.service;
 
-import com.ocho.what2do.common.daum.entity.ApiStore;
+import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;

@@ -1,18 +1,11 @@
 package com.ocho.what2do.store.repository;
 
-import com.ocho.what2do.common.daum.entity.ApiStore;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.StoreCountEntity;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.Collections;
+
 import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,7 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.ocho.what2do.common.daum.entity.QApiStore.apiStore;
+import static com.ocho.what2do.store.entity.QApiStore.apiStore;
 import static com.ocho.what2do.review.entity.QReview.review;
 import static com.ocho.what2do.store.entity.QStore.store;
 

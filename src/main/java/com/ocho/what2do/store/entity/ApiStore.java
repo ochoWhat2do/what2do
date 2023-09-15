@@ -1,4 +1,4 @@
-package com.ocho.what2do.common.daum.entity;
+package com.ocho.what2do.store.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -1,7 +1,7 @@
 package com.ocho.what2do.store.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ocho.what2do.common.daum.entity.ApiStore;
+import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.user.entity.User;
