@@ -1,7 +1,7 @@
 package com.ocho.what2do.store.service;
 
-import com.ocho.what2do.common.daum.entity.ApiStore;
-import com.ocho.what2do.common.daum.repository.ApiStoreRepository;
+import com.ocho.what2do.store.entity.ApiStore;
+import com.ocho.what2do.store.repository.ApiStoreRepository;
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
