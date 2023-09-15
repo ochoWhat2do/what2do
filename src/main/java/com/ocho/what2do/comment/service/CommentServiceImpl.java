@@ -1,9 +1,6 @@
 package com.ocho.what2do.comment.service;
 
-import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
-import com.ocho.what2do.comment.dto.CommentEditRequestDto;
-import com.ocho.what2do.comment.dto.CommentLikeResponseDto;
-import com.ocho.what2do.comment.dto.CommentResponseDto;
+import com.ocho.what2do.comment.dto.*;
 import com.ocho.what2do.comment.entity.Comment;
 import com.ocho.what2do.comment.entity.CommentLike;
 import com.ocho.what2do.comment.repository.CommentLikeRepository;
@@ -15,9 +12,7 @@ import com.ocho.what2do.review.repository.ReviewRepository;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,16 +30,17 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc, User user
-    ) {
+    public CommentListResponseDto getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc, User user) {
         Review review = findReview(reviewId);
-        Direction direction = isAsc ? Direction.ASC : Direction.DESC;
+        Sort.Direction direction = isAsc ? Direction.ASC : Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        List<CommentResponseDto> commentList = commentRepository.findAllByReview(review, pageable).stream()
-                .map(v -> new CommentResponseDto(v, user)).toList();
-        return commentList;
-
+        Page<Comment> pageComments = commentRepository.findAllByReview(review, pageable);
+        Long totalCount = ((PageImpl) pageComments).getTotalElements();
+        int pageCount = ((PageImpl) pageComments).getTotalPages();
+        List<CommentResponseDto> commentList = pageComments.stream().map(CommentResponseDto::new).toList();
+        CommentListResponseDto commentListResponseDto = new CommentListResponseDto(totalCount, pageCount, commentList);
+        return commentListResponseDto;
     }
 
     @Override

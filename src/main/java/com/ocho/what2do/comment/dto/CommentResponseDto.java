@@ -22,6 +22,14 @@ public class CommentResponseDto {
     private int likeCount;
     private boolean liked;
 
+    public CommentResponseDto(Comment comment) {
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.createdAt = getCreatedAt();
+        this.modifiedAt = getModifiedAt();
+        this.likeCount = getLikeCount();
+    }
+
     @Builder
     public CommentResponseDto(Comment comment, User loginUser) {
         this.id = comment.getId();
