@@ -3,7 +3,7 @@ package com.ocho.what2do.comment.controller;
 import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
 import com.ocho.what2do.comment.dto.CommentEditRequestDto;
 import com.ocho.what2do.comment.dto.CommentLikeResponseDto;
-import com.ocho.what2do.comment.dto.CommentResponseDto;
+import com.ocho.what2do.comment.dto.CommentListResponseDto;
 import com.ocho.what2do.comment.service.CommentService;
 import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.security.UserDetailsImpl;
@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,18 +26,16 @@ public class CommentController {
     @Operation(summary = "댓글 목록 조회", description = "댓글 목록을 조회합니다.")
     @GetMapping("/stores/{storeId}/reviews/{reviewId}/comments")
     @ResponseBody
-    public ResponseEntity commentList(
+    public ResponseEntity<CommentListResponseDto> commentList(
             @PathVariable Long storeId,
             @PathVariable Long reviewId,
             @RequestParam("page") int page,
             @RequestParam("size") int size,
             @RequestParam("sortBy") String sortBy,
             @RequestParam("isAsc") boolean isAsc,
-        @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
-        List<CommentResponseDto> commentList = commentService.getCommentList(reviewId, page - 1, size, sortBy, isAsc, userDetails.getUser());
-
-        return new ResponseEntity<>(commentList, HttpStatus.OK);
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        CommentListResponseDto responseDto = commentService.getCommentList(reviewId, page - 1, size, sortBy, isAsc, userDetails.getUser());
+        return ResponseEntity.ok().body(responseDto);
     }
 
     @Operation(summary = "댓글 생성", description = "댓글을 생성합니다.")
@@ -64,7 +60,6 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails
     ) {
         String result = commentService.editComment(commentId, requestDto, userDetails.getUser());
-
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), result));
     }
 
@@ -74,8 +69,7 @@ public class CommentController {
             @PathVariable Long storeId,
             @PathVariable Long reviewId,
             @PathVariable Long commentId,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
-    ) {
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         String result = commentService.deleteComment(commentId, userDetails.getUser());
         return ResponseEntity.ok(new ApiResponseDto(HttpStatus.OK.value(), result));
     }
@@ -100,6 +94,5 @@ public class CommentController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         commentService.unlikeComment(commentId, userDetails.getUser());
         return ResponseEntity.ok().body(new ApiResponseDto(HttpStatus.OK.value(), "좋아요가 취소되었습니다."));
-
     }
 }

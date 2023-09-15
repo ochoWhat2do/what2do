@@ -3,10 +3,8 @@ package com.ocho.what2do.comment.service;
 import com.ocho.what2do.comment.dto.CommentCreateRequestDto;
 import com.ocho.what2do.comment.dto.CommentEditRequestDto;
 import com.ocho.what2do.comment.dto.CommentLikeResponseDto;
-import com.ocho.what2do.comment.dto.CommentResponseDto;
+import com.ocho.what2do.comment.dto.CommentListResponseDto;
 import com.ocho.what2do.user.entity.User;
-
-import java.util.List;
 
 
 public interface CommentService {
@@ -16,7 +14,7 @@ public interface CommentService {
      * @param reviewId 조회할 리뷰 ID
      * @return 댓글 목록
      */
-    List<CommentResponseDto> getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc, User user);
+    CommentListResponseDto getCommentList(Long reviewId, int page, int size, String sortBy, boolean isAsc, User user);
 
     /*
      * 댓글 생성
