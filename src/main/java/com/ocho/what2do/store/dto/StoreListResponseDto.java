@@ -22,8 +22,9 @@ public class StoreListResponseDto {
         this.storeList = storeList;
     }
 
-    public StoreListResponseDto(Integer totalCnt, List<StoreResponseDto> storeList) {
+    public StoreListResponseDto(Integer totalCnt, Integer pageCnt, List<StoreResponseDto> storeList) {
         this.totalCnt = totalCnt;
+        this.pageCnt = pageCnt;
         this.storeList = storeList;
     }
 }
