@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+//@EnableScheduling  //쓰지않을때 주석처리 배치프로그램
 public class What2doApplication {
 
 	public static void main(String[] args) {

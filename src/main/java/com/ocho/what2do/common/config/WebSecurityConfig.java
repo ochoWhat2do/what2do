@@ -28,83 +28,72 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig {
 
-    private final JwtUtil jwtUtil;
-    private final AuthenticationConfiguration authenticationConfiguration;
-    private final RedisTemplate redisTemplate;
-    private final UserRepository userRepository;
+  private final JwtUtil jwtUtil;
+  private final AuthenticationConfiguration authenticationConfiguration;
+  private final RedisTemplate redisTemplate;
+  private final UserRepository userRepository;
 
-    /*private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;*/
-/*  private final UserOAuthService userOAuthService;
-  private final OAuth2SuccessHandler oAuth2SuccessHandler;*/
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-            throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+      throws Exception {
+    return configuration.getAuthenticationManager();
+  }
 
-    @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisTemplate);
-        filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
-        filter.setAuthenticationSuccessHandler(loginSuccessHandler());
-        filter.setAuthenticationFailureHandler(loginFailureHandler());
-        return filter;
-    }
+  @Bean
+  public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+    JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, redisTemplate);
+    filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+    filter.setAuthenticationSuccessHandler(loginSuccessHandler());
+    // filter.setAuthenticationFailureHandler(loginFailureHandler());
+    return filter;
+  }
 
-    @Bean
-    public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userRepository);
-    }
+  @Bean
+  public JwtAuthorizationFilter jwtAuthorizationFilter() {
+    return new JwtAuthorizationFilter(jwtUtil, userRepository);
+  }
 
-    /**
-     * 로그인 성공 시 호출되는 LoginSuccessHandler 빈 등록
-     */
-    @Bean
-    public LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(jwtUtil, userRepository);
-    }
+  /**
+   * 로그인 성공 시 호출되는 LoginSuccessHandler 빈 등록
+   */
+  @Bean
+  public LoginSuccessHandler loginSuccessHandler() {
+    return new LoginSuccessHandler(jwtUtil, userRepository);
+  }
 
-    /**
-     * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
-     */
-    @Bean
-    public LoginFailureHandler loginFailureHandler() {
-        return new LoginFailureHandler();
-    }
+  /**
+   * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
+   */
+  @Bean
+  public LoginFailureHandler loginFailureHandler() {
+    return new LoginFailureHandler();
+  }
 
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // CSRF 설정
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(Customizer.withDefaults());
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    // CSRF 설정
+    http.csrf(AbstractHttpConfigurer::disable);
+    http.cors(Customizer.withDefaults());
 
-        // Session 방식 -> JWT 방식 설정 변경
-        http.sessionManagement(sessionManagement ->
-                sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    // Session 방식 -> JWT 방식 설정 변경
+    http.sessionManagement(sessionManagement ->
+        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.authorizeHttpRequests(authorizeHttpRequests ->
-                authorizeHttpRequests
-                        .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll() // '/api/users'로 시작하는 요청 중 모든 POST 접근 허가
-                        .requestMatchers("/swagger-ui/**", "/v3/**").permitAll() // swagger-ui 와 관련된 모든 요청 접근 허가
-                        .requestMatchers("/oauth/kakao").permitAll()
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/info").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/checkEmail").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/users/confirmEmail").permitAll()
-                        //  .requestMatchers("/admin/**").permitAll()
-                        .requestMatchers("/api/daum/**").permitAll() // daum 지역 api 요청 접근 허가
-                        .anyRequest().authenticated() // 그 외 모든 요청 인증처리
-        );
-
-/*    http.oauth2Login(oauth2 -> oauth2
-        .defaultSuccessUrl("/auth/login-success")
-        .userInfoEndpoint(userInfo -> userInfo
-            .userService(userOAuthService))
-        .successHandler(oAuth2SuccessHandler)
-    );*/
+    http.authorizeHttpRequests(authorizeHttpRequests ->
+        authorizeHttpRequests
+            .requestMatchers(HttpMethod.POST, "/api/users/**")
+            .permitAll() // '/api/users'로 시작하는 요청 중 모든 POST 접근 허가
+            .requestMatchers("/swagger-ui/**", "/v3/**").permitAll() // swagger-ui 와 관련된 모든 요청 접근 허가
+            .requestMatchers("/oauth/kakao").permitAll()
+            .requestMatchers("/").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/users/info").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/users/checkEmail").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/users/confirmEmail").permitAll()
+            //  .requestMatchers("/admin/**").permitAll()
+            .requestMatchers("/api/daum/**").permitAll() // daum 지역 api 요청 접근 허가
+            .anyRequest().authenticated() // 그 외 모든 요청 인증처리
+    );
 
     /*http.oauth2Login(oauth2 -> oauth2
         .defaultSuccessUrl("/auth/login-success")
@@ -113,19 +102,12 @@ public class WebSecurityConfig {
         .successHandler(oAuth2LoginSuccessHandler)
         .failureHandler(oAuth2LoginFailureHandler)
     );*/
+    // userInfoEndpoint : oauth2Login에 성공하면 customOAuth2UserService에서 설정을 진행하겠다라는 의미입니다.
 
-/*    http.oauth2Login(oauth2 -> oauth2.userInfoEndpoint(userInfo -> userInfo
-            .userService(customOAuth2UserService))
-        .successHandler(oAuth2LoginSuccessHandler)
-        .failureHandler(oAuth2LoginFailureHandler)
-    );*/
+    // 필터 관리
+    http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+    http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        // userInfoEndpoint : oauth2Login에 성공하면 customOAuth2UserService에서 설정을 진행하겠다라는 의미입니다.
-
-        // 필터 관리
-        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
-        return http.build();
-    }
+    return http.build();
+  }
 }
