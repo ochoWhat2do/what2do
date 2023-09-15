@@ -1,5 +1,6 @@
 package com.ocho.what2do.store.service;
 
+import com.ocho.what2do.common.ConstVal;
 import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.repository.ApiStoreRepository;
 import com.ocho.what2do.common.exception.CustomException;
@@ -31,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
     private final ApiStoreRepository apiStoreRepository;
     private final StoreFavoriteRepository storeFavoriteRepository;
-    private final int pageSize = 1000;    // 한 페이지에 출력할 데이터 갯수(변경 가능)
+    private final int pageSize = ConstVal.API_STORE_PAGE_PER_COUNT;    // 한 페이지에 출력할 데이터 갯수(API 받아온 정보라면 고정)
 
     @Override
     @Transactional(readOnly = true)
@@ -39,12 +40,12 @@ public class StoreServiceImpl implements StoreService {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeList = apiStoreRepository.findAll(pageRequest).stream().map(StoreResponseDto::new).collect(Collectors.toList());
         Integer totalCnt = apiStoreRepository.findAll().size();
-
-        if (pageCnt(totalCnt) < page) {
+        Integer pageCnt = pageCnt(totalCnt);
+        if (pageCnt < page) {
             throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
         }
 
-        return new StoreListResponseDto(totalCnt, storeList);
+        return new StoreListResponseDto(totalCnt, pageCnt, storeList);
     }
 
     @Override
@@ -82,11 +83,11 @@ public class StoreServiceImpl implements StoreService {
         PageRequest pageRequest = pageable(page);
         List<StoreResponseDto> storeCategory = apiStoreRepository.findByCategoryContains(category, pageRequest).stream().map(StoreResponseDto::new).toList();
         Integer totalCnt = apiStoreRepository.findAllByCategoryContains(category).stream().toList().size();
-
-        if (pageCnt(totalCnt) < page || totalCnt == 0) {
+        Integer pageCnt = pageCnt(totalCnt);
+        if (pageCnt < page || totalCnt == 0) {
             throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
         }
-        return new StoreCategoryListResponseDto(totalCnt, storeCategory);
+        return new StoreCategoryListResponseDto(totalCnt, pageCnt, storeCategory);
     }
 
     @Override
