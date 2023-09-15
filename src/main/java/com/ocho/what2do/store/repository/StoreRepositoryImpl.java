@@ -16,8 +16,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.ocho.what2do.common.daum.entity.QApiStore.apiStore;
 import static com.ocho.what2do.review.entity.QReview.review;
+import static com.ocho.what2do.store.entity.QApiStore.apiStore;
 import static com.ocho.what2do.store.entity.QStore.store;
 
 @RequiredArgsConstructor
