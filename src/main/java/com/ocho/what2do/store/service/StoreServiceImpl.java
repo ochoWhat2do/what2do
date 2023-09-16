@@ -62,7 +62,7 @@ public class StoreServiceImpl implements StoreService {
   @Override
   @Transactional
   public StoreResponseDto getStore(String storeKey, User user) {
-    ApiStore findStore = findStoreKey(storeKey);
+    ApiStore findStore = findByStoreKey(storeKey);
     Store store = Store.builder().storeKey(findStore.getStoreKey())
         .title(findStore.getTitle())
         .homePageLink(findStore.getHomePageLink())
@@ -71,6 +71,7 @@ public class StoreServiceImpl implements StoreService {
         .roadAddress(findStore.getRoadAddress())
         .latitude(findStore.getLatitude())
         .longitude(findStore.getLongitude())
+        .images(findStore.getImages())
         .viewCount(0)
         .build();
     Optional<Store> savedStore = null;
@@ -170,9 +171,23 @@ public class StoreServiceImpl implements StoreService {
   }
 
   @Override
-  public ApiStore findStoreKey(String storeKey) {
+  public ApiStore findByStoreKey(String storeKey) {
     return apiStoreRepository.findByStoreKey(storeKey)
         .orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));
+  }
+
+  // 스케줄러에서 실행되는 메소드 입니다.
+  @Override
+  public ApiStore getApiStoreNotCheck(String storeKey) {
+    Optional<ApiStore> optionalApiStore = apiStoreRepository.findByStoreKey(storeKey);
+    if (optionalApiStore.isPresent()) {
+      return optionalApiStore.get();
+    } else {
+      return null;
+    }
+    // 가게없으면 실행을 안하면 된다..
+    /*return apiStoreRepository.findByStoreKey(storeKey)
+        .orElseThrow(() -> new CustomException(CustomErrorCode.STORE_NOT_FOUND));*/
   }
 
   @Override
@@ -205,6 +220,7 @@ public class StoreServiceImpl implements StoreService {
     List<S3FileDto> fileDtoList = null;
     List<MultipartFile> apiStoreFileList = null;
     int result = 0;
+    int fileSavedResult = 0;
 
     if (files.size() > 0) {
       for (int i = 0; i < files.size(); i++) {
@@ -214,36 +230,47 @@ public class StoreServiceImpl implements StoreService {
 
         // 정규 표현식 패턴 정의
         String storeKey = storeKeyList.get(i);
-        ApiStore apiStore = findStoreKey(storeKey);
-        // 파일정보 불러오기
-        List<S3FileDto> images = apiStore.getImages();
+        ApiStore apiStore = getApiStoreNotCheck(storeKey);
+        if (apiStore != null) {
+          // 파일정보 불러오기
+          List<S3FileDto> images = apiStore.getImages();
 
-        // 기존 파일 삭제
-//                if (images != null && images.size() > 0) {
-//                    for (int j = 0; j < images.size(); j++) {
-//                        fileUploader.deleteFile(images.get(j).getUploadFilePath(),
-//                            images.get(j).getUploadFileName());
-//                    }
-//                }
+          // 부하 때문에 파일이 없을 경우에만 업데이트 하기로 TODO: 파일업데이트
+          if (images == null) {
+            // 파일 등록 (현재는 대표 이미지 1개만 등록)
+            if (files.get(i) != null) {
+              apiStoreFileList.add(files.get(i));
+              fileDtoList = fileUploader.uploadFiles(apiStoreFileList, "stores");
+              fileSavedResult++;
+            }
 
-        // 부하 때문에 파일이 없을 경우에만 업데이트 하기로 TODO: 파일업데이트
-        if (images.size() == 0 || images == null) {
-          // 파일 등록 (현재는 대표 이미지 1개만 등록)
-          if (files.get(i) != null) {
-            apiStoreFileList.add(files.get(i));
-            fileDtoList = fileUploader.uploadFiles(apiStoreFileList, "stores");
+            if (fileDtoList.size() > 0) {
+              apiStore.update(fileDtoList);
+              result++;
+            }
+
           }
+        } // if (apiStore != null)
 
-          if (fileDtoList.size() > 0) {
-            apiStore.update(fileDtoList);
-            result++;
-          }
-
-        }
       }
+    }
+
+    if(result > 0 && result == fileSavedResult) {
+      result = 1;
+    } else if (result == 0) {
+      result = 0;
+    } else {
+      result = -1;
     }
 
     return result;
   }
 
+  // 기존 파일 삭제
+ //                if (images != null && images.size() > 0) {
+ //                    for (int j = 0; j < images.size(); j++) {
+ //                        fileUploader.deleteFile(images.get(j).getUploadFilePath(),
+ //                            images.get(j).getUploadFileName());
+ //                    }
+ //                }
 }

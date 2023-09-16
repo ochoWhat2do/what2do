@@ -72,7 +72,7 @@ public interface StoreService {
      * @param storeKey 조회할 가게 storeKey
      * @return 가게 API Entity
      */
-    ApiStore findStoreKey(String storeKey);
+    ApiStore findByStoreKey(String storeKey);
 
     /**
      * 페이징 기능 추가 시 1 페이지부터 시작 하도록 설정
@@ -114,4 +114,11 @@ public interface StoreService {
      * @return int 성공여부
      */
     int updateApiStore(List<String> storeKeyList, List<MultipartFile> files);
+
+    /**
+     * 스케줄링 시 가게 Entity 단건 조회 (없는지 체크하지 않을 것 )
+     * @param storeKey 조회할 가게 storeKey
+     * @return 가게 API Entity
+     */
+    ApiStore getApiStoreNotCheck(String storeKey);
 }

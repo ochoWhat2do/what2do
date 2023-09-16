@@ -39,7 +39,7 @@ public class ApiStore {
     private List<S3FileDto> images;
 
     @Builder
-    public ApiStore(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
+    public ApiStore(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude, List<S3FileDto> images) {
         this.storeKey = storeKey;
         this.title = title;
         this.homePageLink = homePageLink;
@@ -48,6 +48,7 @@ public class ApiStore {
         this.roadAddress = roadAddress;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.images = images;
     }
 
     public void update(List<S3FileDto> images) {

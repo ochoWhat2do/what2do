@@ -1,10 +1,13 @@
 package com.ocho.what2do.store.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.user.entity.User;
+import java.util.List;
+import lombok.Builder;
 import lombok.Getter;
 import org.json.JSONObject;
 
@@ -26,6 +29,15 @@ public class StoreResponseDto {
     private  boolean favoriteYn;
 
     private Long reviewCount; // reviewCount 필드 추가
+    private List<S3FileDto> images;
+
+    public List<S3FileDto> getImages() {
+        return images;
+    }
+
+    public void setImages(List<S3FileDto> images) {
+        this.images = images;
+    }
 
     public StoreResponseDto(JSONObject itemJson) {
         this.storeKey = itemJson.getString("id");
@@ -48,6 +60,7 @@ public class StoreResponseDto {
         this.roadAddress = store.getRoadAddress();
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
+        this.images =store.getImages();
     }
 
     public StoreResponseDto(Store store) {
@@ -61,6 +74,7 @@ public class StoreResponseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.viewCount = store.getViewCount();
+        this.images = store.getImages();
     }
 
     public StoreResponseDto(Store store, Long reviewCount) {
@@ -75,6 +89,25 @@ public class StoreResponseDto {
         this.longitude = store.getLongitude();
         this.viewCount = store.getViewCount();
         this.reviewCount = reviewCount;
+        this.images = store.getImages();
+    }
+
+    @Builder
+    public StoreResponseDto(Long id, String storeKey, String title, String homePageLink,
+        String category, String address, String roadAddress, String latitude, String longitude,
+        int viewCount, Long reviewCount, List<S3FileDto> images) {
+        this.id = id;
+        this.storeKey = storeKey;
+        this.title = title;
+        this.homePageLink = homePageLink;
+        this.category = category;
+        this.address = address;
+        this.roadAddress = roadAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.viewCount = viewCount;
+        this.reviewCount = reviewCount;
+        this.images = images;
     }
 
     public StoreResponseDto(Store store, User loginUser) {
@@ -88,6 +121,7 @@ public class StoreResponseDto {
         this.latitude = store.getLatitude();
         this.longitude = store.getLongitude();
         this.viewCount = store.getViewCount();
+        this.images = store.getImages();
         Optional<StoreFavorite> userFavorite = store.getStoreFavoriteList().stream().filter(v -> v.getUser().getId().equals(loginUser.getId())).findFirst();
         if (userFavorite.isPresent()) {
             this.favoriteYn = true;
