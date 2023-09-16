@@ -18,7 +18,7 @@ public class StoreImageScheduler {
 
   // @Scheduled(cron = "* */10 * * * *", zone = "Asia/Seoul") //10 분마다
   // 초, 분, 시, 일, 월, 주 순서
-  @Scheduled(cron = "0 4 3 * * *", zone = "Asia/Seoul") // 매일 새벽 1시
+  @Scheduled(cron = "0 21 3 * * *", zone = "Asia/Seoul") // 매일 새벽 1시
   public void yourScheduledMethod() {
     // 스케줄러가 실행될 로직
     log.info("가게 이미지 등록 스케줄러 실행");
