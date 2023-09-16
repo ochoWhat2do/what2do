@@ -48,17 +48,17 @@ jobs:
       - name: properties 파일 생성
         run: |
           cd ./src/main/resources
-            touch ./application-ds.properties
-            echo "${{ secrets.APPLICATION_DS_PROP }}" > ./application-ds.properties
-            touch ./application-s3.properties
-            echo "${{ secrets.APPLICATION_S3_PROP }}" > ./application-s3.properties
-            touch ./application-key.properties
-            echo "${{ secrets.APPLICATION_KEY_PROP }}" > ./application-key.properties
-            touch ./application-oauth.properties
-            echo "${{ secrets.APPLICATION_OAUTH_PROP }}" > ./application-oauth.properties
-            touch ./application-template.properties
-            echo "${{ secrets.APPLICATION_TEMPLATE_PROP }}" > ./application-template.properties
-          shell: bash
+          touch ./application-ds.properties
+          echo "${{ secrets.APPLICATION_DS_PROP }}" > ./application-ds.properties
+          touch ./application-s3.properties
+          echo "${{ secrets.APPLICATION_S3_PROP }}" > ./application-s3.properties
+          touch ./application-key.properties
+          echo "${{ secrets.APPLICATION_KEY_PROP }}" > ./application-key.properties
+          touch ./application-oauth.properties
+          echo "${{ secrets.APPLICATION_OAUTH_PROP }}" > ./application-oauth.properties
+          touch ./application-template.properties
+          echo "${{ secrets.APPLICATION_TEMPLATE_PROP }}" > ./application-template.properties
+        shell: bash
 
       # gradle 실행 허가
       - name: Run chmod to make gradlew executable
