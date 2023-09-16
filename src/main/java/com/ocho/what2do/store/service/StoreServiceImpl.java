@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -37,6 +38,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
+
+  @Value("${spring.profiles.active}")
+  private String runType;
 
   private final StoreRepository storeRepository;
   private final ApiStoreRepository apiStoreRepository;
@@ -221,6 +225,12 @@ public class StoreServiceImpl implements StoreService {
     List<MultipartFile> apiStoreFileList = null;
     int result = 0;
     int fileSavedResult = 0;
+    String s3SavedFolder = "";
+    if (runType.equals("local")) {
+      s3SavedFolder = "store_local";
+    } else {
+      s3SavedFolder = "store";
+    }
 
     if (files.size() > 0) {
       for (int i = 0; i < files.size(); i++) {
@@ -240,7 +250,7 @@ public class StoreServiceImpl implements StoreService {
             // 파일 등록 (현재는 대표 이미지 1개만 등록)
             if (files.get(i) != null) {
               apiStoreFileList.add(files.get(i));
-              fileDtoList = fileUploader.uploadFiles(apiStoreFileList, "stores");
+              fileDtoList = fileUploader.uploadFiles(apiStoreFileList, s3SavedFolder);
               fileSavedResult++;
             }
 
