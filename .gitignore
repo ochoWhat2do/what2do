@@ -47,3 +47,7 @@ application-template.properties
 
 ## generated Files
 **/src/main/generated/**
+
+# store images not included
+resources/images/stores/
+!/resources/images/stores/what2do_logo.png

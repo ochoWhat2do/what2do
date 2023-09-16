@@ -11,6 +11,7 @@ import com.ocho.what2do.user.entity.User;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface StoreService {
 
@@ -71,7 +72,7 @@ public interface StoreService {
      * @param storeKey 조회할 가게 storeKey
      * @return 가게 API Entity
      */
-    List<ApiStore> findStoreKey(String storeKey);
+    ApiStore findByStoreKey(String storeKey);
 
     /**
      * 페이징 기능 추가 시 1 페이지부터 시작 하도록 설정
@@ -104,4 +105,20 @@ public interface StoreService {
      * @return 리뷰 건수가 높은 순으로 정렬된 가게 목록
      */
     List<StoreResponseDto> findStoresListReview(int page, int size, String sortBy, boolean isAsc);
+
+
+    /**
+     * 첨부파일 정보업데이트
+     * @param storeKeyList    스토어 키 목록
+     * @param files    파일정보
+     * @return int 성공여부
+     */
+    int updateApiStore(List<String> storeKeyList, List<MultipartFile> files);
+
+    /**
+     * 스케줄링 시 가게 Entity 단건 조회 (없는지 체크하지 않을 것 )
+     * @param storeKey 조회할 가게 storeKey
+     * @return 가게 API Entity
+     */
+    ApiStore getApiStoreNotCheck(String storeKey);
 }

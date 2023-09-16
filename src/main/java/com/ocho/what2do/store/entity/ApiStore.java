@@ -1,10 +1,14 @@
 package com.ocho.what2do.store.entity;
 
+import com.ocho.what2do.common.file.S3FileDto;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Getter
@@ -30,9 +34,12 @@ public class ApiStore {
     private String latitude;                // 가게 x 좌표
     @Column(name = "longitude", length = 500)
     private String longitude;               // 가게 y 좌표
+    @Type(JsonType.class)
+    @Column(name = "images", columnDefinition = "json")
+    private List<S3FileDto> images;
 
     @Builder
-    public ApiStore(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude) {
+    public ApiStore(String storeKey, String title, String homePageLink, String category, String address, String roadAddress, String latitude, String longitude, List<S3FileDto> images) {
         this.storeKey = storeKey;
         this.title = title;
         this.homePageLink = homePageLink;
@@ -41,5 +48,10 @@ public class ApiStore {
         this.roadAddress = roadAddress;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.images = images;
+    }
+
+    public void update(List<S3FileDto> images) {
+        this.images = images;
     }
 }

@@ -38,6 +38,10 @@ jobs:
       - name: properties 파일 생성
         run: |
           cd ./src/main/resources
+          touch ./application-local.properties
+          echo "${{ secrets.APPLICATION_LOCAL_PROP }}" > ./application-local.properties
+          touch ./application-dev.properties
+          echo "${{ secrets.APPLICATION_DEV_PROP }}" > ./application-dev.properties
           touch ./application-ds.properties
           echo "${{ secrets.APPLICATION_DS_PROP }}" > ./application-ds.properties
           touch ./application-s3.properties

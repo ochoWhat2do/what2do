@@ -1,5 +1,9 @@
 package com.ocho.what2do.store.repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.StoreCountEntity;
 import com.querydsl.core.types.Order;
@@ -26,6 +30,8 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
 
   private final JPAQueryFactory queryFactory;
 
+  private final ObjectMapper objectMapper;
+
   @Override
   public List<StoreResponseDto> findStoresListReview(Pageable pageable) {
 
@@ -47,7 +53,19 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
     Map<Long, Long> storeIdToReviewCountMap = storeContList.stream()
         .collect(Collectors.toMap(StoreCountEntity::getStoreId, StoreCountEntity::getReviewCount));
 
-    var query = queryFactory.select(store)
+    var query = queryFactory.select(
+            store.id.as("is"),
+            apiStore.storeKey.as("storeKey"),
+            store.title.as("title"), // store 엔티티의 title 컬럼을 별칭 "title"로 지정
+            store.homePageLink.as("homePageLink"),
+            store.category.as("category"),
+            store.address.as("address"), // store 엔티티의 address 컬럼을 별칭 "address"로 지정
+            store.roadAddress.as("roadAddress"),
+            store.latitude.as("latitude"),
+            store.longitude.as("longitude"),
+            store.viewCount.as("viewCount"),
+            apiStore.images.as("images")
+        )
         .from(apiStore)
         .join(store).on(apiStore.storeKey.eq(store.storeKey))
         .where(
@@ -57,7 +75,32 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
     var lists = query.fetch();
 
     List<StoreResponseDto> responseList = lists.stream()
-        .map(store -> new StoreResponseDto(store, storeIdToReviewCountMap.get(store.getId())))
+        .map(row ->
+            {
+              try {
+                return StoreResponseDto.builder()
+                    .id(row.get(0, Long.class))
+                    .storeKey(row.get(1, String.class))
+                    .title(row.get(2, String.class))
+                    .homePageLink(row.get(3, String.class))
+                    .category(row.get(4, String.class))
+                    .address(row.get(5, String.class))
+                    .roadAddress(row.get(6, String.class))
+                    .latitude(row.get(7, String.class))
+                    .longitude(row.get(8, String.class))
+                    .viewCount(row.get(9, Integer.class))
+                    .images(
+                        row.get(10, String.class) == null ? null :
+                        objectMapper.readValue(row.get(10, String.class), new TypeReference<>() {
+                        })
+                    )
+                    .reviewCount(storeIdToReviewCountMap.get(row.get(0, Long.class)))
+                    .build();
+              } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+              }
+            }
+        )
         .sorted(Comparator.comparingLong(StoreResponseDto::getReviewCount).reversed())
         .limit(pageable.getPageSize()) // 프론트에서 받아온 페이지당 개수만큼만 보여준다
         .collect(Collectors.toList());
