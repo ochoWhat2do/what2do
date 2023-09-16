@@ -265,7 +265,7 @@ public class StoreServiceImpl implements StoreService {
       }
     }
 
-    if(result > 0 && result == fileSavedResult) {
+    if (result > 0 && result == fileSavedResult) {
       result = 1;
     } else if (result == 0) {
       result = 0;
@@ -277,10 +277,10 @@ public class StoreServiceImpl implements StoreService {
   }
 
   // 기존 파일 삭제
- //                if (images != null && images.size() > 0) {
- //                    for (int j = 0; j < images.size(); j++) {
- //                        fileUploader.deleteFile(images.get(j).getUploadFilePath(),
- //                            images.get(j).getUploadFileName());
- //                    }
- //                }
+  //                if (images != null && images.size() > 0) {
+  //                    for (int j = 0; j < images.size(); j++) {
+  //                        fileUploader.deleteFile(images.get(j).getUploadFilePath(),
+  //                            images.get(j).getUploadFileName());
+  //                    }
+  //                }
 }
