@@ -78,7 +78,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public void deleteUserInfo(WithdrawalRequestDto requestDto, User user) {
     User found = findUser(user.getId());
-    checkPassword(requestDto.getPassword(), found.getPassword());
+    if(user.getSocialType() == null) {
+      checkPassword(requestDto.getPassword(), found.getPassword());
+    }
     confirmUser(found, user);
 
     reviewRepository.deleteAllByUserId(user.getId());

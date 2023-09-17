@@ -1,6 +1,10 @@
 package com.ocho.what2do.admin.controller;
 
 
+import com.ocho.what2do.admin.dto.AdminApiStoreListResponseDto;
+import com.ocho.what2do.admin.dto.AdminApiStoreRequestDto;
+import com.ocho.what2do.admin.dto.AdminApiStoreResponseDto;
+import com.ocho.what2do.admin.dto.AdminApiStoreViewResponseDto;
 import com.ocho.what2do.admin.dto.AdminStoreListResponseDto;
 import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
 import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
@@ -31,22 +35,45 @@ public class AdminStoreController {
     return new ResponseEntity<>(storeService.createStore(requestDto, userDetails.getUser(),files), HttpStatus.OK);
   }
 
-  @Operation(summary = "관리자 가게 전체 조회", description = "가게를 조회합니다.")
-  @GetMapping("/stores") //가게 전체 조회
-  public ResponseEntity<AdminStoreListResponseDto> getStores() {
-    AdminStoreListResponseDto result = storeService.getStores();
+  @Operation(summary = "관리자 API 데이터 전체 조회", description = "가게를 조회합니다.")
+  @GetMapping("/stores")
+  public ResponseEntity<AdminApiStoreListResponseDto> getStores(
+      @RequestParam("keyword") String keyword,
+      @RequestParam("page") int page,
+      @RequestParam("size") int size,
+      @RequestParam("sortBy") String sortBy,
+      @RequestParam("isAsc") boolean isAsc
+  ) {
+    AdminApiStoreListResponseDto result = storeService.getStores(keyword, page, size, sortBy, isAsc);
 
     return ResponseEntity.ok().body(result);
   }
 
-  @Operation(summary = "관리자 가게 전체 조회", description = "가게를 조회합니다.")
-  @GetMapping("/stores/{storeId}") //가게 단건 조회
+  @Operation(summary = "관리자 가게 API STORE 조회", description = "API STORE KEY로 가게를 조회합니다.")
+  @GetMapping("/stores/{storeKey}")
+  public ResponseEntity<AdminApiStoreViewResponseDto> getApiStoreStoreKey(@PathVariable String storeKey, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    return new ResponseEntity<>(storeService.getApiStoreByStoreKey(storeKey, userDetails.getUser()), HttpStatus.OK);
+  }
+
+  @Operation(summary = "관리자 가게 조회", description = "가게를 조회합니다.")
+  @GetMapping("/detail-stores/{storeId}")
   public ResponseEntity<AdminStoreViewResponseDto> getStoreById(@PathVariable Long storeId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     return new ResponseEntity<>(storeService.getStoreById(storeId, userDetails.getUser()), HttpStatus.OK);
   }
 
+  @Operation(summary = "API 관리자 가게 수정", description = "가게를 수정합니다.")
+  @PutMapping("/stores/{storeKey}") //가게 수정
+  public ResponseEntity<AdminApiStoreResponseDto> updateApiStore(@AuthenticationPrincipal UserDetailsImpl userDetails
+      , @PathVariable String storeKey
+      , @RequestPart AdminApiStoreRequestDto requestDto
+      , @RequestPart(required = false) List<MultipartFile> files) {
+    AdminApiStoreResponseDto result;
+    result = storeService.updateApiStore(storeKey, requestDto, userDetails.getUser(), files);
+    return ResponseEntity.ok().body(result);
+  }
+
   @Operation(summary = "관리자 가게 수정", description = "가게를 수정합니다.")
-  @PutMapping("/stores/{storeId}") //가게 수정
+  @PutMapping("/detail-stores/{storeId}") //가게 수정
   public ResponseEntity<ApiResponseDto> updateStore(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long storeId, @RequestPart AdminStoreRequestDto requestDto,  @RequestPart(required = false) List<MultipartFile> files) {
     AdminStoreResponseDto result;
     result = storeService.updateStore(storeId, requestDto, userDetails.getUser(), files);
