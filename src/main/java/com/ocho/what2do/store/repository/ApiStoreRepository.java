@@ -21,6 +21,8 @@ public interface ApiStoreRepository extends JpaRepository<ApiStore, Long> {
 
     Page<ApiStore> findAll(Pageable pageable);
 
+    Page<ApiStore> findAllByTitleLike(String title, Pageable pageable);
+
     List<ApiStore> findAllByCategoryContains(String category);
 
     Optional<ApiStore> findByStoreKey(String storeKey);
