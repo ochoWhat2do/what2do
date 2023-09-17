@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.StoreCountEntity;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import java.util.Comparator;
@@ -53,6 +55,7 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
     Map<Long, Long> storeIdToReviewCountMap = storeContList.stream()
         .collect(Collectors.toMap(StoreCountEntity::getStoreId, StoreCountEntity::getReviewCount));
 
+    Expression<String> jsonImages = Expressions.stringTemplate("CAST({0} AS text)", apiStore.images).as("images");
     var query = queryFactory.select(
             store.id.as("is"),
             apiStore.storeKey.as("storeKey"),
@@ -64,7 +67,7 @@ public class StoreRepositoryImpl implements CustomStoreRepository {
             store.latitude.as("latitude"),
             store.longitude.as("longitude"),
             store.viewCount.as("viewCount"),
-            apiStore.images.as("images")
+            jsonImages // 타입을 명시
         )
         .from(apiStore)
         .join(store).on(apiStore.storeKey.eq(store.storeKey))

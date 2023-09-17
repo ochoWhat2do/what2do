@@ -79,6 +79,11 @@ public class Store extends Timestamped {
         this.images = requestDto.getImages();
     }
 
+    // 이미지 업데이트
+    public void updateImages(List<S3FileDto> images) {
+        this.images = images;
+    }
+
     public void increaseViewCount() {
         this.viewCount++;
     }
