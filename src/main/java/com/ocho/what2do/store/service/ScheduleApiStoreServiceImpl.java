@@ -29,7 +29,7 @@ public class ScheduleApiStoreServiceImpl implements ScheduleApiStoreService {
     String imagePath = imageFileUploadPath != null ?
         imageFileUploadPath.equals("localUploadPath")  ?
             new ClassPathResource("image/stores").getFile().getAbsolutePath() :
-            "/home/ubuntu/backend/resources/image/stores/"
+            imageFileUploadPath
         : new ClassPathResource("image/stores").getFile().getAbsolutePath();
 
     // images 폴더 내의 모든 파일을 가져와서 리스트에 저장합니다.
