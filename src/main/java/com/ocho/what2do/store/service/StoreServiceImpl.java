@@ -88,6 +88,12 @@ public class StoreServiceImpl implements StoreService {
     if (savedStore.isPresent()) {
       return new StoreResponseDto(savedStore.get(), user);
     } else {
+      // API 정보에 이미지가 있고  STORE 테이블에 이미지가 없을경우 업데이트
+      if (findStore.getImages() != null) {
+        if (store.getImages() == null) {
+          store.updateImages(findStore.getImages());
+        }
+      }
       return new StoreResponseDto(findStore);
     }
   }
