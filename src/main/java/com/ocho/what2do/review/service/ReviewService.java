@@ -5,11 +5,9 @@ import com.ocho.what2do.review.dto.ReviewListResponseDto;
 import com.ocho.what2do.review.dto.ReviewRequestDto;
 import com.ocho.what2do.review.dto.ReviewResponseDto;
 import com.ocho.what2do.user.entity.User;
-
-import java.io.IOException;
-
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ReviewService {

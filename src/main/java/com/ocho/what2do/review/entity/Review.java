@@ -8,11 +8,6 @@ import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.user.entity.User;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +15,10 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.Id;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Entity

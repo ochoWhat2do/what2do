@@ -1,8 +1,9 @@
 package com.ocho.what2do.admin.dto;
 
 import com.ocho.what2do.common.file.S3FileDto;
-import java.util.List;
 import lombok.Builder;
+
+import java.util.List;
 
 public class AdminApiStoreRequestDto {
 

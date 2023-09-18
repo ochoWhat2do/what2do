@@ -1,20 +1,10 @@
 package com.ocho.what2do.admin.service;
 
-import com.ocho.what2do.admin.dto.AdminApiStoreListResponseDto;
-import com.ocho.what2do.admin.dto.AdminApiStoreRequestDto;
-import com.ocho.what2do.admin.dto.AdminApiStoreResponseDto;
-import com.ocho.what2do.admin.dto.AdminApiStoreViewResponseDto;
-import com.ocho.what2do.admin.dto.AdminStoreListResponseDto;
-import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
-import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
-import com.ocho.what2do.admin.dto.AdminStoreViewResponseDto;
+import com.ocho.what2do.admin.dto.*;
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.file.FileUploader;
 import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.common.message.CustomErrorCode;
-import com.ocho.what2do.review.dto.ReviewListResponseDto;
-import com.ocho.what2do.review.dto.ReviewResponseDto;
-import com.ocho.what2do.review.entity.Review;
 import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.store.repository.ApiStoreRepository;
@@ -22,20 +12,15 @@ import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
 import com.ocho.what2do.user.repository.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

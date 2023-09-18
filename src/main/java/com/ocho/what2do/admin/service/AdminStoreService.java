@@ -1,13 +1,6 @@
 package com.ocho.what2do.admin.service;
 
-import com.ocho.what2do.admin.dto.AdminApiStoreListResponseDto;
-import com.ocho.what2do.admin.dto.AdminApiStoreRequestDto;
-import com.ocho.what2do.admin.dto.AdminApiStoreResponseDto;
-import com.ocho.what2do.admin.dto.AdminApiStoreViewResponseDto;
-import com.ocho.what2do.admin.dto.AdminStoreListResponseDto;
-import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
-import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
-import com.ocho.what2do.admin.dto.AdminStoreViewResponseDto;
+import com.ocho.what2do.admin.dto.*;
 import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.user.entity.User;

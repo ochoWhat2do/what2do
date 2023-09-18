@@ -3,7 +3,6 @@ package com.ocho.what2do.store.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
 import com.ocho.what2do.store.entity.StoreCountEntity;
 import com.querydsl.core.types.Expression;
@@ -11,16 +10,15 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import java.util.Comparator;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.ocho.what2do.review.entity.QReview.review;
 import static com.ocho.what2do.store.entity.QApiStore.apiStore;

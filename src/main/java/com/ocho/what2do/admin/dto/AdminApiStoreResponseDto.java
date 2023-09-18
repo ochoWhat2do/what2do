@@ -2,10 +2,10 @@ package com.ocho.what2do.admin.dto;
 
 import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.store.entity.ApiStore;
-import com.ocho.what2do.store.entity.Store;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor

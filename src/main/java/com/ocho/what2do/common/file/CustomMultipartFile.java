@@ -1,12 +1,13 @@
 package com.ocho.what2do.common.file;
 
+import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 // s3에서 필요로 하는 MultipartFile 형태로 File 객체 변환
 public class CustomMultipartFile implements MultipartFile {

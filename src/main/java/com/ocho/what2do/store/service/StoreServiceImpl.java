@@ -1,27 +1,22 @@
 package com.ocho.what2do.store.service;
 
-import com.ocho.what2do.admin.dto.AdminStoreRequestDto;
-import com.ocho.what2do.admin.dto.AdminStoreResponseDto;
 import com.ocho.what2do.common.ConstVal;
+import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.file.FileUploader;
 import com.ocho.what2do.common.file.S3FileDto;
-import com.ocho.what2do.store.entity.ApiStore;
-import com.ocho.what2do.store.repository.ApiStoreRepository;
-import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
+import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
+import com.ocho.what2do.store.repository.ApiStoreRepository;
 import com.ocho.what2do.store.repository.StoreRepository;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.storefavorite.repository.StoreFavoriteRepository;
 import com.ocho.what2do.user.entity.User;
-import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +24,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
