@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -67,15 +68,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
           )
       );
     } catch (Exception e) {
-      Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
-      if(user.isPresent()) {
-        User loginUser = user.get();
-        if (!passwordEncoder.matches(requestDto.getPassword(), loginUser.getPassword())) {
-          throw new CustomException(CustomErrorCode.NOT_VALID_LOGIN_PASSWORD_INFO, e);
+      if (e instanceof BadCredentialsException) {
+        Optional<User> user = userRepository.findByEmail(requestDto.getEmail());
+        if(user.isPresent()) {
+          User loginUser = user.get();
+          if (!passwordEncoder.matches(requestDto.getPassword(), loginUser.getPassword())) {
+            throw new CustomException(CustomErrorCode.NOT_VALID_LOGIN_PASSWORD_INFO, e);
+          }
+        } else {
+          throw new CustomException(CustomErrorCode.NOT_VALID_LOGIN_USER_INFO, e);
         }
-      } else {
-        throw new CustomException(CustomErrorCode.NOT_VALID_LOGIN_USER_INFO, e);
       }
+
       throw new CustomException(CustomErrorCode.NOT_VALID_LOGIN_USER_INFO, e);
     }
   }

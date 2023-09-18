@@ -57,7 +57,7 @@ public class User extends Timestamped {
     private String gender;
 
     @Column
-    private String city;
+    private String address;
 
     @Column
     private String introduction;
@@ -89,11 +89,11 @@ public class User extends Timestamped {
         introduction = "안녕하세요.";
     }
 
-    public User(String email, String password, UserRoleEnum role, String city, String gender) {
+    public User(String email, String password, UserRoleEnum role, String address, String gender) {
         this.email = email;
         this.password = password;
         this.role = role;
-        this.city = city;
+        this.address = address;
         this.gender = gender;
         nickname = email.substring(0, email.indexOf('@'));
         introduction = "안녕하세요.";

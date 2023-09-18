@@ -88,8 +88,8 @@ public class WebSecurityConfig {
             .requestMatchers("/oauth/kakao").permitAll()
             .requestMatchers("/").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/users/info").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/users/checkEmail").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/users/confirmEmail").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/users/check-email").permitAll()
+            .requestMatchers(HttpMethod.GET, "/api/users/confirm-email").permitAll()
             //  .requestMatchers("/admin/**").permitAll()
             .requestMatchers("/api/daum/**").permitAll() // daum 지역 api 요청 접근 허가
             .anyRequest().authenticated() // 그 외 모든 요청 인증처리

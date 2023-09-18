@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
       role = UserRoleEnum.ADMIN;
     }
 
-    User user = userRepository.save(new User(email, password, role, requestDto.getCity(),
+    User user = userRepository.save(new User(email, password, role, requestDto.getAddress(),
         requestDto.getGender()));
     userPasswordRepository.save(new UserPassword(password, user));
   }

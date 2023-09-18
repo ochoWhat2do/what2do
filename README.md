@@ -61,15 +61,15 @@
 
 ### ERD
 
-![team8_ocho_erd (1)](https://github.com/ochoWhat2do/what2do/assets/42510512/014d5ba3-0e59-45c5-b550-370005754949)
+![erd0918](https://github.com/ochoWhat2do/what2do/assets/42510512/96b4c32c-7371-493d-abac-cdd3d6cd7ba3)
 
 ### API 명세
 
-API 명세
+https://api.what2do.shop/swagger-ui/index.html
 
-### 프로젝트 프레젠테이션 정보
+### 홈페이지
 
-
+https://www.what2do.co.kr/
 
 ---
 
@@ -84,8 +84,8 @@ API 명세
 - SPRING 프레임워크 환경설정
 - 사용자 관련 테이블 생성 및 로그인 기능 개발
 - 백엔드 가게 조회 (수동 조회), 리뷰 작성 기능 개발
-- 백엔드 API 조회 기능 개발 
-- 프론트엔드 환경설정 및 언어 선택
+- 백엔드 API 조회 기능 개발 (카카오 로컬 API 활용)
+- 프론트엔드 환경설정 및 언어 선택(react, next.js)
 
 
 
@@ -97,7 +97,9 @@ API 명세
 1. 자체 DB 활용하면서, BATCH를 활용하여 INSERT, UPDATE, DELETE 동작을 주기적으로 실행
 2. 실시간으로 API 데이터를 조회하되,  자체DB에 데이터를 추가-> 예외 상황에 대한 처리 추가
 
-2안을 채택하여 실시간으로 데이터를 조회할 때마다, 자체DB에 가게 데이터 수집 API 데이터를 조회하는 테이블과 관계가 있는 가게 테이블로 분리 -> API 연결이 안될때를 대비한 예외처리 가능
+2안을 채택하여 실시간으로 데이터를 조회할 때마다, 테이블에 가게 데이터 수집 
+-> API 데이터를 조회하는 테이블과 관계가 있는 가게 테이블로 분리 
+-> API 연결이 안될때를 대비한 예외처리 가능
 
 #### 5-3. 기술적 의사결정(이미지를 다중 첨부하는 방법)
 
@@ -114,21 +116,20 @@ API 명세
 쌓여진 DB 를 바탕으로 검색을 진행한다면 연결 속도는 점점 떨어질 것으로 예상
 현재는 게시글이 적기 때문에 로딩 시간이 짧게는 200ms 부터 길게는 600ms 까지 보임
 
-![561.png](..%2Finstall_image%2F%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%2F561.png)
+![561sec](https://github.com/ochoWhat2do/what2do/assets/42510512/611fa925-96fa-416b-b58f-732ceeb9ed9e)
 
 최초 조회 시에는 query 문을 던지지만, 다시 검색 할 경우에는 DB 가 아닌 캐시 메모리에서 조회하는 것을 알 수 있음
 
-![동일한조회결과에서는속도개선.png](..%2Finstall_image%2F%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%2F%EB%8F%99%EC%9D%BC%ED%95%9C%EC%A1%B0%ED%9A%8C%EA%B2%B0%EA%B3%BC%EC%97%90%EC%84%9C%EB%8A%94%EC%86%8D%EB%8F%84%EA%B0%9C%EC%84%A0.png)
-
+![캐싱적용](https://github.com/ochoWhat2do/what2do/assets/42510512/e00ab5f9-a412-407e-8b5e-b86f4b4fbc3a)
 이후 동일한 조회 결과에서는 속도가 개선된 모습을 볼 수 있음
 
-![96.png](..%2Finstall_image%2F%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%2F96.png)
+![96sec](https://github.com/ochoWhat2do/what2do/assets/42510512/c85d09d1-86f6-49fe-bb0d-2437dcfcf895)
 
 (1) 서버 과부하를 막기 위해 스케줄링을 도입해 주기적으로 캐시 메모리 정리
-![img.png](img.png)
+![캐싱메모리제거](https://github.com/ochoWhat2do/what2do/assets/42510512/d784d8fe-b304-4517-b6ea-f4f208fac644)
 
 (2) 캐시 메모리 삭제 후 동일하게 검색 시 다시 select 하는 것을 볼 수 있음
-![img_1.png](img_1.png)
+![캐싱삭제후](https://github.com/ochoWhat2do/what2do/assets/42510512/c3c6e9a2-6b58-49ac-bf85-0484fcfa8326)
 
 ## 7. 팀원 소개
 

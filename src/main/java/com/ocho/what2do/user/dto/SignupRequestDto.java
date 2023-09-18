@@ -25,7 +25,7 @@ public class SignupRequestDto {
     private String nickname;
 
     // 추가정보
-    private String city;
+    private String address;
     private String gender;
 
     // 관리자 여부와 관리자 토큰
