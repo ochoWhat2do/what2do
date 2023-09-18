@@ -56,6 +56,8 @@ public class KakaoUtil {
         entity,
         String.class);
 
+    log.info("uri = " + uriComponents);
+
     if (Integer.parseInt(page) > 3) {
       throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
     }
