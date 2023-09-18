@@ -104,7 +104,7 @@ public class StoreServiceImpl implements StoreService {
     Integer totalCnt = apiStoreRepository.findAllByCategoryContains(category).stream().toList()
         .size();
     Integer pageCnt = pageCnt(totalCnt);
-    if (pageCnt < page || totalCnt == 0) {
+    if (pageCnt < page || totalCnt == 0 || storeCategory.isEmpty()) {
       throw new CustomException(CustomErrorCode.DATA_NOT_FOUND);
     }
     return new StoreCategoryListResponseDto(totalCnt, pageCnt, storeCategory);

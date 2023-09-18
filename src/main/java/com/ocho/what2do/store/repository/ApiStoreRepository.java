@@ -1,6 +1,7 @@
 package com.ocho.what2do.store.repository;
 
 import com.ocho.what2do.store.entity.ApiStore;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,7 @@ public interface ApiStoreRepository extends JpaRepository<ApiStore, Long> {
 
     //List<ApiStore> findAllByStoreKey(String storeKey);
 
+    @Cacheable(value = "store_category", key = "#category")
     Page<ApiStore> findByCategoryContains(String category, Pageable pageable);
 
     Page<ApiStore> findAll(Pageable pageable);
