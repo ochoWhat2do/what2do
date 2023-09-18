@@ -1,7 +1,7 @@
 package com.ocho.what2do.store.controller;
 
-import com.ocho.what2do.store.service.KakaoApiServiceImpl;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
+import com.ocho.what2do.store.service.KakaoApiServiceImpl;
 import com.ocho.what2do.store.util.KakaoUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,8 +1,6 @@
 package com.ocho.what2do.common.jwt;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ocho.what2do.common.dto.ApiResponseDto;
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.user.dto.LoginRequestDto;
@@ -10,20 +8,18 @@ import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

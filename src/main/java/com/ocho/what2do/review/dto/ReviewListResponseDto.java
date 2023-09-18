@@ -1,7 +1,8 @@
 package com.ocho.what2do.review.dto;
 
-import java.util.List;
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 public class ReviewListResponseDto {

@@ -1,17 +1,17 @@
 package com.ocho.what2do.store.service;
 
-import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.dto.StoreCategoryListResponseDto;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
+import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteListResponseDto;
 import com.ocho.what2do.storefavorite.dto.StoreFavoriteResponseDto;
 import com.ocho.what2do.user.entity.User;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface StoreService {
 

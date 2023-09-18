@@ -2,7 +2,6 @@ package com.ocho.what2do.user.dto;
 
 import com.ocho.what2do.user.entity.User;
 import com.ocho.what2do.user.entity.UserRoleEnum;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

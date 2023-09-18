@@ -2,22 +2,16 @@ package com.ocho.what2do.store.util;
 
 import com.ocho.what2do.common.exception.CustomException;
 import com.ocho.what2do.common.message.CustomErrorCode;
-import com.ocho.what2do.store.dto.StoreListResponseDto;
-import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @Slf4j(topic = "Kakao Local Api 호출")
 @Component

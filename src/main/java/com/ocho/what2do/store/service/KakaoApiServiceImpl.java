@@ -1,28 +1,22 @@
 package com.ocho.what2do.store.service;
 
-import com.ocho.what2do.common.file.S3FileDto;
-import com.ocho.what2do.store.entity.ApiStore;
-import com.ocho.what2do.store.repository.ApiStoreRepository;
 import com.ocho.what2do.common.exception.CustomException;
+import com.ocho.what2do.common.file.S3FileDto;
 import com.ocho.what2do.common.message.CustomErrorCode;
 import com.ocho.what2do.store.dto.StoreListResponseDto;
 import com.ocho.what2do.store.dto.StoreResponseDto;
-import java.util.Optional;
+import com.ocho.what2do.store.entity.ApiStore;
+import com.ocho.what2do.store.repository.ApiStoreRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j(topic = "DAUM API")
 @Service

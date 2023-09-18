@@ -1,13 +1,12 @@
 package com.ocho.what2do.common.sceduler;
 
 import com.ocho.what2do.store.service.ScheduleApiStoreServiceImpl;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Slf4j(topic = "StoreImage Scheduler")
 @Component

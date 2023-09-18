@@ -6,11 +6,11 @@ import com.ocho.what2do.store.entity.ApiStore;
 import com.ocho.what2do.store.entity.Store;
 import com.ocho.what2do.storefavorite.entity.StoreFavorite;
 import com.ocho.what2do.user.entity.User;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Optional;
 
 @Getter
