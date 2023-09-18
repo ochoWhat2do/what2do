@@ -26,7 +26,7 @@ public class KakaoApiServiceImpl implements KakaoApiService {
   private final ApiStoreRepository apiStoreRepository;
 
   @Override
-  @Cacheable(value = "store_all", key = "#responseEntity")
+  @Cacheable(cacheNames = "store_all", key = "#responseEntity")
   public StoreListResponseDto fromJSONtoItems(String responseEntity) {
     JSONObject jsonObject = new JSONObject(responseEntity);
     JSONObject meta = jsonObject.getJSONObject("meta");
