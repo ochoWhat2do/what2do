@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ public class KakaoApiServiceImpl implements KakaoApiService {
   private final ApiStoreRepository apiStoreRepository;
 
   @Override
+  @Cacheable(value = "store_all", key = "#responseEntity")
   public StoreListResponseDto fromJSONtoItems(String responseEntity) {
     JSONObject jsonObject = new JSONObject(responseEntity);
     JSONObject meta = jsonObject.getJSONObject("meta");
@@ -66,14 +67,10 @@ public class KakaoApiServiceImpl implements KakaoApiService {
           .longitude(storeResponseDto.getLongitude())
           .images(fileDtoList)
           .build();
-
       storeResponseDtoList.add(storeResponseDto);
-      try {
-        if (!apiStoreRepository.existsApiStoreByStoreKey(store.getStoreKey())) {
-          apiStoreRepository.save(store);
-        }
-      } catch (DataIntegrityViolationException e) {
-        continue;
+
+      if (!apiStoreRepository.existsApiStoreByStoreKey(store.getStoreKey())) {
+        apiStoreRepository.save(store);
       }
     }
     return new StoreListResponseDto(totalCnt, pageCnt, keyWord, region, storeResponseDtoList);
