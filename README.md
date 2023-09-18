@@ -61,7 +61,7 @@
 
 ### ERD
 
-![erd0918](https://github.com/ochoWhat2do/what2do/assets/42510512/96b4c32c-7371-493d-abac-cdd3d6cd7ba3)
+![team8_ocho_db](https://github.com/ochoWhat2do/what2do/assets/42510512/921c8a4b-1372-46cf-9456-1652dea10b7a)
 
 ### API 명세
 
@@ -112,24 +112,45 @@ https://www.what2do.co.kr/
 
 
 ## 6. 트러블 슈팅
-현재 api 의 한계로 한 페이지에 15개의 게시글이 조회가 가능하지만 추후 데이터가 쌓였을 땐, 
-쌓여진 DB 를 바탕으로 검색을 진행한다면 연결 속도는 점점 떨어질 것으로 예상
-현재는 게시글이 적기 때문에 로딩 시간이 짧게는 200ms 부터 길게는 600ms 까지 보임
 
-![561sec](https://github.com/ochoWhat2do/what2do/assets/42510512/611fa925-96fa-416b-b58f-732ceeb9ed9e)
+#### 자주 사용되는 api 데이터 조회 시 캐싱 처리
 
-최초 조회 시에는 query 문을 던지지만, 다시 검색 할 경우에는 DB 가 아닌 캐시 메모리에서 조회하는 것을 알 수 있음
+캐싱을 사용한 API 성능 개선
 
-![캐싱적용](https://github.com/ochoWhat2do/what2do/assets/42510512/e00ab5f9-a412-407e-8b5e-b86f4b4fbc3a)
-이후 동일한 조회 결과에서는 속도가 개선된 모습을 볼 수 있음
+(1) kakao api 호출 시 검색한 값들을 하나하나 select 문을 날려 DB에 있는지 확인 후 없으면 DB에 insert 하도록 구현
+- 검색할 때 마다 select문 호출로 조회 속도가 느려지는 현상 발생, 검색 값을 캐시 메모리에 저장하여 무분별한 select 문 최소화
 
-![96sec](https://github.com/ochoWhat2do/what2do/assets/42510512/c85d09d1-86f6-49fe-bb0d-2437dcfcf895)
+![0918_캐싱1](https://github.com/ochoWhat2do/what2do/assets/42510512/ed700217-1ba2-445f-a7e1-2955d8edb481)
 
-(1) 서버 과부하를 막기 위해 스케줄링을 도입해 주기적으로 캐시 메모리 정리
-![캐싱메모리제거](https://github.com/ochoWhat2do/what2do/assets/42510512/d784d8fe-b304-4517-b6ea-f4f208fac644)
 
-(2) 캐시 메모리 삭제 후 동일하게 검색 시 다시 select 하는 것을 볼 수 있음
-![캐싱삭제후](https://github.com/ochoWhat2do/what2do/assets/42510512/c3c6e9a2-6b58-49ac-bf85-0484fcfa8326)
+(2) 리소스 과부하를 막기 위해 스케쥴러를 통한 주기적인 캐시 메모리 정리
+
+![0918_캐싱2](https://github.com/ochoWhat2do/what2do/assets/42510512/f99ba16f-cd0d-46d4-b7cb-83cbd4dae4f3)
+
+
+(3) 캐시메모리 정리 후에 조회 시 select 문이 다시 동작함을 알 수 있음
+
+![0918_캐싱3](https://github.com/ochoWhat2do/what2do/assets/42510512/8dfb6f1d-3df8-4a8b-b6b1-83388f6518b8)
+
+
+(4) 캐시처리를 이용하여 어느정도의 성능이 개선되었나 ?
+  - 동일한 검색어를 가지고 조회하여 속도 확인
+  - 972ms -> 105ms : 약 90% 의 성능 개선, 190ms -> 91ms : 약 50% 의 성능 개선
+  - 즉 최소 50% 에서 90% 까지의 성능 개선 효과
+
+- 첫번째 사례 
+ - 처리 전 
+![0918_캐싱_1_변화전](https://github.com/ochoWhat2do/what2do/assets/42510512/f6078fe9-b59b-4cf9-8472-d1509e603222)
+ 
+ - 처리 후 
+
+![0918_캐싱_1_변화후](https://github.com/ochoWhat2do/what2do/assets/42510512/d60f26b1-758e-4538-8a02-887f6a91cb6d)
+
+- 두번째 사례 
+- 처리 전
+  ![0918_캐싱_2_변화전](https://github.com/ochoWhat2do/what2do/assets/42510512/b167959b-afb4-4659-a471-7239b4b30f5a)
+- 처리 후
+  ![0918_캐싱_2_변화후](https://github.com/ochoWhat2do/what2do/assets/42510512/ccdade54-c606-48f7-9c9d-4063995a9cec)
 
 ## 7. 팀원 소개
 
