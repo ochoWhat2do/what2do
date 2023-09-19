@@ -86,8 +86,8 @@
 ## 3. 프로젝트 명세
 
 ### ERD
+![team8_ocho_db](https://github.com/ochoWhat2do/what2do/assets/42510512/88fc14e9-5931-46fd-87e6-4c7129a39d39)
 
-![team8_ocho_db](https://github.com/ochoWhat2do/what2do/assets/42510512/921c8a4b-1372-46cf-9456-1652dea10b7a)
 
 ### API 명세
 
