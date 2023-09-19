@@ -16,7 +16,7 @@ public interface ApiStoreRepository extends JpaRepository<ApiStore, Long> {
 
     //List<ApiStore> findAllByStoreKey(String storeKey);
 
-    @Cacheable(value = "store_category", key = "#category")
+    @Cacheable(cacheNames = "store_category", key = "#category")
     Page<ApiStore> findByCategoryContains(String category, Pageable pageable);
 
     Page<ApiStore> findAll(Pageable pageable);
